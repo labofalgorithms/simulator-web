@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#080c18" />
+  <meta name="description" content="LabOfAlgorithms: simuladores interativos para aprender estruturas de dados e algoritmos." />
+  <title>LabOfAlgorithms · Simuladores</title>
+  <link rel="stylesheet" href="./src/css/base.css" />
+  <link rel="stylesheet" href="./src/css/home.css" />
+</head>
+<body class="home-body">
+  <div class="home-shell">
+    <nav class="home-nav" aria-label="Navegação principal">
+      <a class="home-brand" href="./index.html">
+        <span class="brand-mark" aria-hidden="true">⌁</span>
+        <span><strong>LabOfAlgorithms</strong><small>Aprenda vendo o algoritmo acontecer</small></span>
+      </a>
+      <div class="home-actions">
+        <a href="#simuladores">Simuladores</a>
+        <a href="#arquitetura">Sobre o projeto</a>
+        <button id="theme-button" class="theme-button" type="button" aria-label="Alternar tema"></button>
+      </div>
+    </nav>
+
+    <main>
+      <section class="hero">
+        <div>
+          <span class="hero-kicker"><i></i> laboratório interativo</span>
+          <h1>Estruturas de dados que você pode <span>ver e controlar.</span></h1>
+          <p>Execute algoritmos passo a passo, acompanhe o pseudocódigo, inspecione variáveis e experimente seus próprios dados. O LabOfAlgorithms transforma cada operação em uma sequência visual.</p>
+          <div class="hero-buttons">
+            <a class="home-button primary" href="./simuladores/vetores/">Abrir Vetores <span aria-hidden="true">→</span></a>
+            <a class="home-button secondary" href="#simuladores">Explorar módulos</a>
+          </div>
+        </div>
+        <div class="hero-visual" aria-label="Prévia de uma simulação de vetor">
+          <div class="visual-top"><span>Execução visual</span><span class="visual-status">● passo a passo</span></div>
+          <div class="mini-array"><span class="mini-cell">8</span><span class="mini-cell">3</span><span class="mini-cell active">12</span><span class="mini-cell">5</span><span class="mini-cell">9</span></div>
+          <div class="visual-code"><span></span><span></span><span></span><span></span></div>
+        </div>
+      </section>
+
+      <section id="simuladores">
+        <div class="section-heading">
+          <div><span>Catálogo</span><h2>Escolha uma estrutura</h2></div>
+          <p>Todos os módulos compartilharão o mesmo motor de execução, os mesmos controles e a mesma identidade visual.</p>
+        </div>
+
+        <div class="module-grid">
+          <article class="module-card available">
+            <div class="module-number"><span>ED1 · 01</span><span class="module-state">Disponível</span></div>
+            <div class="module-icon">[ ]</div>
+            <h3>Vetores</h3>
+            <p>Índices, acesso, percurso, somatório, média, maior, menor, busca sequencial e ordenação simples.</p>
+            <div class="module-footer"><span>9 simuladores</span><strong>Abrir →</strong></div>
+            <a class="module-link" href="./simuladores/vetores/">Abrir simuladores de vetores</a>
+          </article>
+
+          <article class="module-card">
+            <div class="module-number"><span>ED1 · 02</span><span class="module-state">Em breve</span></div>
+            <div class="module-icon">↥</div>
+            <h3>Pilhas</h3>
+            <p>Empilhar, desempilhar, consultar o topo e visualizar situações de pilha cheia ou vazia.</p>
+            <div class="module-footer"><span>Próximo módulo</span><span>Planejado</span></div>
+          </article>
+
+          <article class="module-card">
+            <div class="module-number"><span>ED1 · 03</span><span class="module-state">Em breve</span></div>
+            <div class="module-icon">⇥</div>
+            <h3>Filas</h3>
+            <p>Enfileirar, desenfileirar, acompanhar início e fim e compreender a implementação circular.</p>
+            <div class="module-footer"><span>Estrutura preparada</span><span>Planejado</span></div>
+          </article>
+
+          <article class="module-card">
+            <div class="module-number"><span>ED1 · 04</span><span class="module-state">Em breve</span></div>
+            <div class="module-icon">○→○</div>
+            <h3>Listas</h3>
+            <p>Inserções, remoções, buscas e movimentação de referências em listas simples, duplas e circulares.</p>
+            <div class="module-footer"><span>Estrutura preparada</span><span>Planejado</span></div>
+          </article>
+
+          <article class="module-card">
+            <div class="module-number"><span>ED2 · 01</span><span class="module-state">Em breve</span></div>
+            <div class="module-icon">⌘</div>
+            <h3>Árvores</h3>
+            <p>Inserção, busca, remoção e percursos em árvores binárias, AVL e árvores B.</p>
+            <div class="module-footer"><span>Expansão futura</span><span>Planejado</span></div>
+          </article>
+
+          <article class="module-card">
+            <div class="module-number"><span>ED2 · 02</span><span class="module-state">Em breve</span></div>
+            <div class="module-icon">#</div>
+            <h3>Hash e Grafos</h3>
+            <p>Colisões, endereçamento, encadeamento, BFS, DFS e visualização de caminhos.</p>
+            <div class="module-footer"><span>Expansão futura</span><span>Planejado</span></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="arquitetura" class="architecture">
+        <div>
+          <span class="hero-kicker"><i></i> arquitetura modular</span>
+          <h2>Um motor, vários simuladores.</h2>
+          <p>O controlador de passos, a reprodução automática, o tema e o armazenamento são compartilhados. Cada estrutura fornece apenas seus algoritmos, parâmetros e representação visual.</p>
+        </div>
+        <div class="architecture-flow">
+          <div class="flow-item"><b>Core</b><strong>SimulationController</strong><small>Executar, pausar, avançar, voltar e controlar velocidade.</small></div>
+          <div class="flow-item"><b>Módulo</b><strong>Algoritmos</strong><small>Geração dos estados e explicações de cada operação.</small></div>
+          <div class="flow-item"><b>Renderer</b><strong>Visualização</strong><small>Vetor, pilha, fila, lista, árvore ou grafo.</small></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="home-footer"><span>LabOfAlgorithms · Estruturas de Dados</span><span>© <span id="current-year"></span> Bruno de A. Iizuka Moritani</span></footer>
+  </div>
+  <script type="module" src="./src/js/pages/home.js"></script>
+</body>
+</html>
