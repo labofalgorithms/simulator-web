@@ -16,29 +16,35 @@ Código compartilhado por todos os simuladores:
 
 ### `src/js/modules`
 
-Cada estrutura de dados possui sua própria pasta. O módulo de vetores contém:
+Cada estrutura possui uma pasta independente:
 
-- `algorithms.js`: metadados, pseudocódigos e geração dos passos;
-- `vector-module.js`: contrato do módulo, entrada de dados, parâmetros e renderização do vetor.
+```text
+modules/
+├── vectors/
+│   ├── algorithms.js
+│   └── vector-module.js
+└── matrices/
+    ├── algorithms.js
+    └── matrix-module.js
+```
+
+`algorithms.js` contém metadados, pseudocódigos e a geração dos estados da simulação. O arquivo `*-module.js` define entrada de dados, parâmetros, renderização e eventos específicos da estrutura.
 
 ### `src/js/pages`
 
-Arquivos de inicialização das páginas:
-
 - `home.js`: página inicial;
-- `vector-simulator.js`: conecta `SimulatorApp` ao `vectorModule`.
+- `vector-simulator.js`: conecta `SimulatorApp` ao `vectorModule`;
+- `matrix-simulator.js`: conecta `SimulatorApp` ao `matrixModule`.
 
 ## Contrato de um módulo
 
-Um novo módulo deve exportar um objeto com:
-
 ```js
-export const stackModule = {
-  id: 'stacks',
-  name: 'Pilhas',
+export const module = {
+  id: 'nome',
+  name: 'Nome',
   version: '1.0',
-  defaultAlgorithmId: 'push',
-  storageKey: 'loa-stacks-data',
+  defaultAlgorithmId: 'algoritmo-inicial',
+  storageKey: 'loa-chave',
   defaultData: [],
   algorithms,
   buildSteps,
@@ -55,13 +61,20 @@ export const stackModule = {
 };
 ```
 
-O `SimulatorApp` cuida do restante da interface.
+O `SimulatorApp` cuida do menu, cabeçalho, pseudocódigo, variáveis, console, reprodução automática, atalhos e tema.
 
-## Como adicionar Pilhas
+## Módulo de Matrizes
 
-1. Criar `src/js/modules/stacks/algorithms.js`.
-2. Criar `src/js/modules/stacks/stack-module.js`.
-3. Criar `src/js/pages/stack-simulator.js`.
-4. Copiar o shell de `simuladores/vetores/index.html` para `simuladores/pilhas/index.html`.
-5. Alterar apenas título, descrição e arquivo JavaScript de entrada.
-6. Ativar o cartão de Pilhas na página inicial.
+O renderer bidimensional usa coordenadas no formato `"linha,coluna"`. Cada passo pode fornecer:
+
+- `activeCells`;
+- `comparedCells`;
+- `processedCells`;
+- `resultCells`;
+- `changedCells`;
+- `activeRows` e `activeCols`;
+- `secondaryMatrix` para visualizar transformações como transposição;
+- `resultVector` para soma por linha e coluna;
+- `jagged` e `allocatedRows` para matrizes irregulares.
+
+Isso mantém o controlador genérico e concentra a lógica visual específica dentro do módulo.

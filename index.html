@@ -22,7 +22,6 @@
         <button id="theme-button" class="theme-button" type="button" aria-label="Alternar tema"></button>
       </div>
     </nav>
-
     <main>
       <section class="hero">
         <div>
@@ -40,13 +39,11 @@
           <div class="visual-code"><span></span><span></span><span></span><span></span></div>
         </div>
       </section>
-
       <section id="simuladores">
         <div class="section-heading">
           <div><span>Catálogo</span><h2>Escolha uma estrutura</h2></div>
-          <p>Todos os módulos compartilharão o mesmo motor de execução, os mesmos controles e a mesma identidade visual.</p>
+          <p>Todos os módulos compartilham o mesmo motor de execução, os mesmos controles e a mesma identidade visual.</p>
         </div>
-
         <div class="module-grid">
           <article class="module-card available">
             <div class="module-number"><span>ED1 · 01</span><span class="module-state">Disponível</span></div>
@@ -56,31 +53,35 @@
             <div class="module-footer"><span>9 simuladores</span><strong>Abrir →</strong></div>
             <a class="module-link" href="./simuladores/vetores/">Abrir simuladores de vetores</a>
           </article>
-
+          <article class="module-card available">
+            <div class="module-number"><span>ED1 · 02</span><span class="module-state">Disponível</span></div>
+            <div class="module-icon">▦</div>
+            <h3>Matrizes</h3>
+            <p>Índices 2D, acesso, alteração, percursos, soma, média, maior, somas por linha/coluna, identidade, transposta, simetria e jagged arrays.</p>
+            <div class="module-footer"><span>14 simuladores</span><strong>Abrir →</strong></div>
+            <a class="module-link" href="./simuladores/matrizes/">Abrir simuladores de matrizes</a>
+          </article>
           <article class="module-card">
-            <div class="module-number"><span>ED1 · 02</span><span class="module-state">Em breve</span></div>
+            <div class="module-number"><span>ED1 · 03</span><span class="module-state">Em breve</span></div>
             <div class="module-icon">↥</div>
             <h3>Pilhas</h3>
             <p>Empilhar, desempilhar, consultar o topo e visualizar situações de pilha cheia ou vazia.</p>
             <div class="module-footer"><span>Próximo módulo</span><span>Planejado</span></div>
           </article>
-
           <article class="module-card">
-            <div class="module-number"><span>ED1 · 03</span><span class="module-state">Em breve</span></div>
+            <div class="module-number"><span>ED1 · 04</span><span class="module-state">Em breve</span></div>
             <div class="module-icon">⇥</div>
             <h3>Filas</h3>
             <p>Enfileirar, desenfileirar, acompanhar início e fim e compreender a implementação circular.</p>
             <div class="module-footer"><span>Estrutura preparada</span><span>Planejado</span></div>
           </article>
-
           <article class="module-card">
-            <div class="module-number"><span>ED1 · 04</span><span class="module-state">Em breve</span></div>
+            <div class="module-number"><span>ED1 · 05</span><span class="module-state">Em breve</span></div>
             <div class="module-icon">○→○</div>
             <h3>Listas</h3>
             <p>Inserções, remoções, buscas e movimentação de referências em listas simples, duplas e circulares.</p>
             <div class="module-footer"><span>Estrutura preparada</span><span>Planejado</span></div>
           </article>
-
           <article class="module-card">
             <div class="module-number"><span>ED2 · 01</span><span class="module-state">Em breve</span></div>
             <div class="module-icon">⌘</div>
@@ -88,7 +89,6 @@
             <p>Inserção, busca, remoção e percursos em árvores binárias, AVL e árvores B.</p>
             <div class="module-footer"><span>Expansão futura</span><span>Planejado</span></div>
           </article>
-
           <article class="module-card">
             <div class="module-number"><span>ED2 · 02</span><span class="module-state">Em breve</span></div>
             <div class="module-icon">#</div>
@@ -98,7 +98,6 @@
           </article>
         </div>
       </section>
-
       <section id="arquitetura" class="architecture">
         <div>
           <span class="hero-kicker"><i></i> arquitetura modular</span>
@@ -108,11 +107,10 @@
         <div class="architecture-flow">
           <div class="flow-item"><b>Core</b><strong>SimulationController</strong><small>Executar, pausar, avançar, voltar e controlar velocidade.</small></div>
           <div class="flow-item"><b>Módulo</b><strong>Algoritmos</strong><small>Geração dos estados e explicações de cada operação.</small></div>
-          <div class="flow-item"><b>Renderer</b><strong>Visualização</strong><small>Vetor, pilha, fila, lista, árvore ou grafo.</small></div>
+          <div class="flow-item"><b>Renderer</b><strong>Visualização</strong><small>Vetor, matriz, pilha, fila, lista, árvore ou grafo.</small></div>
         </div>
       </section>
     </main>
-
     <footer class="home-footer"><span>LabOfAlgorithms · Estruturas de Dados</span><span>© <span id="current-year"></span> Bruno de A. Iizuka Moritani</span></footer>
   </div>
   <script type="module" src="./src/js/pages/home.js"></script>

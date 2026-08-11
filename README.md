@@ -2,7 +2,7 @@
 
 Portal estático e modular de simuladores interativos para Estruturas de Dados e Algoritmos.
 
-## Módulo disponível
+## Módulos disponíveis
 
 ### Vetores
 
@@ -16,33 +16,53 @@ Portal estático e modular de simuladores interativos para Estruturas de Dados e
 - Busca sequencial
 - Ordenação simples
 
-Todos possuem execução automática, avanço e retorno manuais, controle de velocidade, pseudocódigo destacado, variáveis, console, entrada manual, geração aleatória e tema claro/escuro.
+### Matrizes
+
+- Dimensões e índices
+- Acesso aos elementos
+- Alteração de valores
+- Percurso com `for` tradicional
+- Percurso com `for-each`
+- Soma total
+- Maior valor
+- Média
+- Soma por linha
+- Soma por coluna
+- Matriz identidade
+- Transposição
+- Verificação de matriz simétrica
+- Matrizes irregulares (Jagged Arrays)
+
+Os módulos possuem execução automática, avanço e retorno manuais, controle de velocidade, pseudocódigo destacado, variáveis, console, entrada manual, geração aleatória e tema claro/escuro.
 
 ## Estrutura
 
 ```text
-labofalgorithms/
-├── index.html                         # portal e catálogo
+simulator-web/
+├── index.html
 ├── simuladores/
-│   └── vetores/
-│       └── index.html                 # página do módulo
+│   ├── vetores/
+│   │   └── index.html
+│   └── matrizes/
+│       └── index.html
 ├── src/
 │   ├── css/
-│   │   ├── base.css                   # tema, tokens e reset
-│   │   ├── home.css                   # portal
-│   │   └── simulator.css              # interface compartilhada
+│   │   ├── base.css
+│   │   ├── home.css
+│   │   └── simulator.css
 │   └── js/
-│       ├── core/                      # motor compartilhado
+│       ├── core/
 │       ├── modules/
-│       │   └── vectors/               # código específico de vetores
-│       └── pages/                     # inicialização das páginas
+│       │   ├── vectors/
+│       │   └── matrices/
+│       └── pages/
 ├── docs/ARCHITECTURE.md
 └── .github/workflows/deploy-pages.yml
 ```
 
 ## Executar no VS Code
 
-Abra a pasta raiz do projeto e use **Open with Live Server** no `index.html`.
+Abra a pasta raiz e use **Open with Live Server** no `index.html`.
 
 Alternativamente:
 
@@ -56,32 +76,26 @@ Acesse:
 http://localhost:8000/
 ```
 
-O módulo de vetores fica em:
+Vetores:
 
 ```text
 http://localhost:8000/simuladores/vetores/
 ```
 
+Matrizes:
+
+```text
+http://localhost:8000/simuladores/matrizes/
+```
+
 Não use `npm run dev`: o projeto não depende de Node, Vite ou processo de build.
 
-## Atualizar o repositório existente
-
-Substitua os arquivos antigos pelos desta versão e execute:
+## Enviar atualizações
 
 ```bash
-git add .
-git commit -m "Refactor project into modular LabOfAlgorithms platform"
+git add -A
+git commit -m "Add matrix simulators"
 git push
 ```
 
 O workflow do GitHub Pages continuará publicando todo o repositório.
-
-## GitHub Pages
-
-Em **Settings → Pages**, selecione **GitHub Actions** como fonte. O endereço terá o formato:
-
-```text
-https://SEU-USUARIO.github.io/NOME-DO-REPOSITORIO/
-```
-
-A arquitetura completa e as instruções para novos módulos estão em [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
