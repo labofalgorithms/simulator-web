@@ -32,9 +32,12 @@ modules/
 ├── queues/
 │   ├── algorithms.js
 │   └── queue-module.js
-└── lists/
+├── lists/
+│   ├── algorithms.js
+│   └── list-module.js
+└── dynamic-stacks/
     ├── algorithms.js
-    └── list-module.js
+    └── dynamic-stack-module.js
 ```
 
 `algorithms.js` contém metadados, pseudocódigos e a geração dos estados da simulação. O arquivo `*-module.js` define entrada de dados, parâmetros, renderização e eventos específicos da estrutura.
@@ -46,7 +49,8 @@ modules/
 - `matrix-simulator.js`: conecta `SimulatorApp` ao `matrixModule`;
 - `stack-simulator.js`: conecta `SimulatorApp` ao `stackModule`;
 - `queue-simulator.js`: conecta `SimulatorApp` ao `queueModule`;
-- `list-simulator.js`: conecta `SimulatorApp` ao `listModule`.
+- `list-simulator.js`: conecta `SimulatorApp` ao `listModule`;
+- `dynamic-stack-simulator.js`: conecta `SimulatorApp` ao `dynamicStackModule`.
 
 ## Contrato de um módulo
 
@@ -99,6 +103,10 @@ Os dados do módulo têm o formato `{ capacity, values }`, em que `values` guard
 - `topo`, quando o índice exibido difere do calculado a partir de `values` (por exemplo, durante o incremento/decremento antes de gravar ou remover um elemento).
 
 `push()` recebe o valor a empilhar por `config.pushValue`; as demais operações (`isFull`, `isEmpty`, `pop`, `peek`, `size`, `show`) operam apenas sobre os dados atuais da pilha.
+
+## Módulo de Pilhas Dinâmicas
+
+Diferente dos demais módulos, os dados são apenas `{ values }` (sem `capacity`): a pilha é encadeada por nós e não tem tamanho máximo, então não existe `isFull()`. `values[0]` representa sempre o nó do topo e o restante do array segue a cadeia de referências `próximo` até o nó final, cujo `próximo` é nulo — o renderer desenha essa cadeia como caixas conectadas por setas, com um rótulo `TOPO` apontando para `values[0]` (ou diretamente para o marcador `nulo` quando a pilha está vazia). Como não há um atributo de tamanho, `size()` e `display()` precisam percorrer a pilha nó por nó (`O(n)`), diferente da versão estática. `push()` recebe o valor por `config.pushValue`; as demais operações usam apenas os dados atuais.
 
 ## Módulo de Filas
 

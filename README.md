@@ -66,6 +66,18 @@ Portal estático e modular de simuladores interativos para Estruturas de Dados e
 - Mostrar elementos (`show`)
 - Tamanho da lista (`size`)
 
+### Pilhas Dinâmicas
+
+- Criação da pilha dinâmica
+- Verificar se está vazia (`isEmpty`)
+- Empilhar (`push`)
+- Desempilhar (`pop`)
+- Consultar o topo (`peek`)
+- Tamanho da pilha (`size`)
+- Mostrar elementos (`display`)
+
+Sem `isFull`: a pilha é encadeada por nós e cresce sob demanda, sem capacidade fixa.
+
 Os módulos possuem execução automática, avanço e retorno manuais, controle de velocidade, pseudocódigo destacado, variáveis, console, entrada manual, geração aleatória e tema claro/escuro.
 
 ## Estrutura
@@ -82,7 +94,9 @@ simulator-web/
 │   │   └── index.html
 │   ├── filas/
 │   │   └── index.html
-│   └── listas/
+│   ├── listas/
+│   │   └── index.html
+│   └── pilhas-dinamicas/
 │       └── index.html
 ├── src/
 │   ├── css/
@@ -96,7 +110,8 @@ simulator-web/
 │       │   ├── matrices/
 │       │   ├── stacks/
 │       │   ├── queues/
-│       │   └── lists/
+│       │   ├── lists/
+│       │   └── dynamic-stacks/
 │       └── pages/
 ├── docs/ARCHITECTURE.md
 └── .github/workflows/deploy-pages.yml
@@ -148,13 +163,19 @@ Listas:
 http://localhost:8000/simuladores/listas/
 ```
 
+Pilhas Dinâmicas:
+
+```text
+http://localhost:8000/simuladores/pilhas-dinamicas/
+```
+
 Não use `npm run dev`: o projeto não depende de Node, Vite ou processo de build.
 
 ## Enviar atualizações
 
 ```bash
 git add -A
-git commit -m "Add list simulators"
+git commit -m "Add dynamic stack simulators"
 git push
 ```
 
