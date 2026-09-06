@@ -54,6 +54,18 @@ Portal estático e modular de simuladores interativos para Estruturas de Dados e
 - Consultar o início (`peek`)
 - Mostrar elementos (`show`)
 
+### Listas
+
+- Criação da lista estática
+- Verificar se está cheia (`isFull`)
+- Verificar se está vazia (`isEmpty`)
+- Inserir em uma posição (`add`)
+- Remover de uma posição (`remove`)
+- Substituir um elemento (`set`)
+- Consultar uma posição (`get`)
+- Mostrar elementos (`show`)
+- Tamanho da lista (`size`)
+
 Os módulos possuem execução automática, avanço e retorno manuais, controle de velocidade, pseudocódigo destacado, variáveis, console, entrada manual, geração aleatória e tema claro/escuro.
 
 ## Estrutura
@@ -68,7 +80,9 @@ simulator-web/
 │   │   └── index.html
 │   ├── pilhas/
 │   │   └── index.html
-│   └── filas/
+│   ├── filas/
+│   │   └── index.html
+│   └── listas/
 │       └── index.html
 ├── src/
 │   ├── css/
@@ -81,7 +95,8 @@ simulator-web/
 │       │   ├── vectors/
 │       │   ├── matrices/
 │       │   ├── stacks/
-│       │   └── queues/
+│       │   ├── queues/
+│       │   └── lists/
 │       └── pages/
 ├── docs/ARCHITECTURE.md
 └── .github/workflows/deploy-pages.yml
@@ -127,13 +142,19 @@ Filas:
 http://localhost:8000/simuladores/filas/
 ```
 
+Listas:
+
+```text
+http://localhost:8000/simuladores/listas/
+```
+
 Não use `npm run dev`: o projeto não depende de Node, Vite ou processo de build.
 
 ## Enviar atualizações
 
 ```bash
 git add -A
-git commit -m "Add queue simulators"
+git commit -m "Add list simulators"
 git push
 ```
 

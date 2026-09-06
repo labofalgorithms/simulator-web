@@ -29,9 +29,12 @@ modules/
 ├── stacks/
 │   ├── algorithms.js
 │   └── stack-module.js
-└── queues/
+├── queues/
+│   ├── algorithms.js
+│   └── queue-module.js
+└── lists/
     ├── algorithms.js
-    └── queue-module.js
+    └── list-module.js
 ```
 
 `algorithms.js` contém metadados, pseudocódigos e a geração dos estados da simulação. O arquivo `*-module.js` define entrada de dados, parâmetros, renderização e eventos específicos da estrutura.
@@ -42,7 +45,8 @@ modules/
 - `vector-simulator.js`: conecta `SimulatorApp` ao `vectorModule`;
 - `matrix-simulator.js`: conecta `SimulatorApp` ao `matrixModule`;
 - `stack-simulator.js`: conecta `SimulatorApp` ao `stackModule`;
-- `queue-simulator.js`: conecta `SimulatorApp` ao `queueModule`.
+- `queue-simulator.js`: conecta `SimulatorApp` ao `queueModule`;
+- `list-simulator.js`: conecta `SimulatorApp` ao `listModule`.
 
 ## Contrato de um módulo
 
@@ -99,3 +103,7 @@ Os dados do módulo têm o formato `{ capacity, values }`, em que `values` guard
 ## Módulo de Filas
 
 Segue a mesma convenção do módulo de Pilhas, mas com dados `{ capacity, values }` em que `values` guarda os elementos do início para o fim (o início é sempre o índice 0; o fim é sempre `values.length - 1`). O renderer desenha uma fileira horizontal e marca as posições `início` e `fim` diretamente na célula. Esta é a fila estática simples (não circular) do material da disciplina: `dequeue()` remove a posição 0 e desloca o restante do vetor uma posição para a esquerda, por isso seu custo é O(n) — cada passo do deslocamento vira um passo de simulação. `enqueue()` recebe o valor a inserir por `config.enqueueValue`; as demais operações (`isFull`, `isEmpty`, `peek`, `show`) operam apenas sobre os dados atuais da fila.
+
+## Módulo de Listas
+
+Também usa `{ capacity, values }`, mas ao contrário de Pilhas e Filas permite operações em posições arbitrárias: `add(posição, valor)`, `remove(posição)`, `set(posição, valor)` e `get(posição)` recebem `config.position` e `config.value`. O renderer reaproveita a visualização em linha do módulo de Vetores (`array-cell`, `array-row`, `array-scroll`) já que uma lista estática é fisicamente um vetor; a única diferença visual é a classe `array-cell.unused`, que marca posições alocadas fisicamente (dentro da capacidade) mas ainda fora da parte lógica da lista (índice ≥ `tamanho`), reforçando a distinção entre estrutura física e lógica destacada no material da disciplina. Cada passo pode fornecer `tamanho` para exibir o valor lógico no momento — útil em `add()`/`remove()`, onde o deslocamento acontece antes (ou depois) de `tamanho` ser atualizado, deixando uma posição física temporariamente à frente ou atrás do limite lógico exibido.
