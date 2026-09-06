@@ -23,9 +23,12 @@ modules/
 ├── vectors/
 │   ├── algorithms.js
 │   └── vector-module.js
-└── matrices/
+├── matrices/
+│   ├── algorithms.js
+│   └── matrix-module.js
+└── stacks/
     ├── algorithms.js
-    └── matrix-module.js
+    └── stack-module.js
 ```
 
 `algorithms.js` contém metadados, pseudocódigos e a geração dos estados da simulação. O arquivo `*-module.js` define entrada de dados, parâmetros, renderização e eventos específicos da estrutura.
@@ -34,7 +37,8 @@ modules/
 
 - `home.js`: página inicial;
 - `vector-simulator.js`: conecta `SimulatorApp` ao `vectorModule`;
-- `matrix-simulator.js`: conecta `SimulatorApp` ao `matrixModule`.
+- `matrix-simulator.js`: conecta `SimulatorApp` ao `matrixModule`;
+- `stack-simulator.js`: conecta `SimulatorApp` ao `stackModule`.
 
 ## Contrato de um módulo
 
@@ -78,3 +82,12 @@ O renderer bidimensional usa coordenadas no formato `"linha,coluna"`. Cada passo
 - `jagged` e `allocatedRows` para matrizes irregulares.
 
 Isso mantém o controlador genérico e concentra a lógica visual específica dentro do módulo.
+
+## Módulo de Pilhas
+
+Os dados do módulo têm o formato `{ capacity, values }`, em que `values` guarda os elementos da base para o topo (o topo é sempre `values.length - 1`). O renderer desenha uma coluna vertical com uma posição por índice, do maior para o menor, e destaca a linha do topo. Cada passo pode fornecer:
+
+- `activeIndices`, `changedIndices`, `foundIndices`, `processedIndices` (índices de posição na pilha);
+- `topo`, quando o índice exibido difere do calculado a partir de `values` (por exemplo, durante o incremento/decremento antes de gravar ou remover um elemento).
+
+`push()` recebe o valor a empilhar por `config.pushValue`; as demais operações (`isFull`, `isEmpty`, `pop`, `peek`, `size`, `show`) operam apenas sobre os dados atuais da pilha.

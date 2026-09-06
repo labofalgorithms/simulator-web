@@ -33,6 +33,17 @@ Portal estático e modular de simuladores interativos para Estruturas de Dados e
 - Verificação de matriz simétrica
 - Matrizes irregulares (Jagged Arrays)
 
+### Pilhas
+
+- Criação da pilha estática
+- Verificar se está cheia (`isFull`)
+- Verificar se está vazia (`isEmpty`)
+- Empilhar (`push`)
+- Desempilhar (`pop`)
+- Consultar o topo (`peek`)
+- Tamanho da pilha (`size`)
+- Mostrar elementos (`show`)
+
 Os módulos possuem execução automática, avanço e retorno manuais, controle de velocidade, pseudocódigo destacado, variáveis, console, entrada manual, geração aleatória e tema claro/escuro.
 
 ## Estrutura
@@ -43,7 +54,9 @@ simulator-web/
 ├── simuladores/
 │   ├── vetores/
 │   │   └── index.html
-│   └── matrizes/
+│   ├── matrizes/
+│   │   └── index.html
+│   └── pilhas/
 │       └── index.html
 ├── src/
 │   ├── css/
@@ -54,7 +67,8 @@ simulator-web/
 │       ├── core/
 │       ├── modules/
 │       │   ├── vectors/
-│       │   └── matrices/
+│       │   ├── matrices/
+│       │   └── stacks/
 │       └── pages/
 ├── docs/ARCHITECTURE.md
 └── .github/workflows/deploy-pages.yml
@@ -88,13 +102,19 @@ Matrizes:
 http://localhost:8000/simuladores/matrizes/
 ```
 
+Pilhas:
+
+```text
+http://localhost:8000/simuladores/pilhas/
+```
+
 Não use `npm run dev`: o projeto não depende de Node, Vite ou processo de build.
 
 ## Enviar atualizações
 
 ```bash
 git add -A
-git commit -m "Add matrix simulators"
+git commit -m "Add stack simulators"
 git push
 ```
 
