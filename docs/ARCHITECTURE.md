@@ -26,9 +26,12 @@ modules/
 ├── matrices/
 │   ├── algorithms.js
 │   └── matrix-module.js
-└── stacks/
+├── stacks/
+│   ├── algorithms.js
+│   └── stack-module.js
+└── queues/
     ├── algorithms.js
-    └── stack-module.js
+    └── queue-module.js
 ```
 
 `algorithms.js` contém metadados, pseudocódigos e a geração dos estados da simulação. O arquivo `*-module.js` define entrada de dados, parâmetros, renderização e eventos específicos da estrutura.
@@ -38,7 +41,8 @@ modules/
 - `home.js`: página inicial;
 - `vector-simulator.js`: conecta `SimulatorApp` ao `vectorModule`;
 - `matrix-simulator.js`: conecta `SimulatorApp` ao `matrixModule`;
-- `stack-simulator.js`: conecta `SimulatorApp` ao `stackModule`.
+- `stack-simulator.js`: conecta `SimulatorApp` ao `stackModule`;
+- `queue-simulator.js`: conecta `SimulatorApp` ao `queueModule`.
 
 ## Contrato de um módulo
 
@@ -91,3 +95,7 @@ Os dados do módulo têm o formato `{ capacity, values }`, em que `values` guard
 - `topo`, quando o índice exibido difere do calculado a partir de `values` (por exemplo, durante o incremento/decremento antes de gravar ou remover um elemento).
 
 `push()` recebe o valor a empilhar por `config.pushValue`; as demais operações (`isFull`, `isEmpty`, `pop`, `peek`, `size`, `show`) operam apenas sobre os dados atuais da pilha.
+
+## Módulo de Filas
+
+Segue a mesma convenção do módulo de Pilhas, mas com dados `{ capacity, values }` em que `values` guarda os elementos do início para o fim (o início é sempre o índice 0; o fim é sempre `values.length - 1`). O renderer desenha uma fileira horizontal e marca as posições `início` e `fim` diretamente na célula. Esta é a fila estática simples (não circular) do material da disciplina: `dequeue()` remove a posição 0 e desloca o restante do vetor uma posição para a esquerda, por isso seu custo é O(n) — cada passo do deslocamento vira um passo de simulação. `enqueue()` recebe o valor a inserir por `config.enqueueValue`; as demais operações (`isFull`, `isEmpty`, `peek`, `show`) operam apenas sobre os dados atuais da fila.

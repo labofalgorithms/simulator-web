@@ -42,3 +42,26 @@
 .stack-legend{display:flex;justify-content:center;flex-wrap:wrap;gap:16px;color:var(--subtle);font-size:9px}
 .stack-legend span{display:flex;align-items:center;gap:6px}
 @media(max-width:720px){.stack-frame{max-width:100%}.stack-stage{padding-inline:14px}}
+
+/* ===== Módulo de Filas ===== */
+.queue-editor{padding-bottom:18px}
+.queue-stage{min-height:260px;padding:16px 22px 22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+.queue-dimensions{display:flex;gap:14px;color:var(--muted);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px}
+.queue-scroll{overflow-x:auto;max-width:100%;padding:6px 2px 4px;scrollbar-width:thin}
+.queue-row{display:flex;gap:6px;min-width:max-content;margin:0 auto}
+.queue-slot{display:flex;flex-direction:column;align-items:center;gap:6px}
+.queue-marker{height:14px;color:var(--cyan);font-size:9px;font-weight:800;white-space:nowrap}
+.queue-cell{position:relative;width:clamp(56px,6.3vw,72px);height:64px;border:1px solid var(--border-strong);border-radius:10px;background:var(--surface-2);color:var(--text);display:grid;place-items:center;font-size:16px;font-weight:800;font-variant-numeric:tabular-nums;cursor:pointer;transition:160ms ease}
+.queue-cell:hover{border-color:var(--cyan);transform:translateY(-2px)}
+.queue-cell.empty{cursor:default;border-style:dashed;color:var(--subtle);font-size:10px;font-weight:600;background:transparent}
+.queue-cell.empty:hover{transform:none;border-color:var(--border-strong)}
+.queue-cell.processed{background:rgba(100,116,139,.12);color:var(--muted)}
+.queue-cell.changed{background:var(--amber-soft);box-shadow:inset 0 0 0 1px var(--amber);color:var(--amber);animation:queue-pulse 520ms ease}
+.queue-cell.active{background:var(--cyan-soft);box-shadow:inset 0 0 0 2px var(--cyan),0 0 26px rgba(34,211,238,.10);color:var(--cyan)}
+.queue-cell.found{background:var(--green-soft);box-shadow:inset 0 0 0 2px var(--green);color:var(--green)}
+.queue-cell.inspected:after{content:"";position:absolute;inset:-5px;border:1px dashed var(--violet);border-radius:14px;pointer-events:none}
+@keyframes queue-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+.queue-index{color:var(--subtle);font-size:10px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.queue-legend{display:flex;justify-content:center;flex-wrap:wrap;gap:16px;color:var(--subtle);font-size:9px}
+.queue-legend span{display:flex;align-items:center;gap:6px}
+@media(max-width:720px){.queue-stage{padding-inline:14px}.queue-row{justify-content:flex-start}}

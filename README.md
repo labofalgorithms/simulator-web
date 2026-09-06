@@ -44,6 +44,16 @@ Portal estático e modular de simuladores interativos para Estruturas de Dados e
 - Tamanho da pilha (`size`)
 - Mostrar elementos (`show`)
 
+### Filas
+
+- Criação da fila estática
+- Verificar se está cheia (`isFull`)
+- Verificar se está vazia (`isEmpty`)
+- Inserir (`enqueue`)
+- Remover (`dequeue`)
+- Consultar o início (`peek`)
+- Mostrar elementos (`show`)
+
 Os módulos possuem execução automática, avanço e retorno manuais, controle de velocidade, pseudocódigo destacado, variáveis, console, entrada manual, geração aleatória e tema claro/escuro.
 
 ## Estrutura
@@ -56,7 +66,9 @@ simulator-web/
 │   │   └── index.html
 │   ├── matrizes/
 │   │   └── index.html
-│   └── pilhas/
+│   ├── pilhas/
+│   │   └── index.html
+│   └── filas/
 │       └── index.html
 ├── src/
 │   ├── css/
@@ -68,7 +80,8 @@ simulator-web/
 │       ├── modules/
 │       │   ├── vectors/
 │       │   ├── matrices/
-│       │   └── stacks/
+│       │   ├── stacks/
+│       │   └── queues/
 │       └── pages/
 ├── docs/ARCHITECTURE.md
 └── .github/workflows/deploy-pages.yml
@@ -108,13 +121,19 @@ Pilhas:
 http://localhost:8000/simuladores/pilhas/
 ```
 
+Filas:
+
+```text
+http://localhost:8000/simuladores/filas/
+```
+
 Não use `npm run dev`: o projeto não depende de Node, Vite ou processo de build.
 
 ## Enviar atualizações
 
 ```bash
 git add -A
-git commit -m "Add stack simulators"
+git commit -m "Add queue simulators"
 git push
 ```
 
