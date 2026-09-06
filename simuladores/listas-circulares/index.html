@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#080c18" />
+  <meta name="description" content="Simuladores interativos de listas circulares do LabOfAlgorithms." />
+  <title>LabOfAlgorithms · Listas Circulares</title>
+  <link rel="stylesheet" href="../../src/css/base.css" />
+  <link rel="stylesheet" href="../../src/css/simulator.css" />
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <aside class="sidebar" aria-label="Algoritmos disponíveis">
+      <a class="brand-block" href="../../index.html" aria-label="Voltar para o portal LabOfAlgorithms">
+        <div class="brand-mark" aria-hidden="true"><span>⌁</span></div>
+        <div><strong>LabOfAlgorithms</strong><small>Estrutura de Dados</small></div>
+      </a>
+      <div class="course-chip"><span class="live-dot"></span><span id="module-chip-name"></span></div>
+      <nav id="algorithm-nav" class="algorithm-nav"></nav>
+      <div class="sidebar-note"><span>⌘</span><p><strong>Dica</strong> Use as setas do teclado para avançar e voltar.</p></div>
+    </aside>
+    <main class="main-content">
+      <header class="topbar">
+        <span id="breadcrumb" class="breadcrumb"></span>
+        <div class="topbar-actions">
+          <a class="module-home-link" href="../../index.html">Portal</a>
+          <span class="keyboard-hint"><kbd>←</kbd><kbd>→</kbd> navegar</span>
+          <button id="theme-button" class="theme-button" type="button" aria-label="Alternar tema"></button>
+        </div>
+      </header>
+      <section class="lesson-header">
+        <div><div id="lesson-kicker" class="lesson-kicker"></div><h1 id="lesson-title"></h1><p id="lesson-description"></p></div>
+        <div class="complexity-strip"><div><small>Tempo</small><strong id="time-complexity"></strong></div><div><small>Espaço</small><strong id="space-complexity"></strong></div></div>
+      </section>
+      <div class="workspace-grid">
+        <div class="workspace-main">
+          <section id="data-editor" class="panel node-editor" aria-labelledby="data-editor-title"></section>
+          <section id="config-panel" class="panel config-panel" aria-labelledby="config-title" hidden></section>
+          <section class="panel simulator-panel" aria-labelledby="visualization-title">
+            <div class="panel-heading simulator-heading"><div><span class="eyebrow">Execução visual</span><h2 id="visualization-title"></h2></div><span id="status-pill" class="status-pill"><i></i><span></span></span></div>
+            <div id="visualization-stage"></div>
+            <div class="playback">
+              <div class="progress-track" aria-label="Progresso da execução"><span id="progress-bar"></span></div>
+              <div class="playback-row">
+                <div class="transport"><button id="restart" type="button" class="icon-button" aria-label="Reiniciar"></button><button id="previous" type="button" class="icon-button" aria-label="Passo anterior"></button><button id="play-toggle" type="button" class="play-button"></button><button id="next" type="button" class="icon-button" aria-label="Próximo passo"></button></div>
+                <div class="step-counter"><strong id="step-current"></strong><span id="step-total"></span></div>
+                <label class="speed-control"><span>Velocidade</span><input id="speed" type="range" min="250" max="1600" step="150" value="700" /><output id="speed-output">1×</output></label>
+              </div>
+            </div>
+          </section>
+          <section class="step-detail-grid">
+            <article class="panel explanation-card"><span id="step-eyebrow" class="eyebrow"></span><h2 id="step-title"></h2><p id="step-description"></p><div class="mini-progress"><span id="mini-progress"></span></div></article>
+            <article class="panel variables-card"><span class="eyebrow">Estado do algoritmo</span><h2>Variáveis</h2><div id="variables"></div></article>
+            <article class="panel output-card"><span class="eyebrow">Saída</span><h2>Console</h2><div id="console-output" class="console-output"></div></article>
+          </section>
+        </div>
+        <aside class="workspace-side">
+          <section class="panel code-panel" aria-labelledby="pseudocode-title"><div class="panel-heading code-heading"><div><span class="eyebrow">Acompanhamento</span><h2 id="pseudocode-title">Pseudocódigo</h2></div><span class="language-badge">PT-BR</span></div><ol id="code-lines" class="code-lines"></ol></section>
+          <section class="panel learning-panel"><span class="eyebrow">Interação sugerida</span><h2>Teste você mesmo</h2><p id="interaction-text"></p><div class="concept-note"><span id="info-icon"></span><span id="complexity-note"></span></div></section>
+        </aside>
+      </div>
+      <footer class="site-footer"><span>LabOfAlgorithms · Simuladores de Estruturas de Dados</span><span id="footer-module"></span></footer>
+    </main>
+  </div>
+  <script type="module" src="../../src/js/pages/circular-list-simulator.js"></script>
+</body>
+</html>

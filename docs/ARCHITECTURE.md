@@ -41,9 +41,12 @@ modules/
 ├── dynamic-queues/
 │   ├── algorithms.js
 │   └── dynamic-queue-module.js
-└── dynamic-lists/
+├── dynamic-lists/
+│   ├── algorithms.js
+│   └── dynamic-list-module.js
+└── circular-lists/
     ├── algorithms.js
-    └── dynamic-list-module.js
+    └── circular-list-module.js
 ```
 
 `algorithms.js` contém metadados, pseudocódigos e a geração dos estados da simulação. O arquivo `*-module.js` define entrada de dados, parâmetros, renderização e eventos específicos da estrutura.
@@ -58,7 +61,8 @@ modules/
 - `list-simulator.js`: conecta `SimulatorApp` ao `listModule`;
 - `dynamic-stack-simulator.js`: conecta `SimulatorApp` ao `dynamicStackModule`;
 - `dynamic-queue-simulator.js`: conecta `SimulatorApp` ao `dynamicQueueModule`;
-- `dynamic-list-simulator.js`: conecta `SimulatorApp` ao `dynamicListModule`.
+- `dynamic-list-simulator.js`: conecta `SimulatorApp` ao `dynamicListModule`;
+- `circular-list-simulator.js`: conecta `SimulatorApp` ao `circularListModule`.
 
 ## Contrato de um módulo
 
@@ -123,6 +127,10 @@ Reaproveita a mesma renderização em cadeia de nós do módulo de Pilhas Dinâm
 ## Módulo de Listas Dinâmicas
 
 Reaproveita a mesma renderização em cadeia de nós e o mesmo par de ponteiros início/fim do módulo de Filas Dinâmicas, mas com muito mais operações: `insertAtFront`, `insertAtBack` e `insertAtPosition` (que recebem `config.item`, e a última também `config.position`), `removeAtFront`, `removeAtBack` e `remove(item)` (busca e remove pelo valor, não pela posição), além de `find(item)` (busca sem remover). Diferente do módulo de Listas (estáticas), não existem `set`/`get` por posição nem `isFull()` — o acesso por posição em uma lista encadeada sempre exige percorrê-la a partir do início, então operações como `insertAtPosition` e `remove` são `O(n)`. Clicar em um nó só preenche `config.position` quando o algoritmo ativo é `insertAtPosition`, já que as demais operações não recebem uma posição como parâmetro.
+
+## Módulo de Listas Circulares
+
+A diferença estrutural chave: só existe `values[0]` como início — não há um `fim` guardado, então o último nó (`values[values.length - 1]`) é encontrado percorrendo a lista, e seu "próximo" volta implicitamente para `values[0]` em vez de apontar para nulo. O renderer reaproveita a cadeia de nós dos demais módulos dinâmicos, mas substitui o marcador `.node-null` do final por `.node-loop` (um selo violeta "↺ início") sempre que a lista tem ao menos um nó; com a lista vazia, mostra `.node-null` normalmente, já que não existe ciclo para desenhar. Como não há `fim`, tanto `inserirNoInicio()` quanto `inserirNoFim()` são `O(n)` (precisam percorrer a lista para achar o último nó), diferente de Listas Dinâmicas onde inserir no fim é `O(1)`. `mostrar()` usa um laço "faça...enquanto" — testar a condição antes do primeiro passo sempre falharia, pois `temp` começa igual a `inicio`.
 
 ## Módulo de Filas
 

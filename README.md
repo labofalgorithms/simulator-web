@@ -105,6 +105,16 @@ Também sem `isFull`: a fila é encadeada por nós com ponteiros início e fim, 
 
 Sem `isFull`, `set` ou `get` por posição: a lista é encadeada por nós com ponteiros início e fim, e o acesso por posição sempre percorre a cadeia a partir do início.
 
+### Listas Circulares
+
+- Criação da lista circular
+- Inserir no início (`inserirNoInicio`)
+- Inserir no final (`inserirNoFim`)
+- Excluir um nó (`deletarNo`)
+- Mostrar elementos (`mostrar`)
+
+Diferente das demais listas encadeadas, mantém apenas a referência início (sem fim): o último nó aponta de volta para início, fechando um ciclo. Por isso, inserir no início ou no final sempre percorre a lista inteira em busca do último nó, e mostrar usa um laço "faça...enquanto" (executa ao menos uma vez antes de comparar), já que não existe um ponteiro nulo natural para parar.
+
 Os módulos possuem execução automática, avanço e retorno manuais, controle de velocidade, pseudocódigo destacado, variáveis, console, entrada manual, geração aleatória e tema claro/escuro.
 
 ## Estrutura
@@ -127,7 +137,9 @@ simulator-web/
 │   │   └── index.html
 │   ├── filas-dinamicas/
 │   │   └── index.html
-│   └── listas-dinamicas/
+│   ├── listas-dinamicas/
+│   │   └── index.html
+│   └── listas-circulares/
 │       └── index.html
 ├── src/
 │   ├── css/
@@ -144,7 +156,8 @@ simulator-web/
 │       │   ├── lists/
 │       │   ├── dynamic-stacks/
 │       │   ├── dynamic-queues/
-│       │   └── dynamic-lists/
+│       │   ├── dynamic-lists/
+│       │   └── circular-lists/
 │       └── pages/
 ├── docs/ARCHITECTURE.md
 └── .github/workflows/deploy-pages.yml
@@ -214,13 +227,19 @@ Listas Dinâmicas:
 http://localhost:8000/simuladores/listas-dinamicas/
 ```
 
+Listas Circulares:
+
+```text
+http://localhost:8000/simuladores/listas-circulares/
+```
+
 Não use `npm run dev`: o projeto não depende de Node, Vite ou processo de build.
 
 ## Enviar atualizações
 
 ```bash
 git add -A
-git commit -m "Add dynamic list simulators"
+git commit -m "Add circular list simulators"
 git push
 ```
 
