@@ -38,9 +38,12 @@ modules/
 ├── dynamic-stacks/
 │   ├── algorithms.js
 │   └── dynamic-stack-module.js
-└── dynamic-queues/
+├── dynamic-queues/
+│   ├── algorithms.js
+│   └── dynamic-queue-module.js
+└── dynamic-lists/
     ├── algorithms.js
-    └── dynamic-queue-module.js
+    └── dynamic-list-module.js
 ```
 
 `algorithms.js` contém metadados, pseudocódigos e a geração dos estados da simulação. O arquivo `*-module.js` define entrada de dados, parâmetros, renderização e eventos específicos da estrutura.
@@ -54,7 +57,8 @@ modules/
 - `queue-simulator.js`: conecta `SimulatorApp` ao `queueModule`;
 - `list-simulator.js`: conecta `SimulatorApp` ao `listModule`;
 - `dynamic-stack-simulator.js`: conecta `SimulatorApp` ao `dynamicStackModule`;
-- `dynamic-queue-simulator.js`: conecta `SimulatorApp` ao `dynamicQueueModule`.
+- `dynamic-queue-simulator.js`: conecta `SimulatorApp` ao `dynamicQueueModule`;
+- `dynamic-list-simulator.js`: conecta `SimulatorApp` ao `dynamicListModule`.
 
 ## Contrato de um módulo
 
@@ -115,6 +119,10 @@ Diferente dos demais módulos, os dados são apenas `{ values }` (sem `capacity`
 ## Módulo de Filas Dinâmicas
 
 Reaproveita a mesma renderização em cadeia de nós do módulo de Pilhas Dinâmicas (classes `.node`, `.node-arrow`, `.node-null`, `.node-topo-badge`), mas com dois ponteiros em vez de um: `values[0]` é sempre o nó do início e `values[values.length - 1]` é sempre o nó do fim. Como o fim se move conforme a fila cresce, cada nó pode receber um rótulo `.node-marker` posicionado acima dele (usado apenas para marcar "fim" no nó final); o "início" continua sendo um rótulo externo fixo, igual ao `TOPO` das pilhas, já que sempre aponta para `values[0]`. `enqueue()` liga o novo nó ao final (ou define início e fim juntos, se a fila estava vazia) e recebe o valor por `config.enqueueValue`; `dequeue()` remove `values[0]`, e quando a fila fica vazia início e fim voltam a nulo automaticamente, pois ambos são derivados do mesmo array `values`. Assim como nas pilhas dinâmicas, não existe `isFull()`, e `size()`/`show()` precisam percorrer a fila nó por nó.
+
+## Módulo de Listas Dinâmicas
+
+Reaproveita a mesma renderização em cadeia de nós e o mesmo par de ponteiros início/fim do módulo de Filas Dinâmicas, mas com muito mais operações: `insertAtFront`, `insertAtBack` e `insertAtPosition` (que recebem `config.item`, e a última também `config.position`), `removeAtFront`, `removeAtBack` e `remove(item)` (busca e remove pelo valor, não pela posição), além de `find(item)` (busca sem remover). Diferente do módulo de Listas (estáticas), não existem `set`/`get` por posição nem `isFull()` — o acesso por posição em uma lista encadeada sempre exige percorrê-la a partir do início, então operações como `insertAtPosition` e `remove` são `O(n)`. Clicar em um nó só preenche `config.position` quando o algoritmo ativo é `insertAtPosition`, já que as demais operações não recebem uma posição como parâmetro.
 
 ## Módulo de Filas
 

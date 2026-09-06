@@ -90,6 +90,21 @@ Sem `isFull`: a pilha é encadeada por nós e cresce sob demanda, sem capacidade
 
 Também sem `isFull`: a fila é encadeada por nós com ponteiros início e fim, sem capacidade fixa.
 
+### Listas Dinâmicas
+
+- Criação da lista dinâmica
+- Verificar se está vazia (`isEmpty`)
+- Inserir no início (`insertAtFront`)
+- Inserir no final (`insertAtBack`)
+- Inserir em uma posição (`insertAtPosition`)
+- Remover do início (`removeAtFront`)
+- Remover do final (`removeAtBack`)
+- Remover um valor (`remove`)
+- Procurar um valor (`find`)
+- Mostrar elementos (`show`)
+
+Sem `isFull`, `set` ou `get` por posição: a lista é encadeada por nós com ponteiros início e fim, e o acesso por posição sempre percorre a cadeia a partir do início.
+
 Os módulos possuem execução automática, avanço e retorno manuais, controle de velocidade, pseudocódigo destacado, variáveis, console, entrada manual, geração aleatória e tema claro/escuro.
 
 ## Estrutura
@@ -110,7 +125,9 @@ simulator-web/
 │   │   └── index.html
 │   ├── pilhas-dinamicas/
 │   │   └── index.html
-│   └── filas-dinamicas/
+│   ├── filas-dinamicas/
+│   │   └── index.html
+│   └── listas-dinamicas/
 │       └── index.html
 ├── src/
 │   ├── css/
@@ -126,7 +143,8 @@ simulator-web/
 │       │   ├── queues/
 │       │   ├── lists/
 │       │   ├── dynamic-stacks/
-│       │   └── dynamic-queues/
+│       │   ├── dynamic-queues/
+│       │   └── dynamic-lists/
 │       └── pages/
 ├── docs/ARCHITECTURE.md
 └── .github/workflows/deploy-pages.yml
@@ -190,13 +208,19 @@ Filas Dinâmicas:
 http://localhost:8000/simuladores/filas-dinamicas/
 ```
 
+Listas Dinâmicas:
+
+```text
+http://localhost:8000/simuladores/listas-dinamicas/
+```
+
 Não use `npm run dev`: o projeto não depende de Node, Vite ou processo de build.
 
 ## Enviar atualizações
 
 ```bash
 git add -A
-git commit -m "Add dynamic queue simulators"
+git commit -m "Add dynamic list simulators"
 git push
 ```
 
