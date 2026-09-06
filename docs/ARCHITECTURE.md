@@ -35,9 +35,12 @@ modules/
 ├── lists/
 │   ├── algorithms.js
 │   └── list-module.js
-└── dynamic-stacks/
+├── dynamic-stacks/
+│   ├── algorithms.js
+│   └── dynamic-stack-module.js
+└── dynamic-queues/
     ├── algorithms.js
-    └── dynamic-stack-module.js
+    └── dynamic-queue-module.js
 ```
 
 `algorithms.js` contém metadados, pseudocódigos e a geração dos estados da simulação. O arquivo `*-module.js` define entrada de dados, parâmetros, renderização e eventos específicos da estrutura.
@@ -50,7 +53,8 @@ modules/
 - `stack-simulator.js`: conecta `SimulatorApp` ao `stackModule`;
 - `queue-simulator.js`: conecta `SimulatorApp` ao `queueModule`;
 - `list-simulator.js`: conecta `SimulatorApp` ao `listModule`;
-- `dynamic-stack-simulator.js`: conecta `SimulatorApp` ao `dynamicStackModule`.
+- `dynamic-stack-simulator.js`: conecta `SimulatorApp` ao `dynamicStackModule`;
+- `dynamic-queue-simulator.js`: conecta `SimulatorApp` ao `dynamicQueueModule`.
 
 ## Contrato de um módulo
 
@@ -107,6 +111,10 @@ Os dados do módulo têm o formato `{ capacity, values }`, em que `values` guard
 ## Módulo de Pilhas Dinâmicas
 
 Diferente dos demais módulos, os dados são apenas `{ values }` (sem `capacity`): a pilha é encadeada por nós e não tem tamanho máximo, então não existe `isFull()`. `values[0]` representa sempre o nó do topo e o restante do array segue a cadeia de referências `próximo` até o nó final, cujo `próximo` é nulo — o renderer desenha essa cadeia como caixas conectadas por setas, com um rótulo `TOPO` apontando para `values[0]` (ou diretamente para o marcador `nulo` quando a pilha está vazia). Como não há um atributo de tamanho, `size()` e `display()` precisam percorrer a pilha nó por nó (`O(n)`), diferente da versão estática. `push()` recebe o valor por `config.pushValue`; as demais operações usam apenas os dados atuais.
+
+## Módulo de Filas Dinâmicas
+
+Reaproveita a mesma renderização em cadeia de nós do módulo de Pilhas Dinâmicas (classes `.node`, `.node-arrow`, `.node-null`, `.node-topo-badge`), mas com dois ponteiros em vez de um: `values[0]` é sempre o nó do início e `values[values.length - 1]` é sempre o nó do fim. Como o fim se move conforme a fila cresce, cada nó pode receber um rótulo `.node-marker` posicionado acima dele (usado apenas para marcar "fim" no nó final); o "início" continua sendo um rótulo externo fixo, igual ao `TOPO` das pilhas, já que sempre aponta para `values[0]`. `enqueue()` liga o novo nó ao final (ou define início e fim juntos, se a fila estava vazia) e recebe o valor por `config.enqueueValue`; `dequeue()` remove `values[0]`, e quando a fila fica vazia início e fim voltam a nulo automaticamente, pois ambos são derivados do mesmo array `values`. Assim como nas pilhas dinâmicas, não existe `isFull()`, e `size()`/`show()` precisam percorrer a fila nó por nó.
 
 ## Módulo de Filas
 

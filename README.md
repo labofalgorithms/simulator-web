@@ -78,6 +78,18 @@ Portal estático e modular de simuladores interativos para Estruturas de Dados e
 
 Sem `isFull`: a pilha é encadeada por nós e cresce sob demanda, sem capacidade fixa.
 
+### Filas Dinâmicas
+
+- Criação da fila dinâmica
+- Verificar se está vazia (`isEmpty`)
+- Inserir (`enqueue`)
+- Remover (`dequeue`)
+- Consultar o início (`peek`)
+- Tamanho da fila (`size`)
+- Mostrar elementos (`show`)
+
+Também sem `isFull`: a fila é encadeada por nós com ponteiros início e fim, sem capacidade fixa.
+
 Os módulos possuem execução automática, avanço e retorno manuais, controle de velocidade, pseudocódigo destacado, variáveis, console, entrada manual, geração aleatória e tema claro/escuro.
 
 ## Estrutura
@@ -96,7 +108,9 @@ simulator-web/
 │   │   └── index.html
 │   ├── listas/
 │   │   └── index.html
-│   └── pilhas-dinamicas/
+│   ├── pilhas-dinamicas/
+│   │   └── index.html
+│   └── filas-dinamicas/
 │       └── index.html
 ├── src/
 │   ├── css/
@@ -111,7 +125,8 @@ simulator-web/
 │       │   ├── stacks/
 │       │   ├── queues/
 │       │   ├── lists/
-│       │   └── dynamic-stacks/
+│       │   ├── dynamic-stacks/
+│       │   └── dynamic-queues/
 │       └── pages/
 ├── docs/ARCHITECTURE.md
 └── .github/workflows/deploy-pages.yml
@@ -169,13 +184,19 @@ Pilhas Dinâmicas:
 http://localhost:8000/simuladores/pilhas-dinamicas/
 ```
 
+Filas Dinâmicas:
+
+```text
+http://localhost:8000/simuladores/filas-dinamicas/
+```
+
 Não use `npm run dev`: o projeto não depende de Node, Vite ou processo de build.
 
 ## Enviar atualizações
 
 ```bash
 git add -A
-git commit -m "Add dynamic stack simulators"
+git commit -m "Add dynamic queue simulators"
 git push
 ```
 
