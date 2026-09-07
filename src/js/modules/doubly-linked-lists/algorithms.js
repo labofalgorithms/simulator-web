@@ -56,19 +56,22 @@ function inserirNoInicioSteps(valores, dado) {
   const vazia = valores.length === 0;
   const steps = [
     frame(valores, 0, 'Chamando inserirNoInicio(dado)', `inserirNoInicio(${fmt(dado)}) é executado.`),
-    frame(valores, 1, 'Criando o novo nó', `novoNo armazena o valor ${fmt(dado)}.`, 'reading', { variables: { dado } }),
-    frame(valores, 2, 'Verificando se a lista está vazia', `inicio == nulo é ${vazia}.`, 'comparison', { activeIndices: valores.length ? [0] : [], variables: { dado, vazia } }),
   ];
   if (vazia) {
+    steps.push(frame(valores, 1, 'Criando o novo nó', `novoNo armazena o valor ${fmt(dado)}.`, 'reading', { variables: { dado } }));
+    steps.push(frame(valores, 2, 'Verificando se a lista está vazia', 'inicio == nulo é true.', 'comparison', { variables: { dado, vazia: true } }));
     const novosValores = [dado];
     steps.push(frame(novosValores, 3, 'Definindo o início', 'início passa a apontar para o novo nó.', 'update', { activeIndices: [0], changedIndices: [0], variables: { dado } }));
     steps.push(frame(novosValores, 9, 'inserirNoInicio() concluído', `${fmt(dado)} agora é o único nó da lista.`, 'done', { foundIndices: [0], variables: { dado }, output: [`inserirNoInicio(${fmt(dado)}) inseriu o valor no início.`] }));
     return steps;
   }
 
+  steps.push(frame(valores, 1, 'Criando o novo nó', `novoNo armazena o valor ${fmt(dado)}. Ele ainda não está ligado à lista.`, 'reading', { variables: { dado }, stagingNode: { value: dado, position: 'start', next: false, prev: false } }));
+  steps.push(frame(valores, 2, 'Verificando se a lista está vazia', 'inicio == nulo é false.', 'comparison', { activeIndices: [0], variables: { dado, vazia: false }, stagingNode: { value: dado, position: 'start', next: false, prev: false } }));
+  steps.push(frame(valores, 5, 'Ligando o novo nó ao antigo início', `novoNo.proximo aponta para ${fmt(valores[0])}. O nó ainda está separado da lista.`, 'update', { activeIndices: [0], variables: { dado }, stagingNode: { value: dado, position: 'start', next: true, prev: false } }));
+
   const novosValores = [dado, ...valores];
-  steps.push(frame(novosValores, 5, 'Ligando o novo nó ao antigo início', 'novoNo.proximo aponta para o antigo início.', 'update', { activeIndices: [0, 1], variables: { dado }, pendingConnector: { index: 0, missing: 'prev' } }));
-  steps.push(frame(novosValores, 6, 'Ligando o antigo início de volta', 'inicio.anterior passa a apontar para o novo nó.', 'update', { activeIndices: [1], changedIndices: [1], variables: { dado } }));
+  steps.push(frame(novosValores, 6, 'Ligando o antigo início de volta', `inicio.anterior passa a apontar para novoNo, encaixando-o na lista.`, 'update', { activeIndices: [0, 1], changedIndices: [1], variables: { dado } }));
   steps.push(frame(novosValores, 7, 'Atualizando o início', 'início passa a apontar para o novo nó.', 'update', { activeIndices: [0], changedIndices: [0], variables: { dado } }));
   steps.push(frame(novosValores, 9, 'inserirNoInicio() concluído', `${fmt(dado)} agora é o primeiro nó da lista.`, 'done', { foundIndices: [0], variables: { dado }, output: [`inserirNoInicio(${fmt(dado)}) inseriu o valor no início.`] }));
   return steps;
@@ -78,10 +81,10 @@ function inserirNoFimSteps(valores, dado) {
   const vazia = valores.length === 0;
   const steps = [
     frame(valores, 0, 'Chamando inserirNoFim(dado)', `inserirNoFim(${fmt(dado)}) é executado.`),
-    frame(valores, 1, 'Criando o novo nó', `novoNo armazena o valor ${fmt(dado)}.`, 'reading', { variables: { dado } }),
-    frame(valores, 2, 'Verificando se a lista está vazia', `inicio == nulo é ${vazia}.`, 'comparison', { activeIndices: valores.length ? [valores.length - 1] : [], variables: { dado, vazia } }),
   ];
   if (vazia) {
+    steps.push(frame(valores, 1, 'Criando o novo nó', `novoNo armazena o valor ${fmt(dado)}.`, 'reading', { variables: { dado } }));
+    steps.push(frame(valores, 2, 'Verificando se a lista está vazia', 'inicio == nulo é true.', 'comparison', { variables: { dado, vazia: true } }));
     const novosValores = [dado];
     steps.push(frame(novosValores, 3, 'Definindo o início', 'início passa a apontar para o novo nó.', 'update', { activeIndices: [0], changedIndices: [0], variables: { dado } }));
     steps.push(frame(novosValores, 12, 'inserirNoFim() concluído', `${fmt(dado)} agora é o único nó da lista.`, 'done', { foundIndices: [0], variables: { dado }, output: [`inserirNoFim(${fmt(dado)}) inseriu o valor na lista.`] }));
@@ -89,17 +92,20 @@ function inserirNoFimSteps(valores, dado) {
   }
 
   const lastIndex = valores.length - 1;
-  steps.push(frame(valores, 5, 'Iniciando o temp', `temp recebe início (${fmt(valores[0])}).`, 'update', { activeIndices: [0], variables: { dado, temp: fmt(valores[0]) } }));
+  const staging = { value: dado, position: 'end', next: false, prev: false };
+  steps.push(frame(valores, 1, 'Criando o novo nó', `novoNo armazena o valor ${fmt(dado)}. Ele ainda não está ligado à lista.`, 'reading', { variables: { dado }, stagingNode: staging }));
+  steps.push(frame(valores, 2, 'Verificando se a lista está vazia', 'inicio == nulo é false.', 'comparison', { activeIndices: [lastIndex], variables: { dado, vazia: false }, stagingNode: staging }));
+  steps.push(frame(valores, 5, 'Iniciando o temp', `temp recebe início (${fmt(valores[0])}).`, 'update', { activeIndices: [0], variables: { dado, temp: fmt(valores[0]) }, stagingNode: staging }));
   for (let i = 0; i < lastIndex; i += 1) {
-    steps.push(frame(valores, 6, 'Verificando temp.proximo != nulo', `o próximo de ${fmt(valores[i])} é ${fmt(valores[i + 1])}, diferente de nulo; a condição é verdadeira.`, 'comparison', { activeIndices: [i], variables: { dado, temp: fmt(valores[i]) } }));
-    steps.push(frame(valores, 7, 'Avançando o temp', `temp passa a apontar para ${fmt(valores[i + 1])}.`, 'update', { activeIndices: [i + 1], variables: { dado, temp: fmt(valores[i + 1]) } }));
+    steps.push(frame(valores, 6, 'Verificando temp.proximo != nulo', `o próximo de ${fmt(valores[i])} é ${fmt(valores[i + 1])}, diferente de nulo; a condição é verdadeira.`, 'comparison', { activeIndices: [i], variables: { dado, temp: fmt(valores[i]) }, stagingNode: staging }));
+    steps.push(frame(valores, 7, 'Avançando o temp', `temp passa a apontar para ${fmt(valores[i + 1])}.`, 'update', { activeIndices: [i + 1], variables: { dado, temp: fmt(valores[i + 1]) }, stagingNode: staging }));
   }
-  steps.push(frame(valores, 6, 'Verificando temp.proximo != nulo', `o próximo de ${fmt(valores[lastIndex])} é nulo; a condição é falsa.`, 'comparison', { activeIndices: [lastIndex], variables: { dado, temp: fmt(valores[lastIndex]) } }));
+  steps.push(frame(valores, 6, 'Verificando temp.proximo != nulo', `o próximo de ${fmt(valores[lastIndex])} é nulo; a condição é falsa.`, 'comparison', { activeIndices: [lastIndex], variables: { dado, temp: fmt(valores[lastIndex]) }, stagingNode: staging }));
+  steps.push(frame(valores, 9, 'Ligando o último nó ao novo nó', `temp.proximo passa a apontar para novoNo. O nó ainda está separado da lista.`, 'update', { activeIndices: [lastIndex], changedIndices: [lastIndex], variables: { dado, temp: fmt(valores[lastIndex]) }, stagingNode: { value: dado, position: 'end', next: true, prev: false } }));
 
   const novosValores = [...valores, dado];
   const novoIndice = novosValores.length - 1;
-  steps.push(frame(novosValores, 9, 'Ligando o último nó ao novo nó', `temp.proximo passa a apontar para ${fmt(dado)}.`, 'update', { activeIndices: [lastIndex, novoIndice], changedIndices: [lastIndex], variables: { dado, temp: fmt(valores[lastIndex]) }, pendingConnector: { index: lastIndex, missing: 'prev' } }));
-  steps.push(frame(novosValores, 10, 'Ligando o novo nó de volta', `novoNo.anterior aponta para ${fmt(valores[lastIndex])}.`, 'update', { activeIndices: [novoIndice], variables: { dado } }));
+  steps.push(frame(novosValores, 10, 'Ligando o novo nó de volta', `novoNo.anterior aponta para ${fmt(valores[lastIndex])}, encaixando-o na lista.`, 'update', { activeIndices: [lastIndex, novoIndice], changedIndices: [novoIndice], variables: { dado } }));
   steps.push(frame(novosValores, 12, 'inserirNoFim() concluído', `${fmt(dado)} agora é o último nó da lista.`, 'done', { foundIndices: [novoIndice], variables: { dado }, output: [`inserirNoFim(${fmt(dado)}) inseriu o valor no final.`] }));
   return steps;
 }

@@ -87,11 +87,21 @@
 .node-null{flex:0 0 auto;padding:8px 14px;border:1px dashed var(--border-strong);border-radius:999px;color:var(--subtle);font-size:10px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;white-space:nowrap}
 .node-loop{flex:0 0 auto;padding:8px 14px;border:1px dashed rgba(139,92,246,.4);border-radius:999px;color:var(--violet);font-size:10px;font-weight:800;white-space:nowrap;background:var(--violet-soft)}
 .node-links{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:0 6px}
-.node-link{display:flex;align-items:center;gap:4px;line-height:1;white-space:nowrap}
+.node-link{display:flex;align-items:center;gap:4px;line-height:1;white-space:nowrap;color:var(--subtle)}
 .node-link-arrow{font-size:15px;line-height:1}
 .node-link-label{font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
-.node-link-next{color:var(--cyan)}
-.node-link-prev{color:var(--violet)}
+.node-link-next.linked{color:var(--cyan)}
+.node-link-prev.linked{color:var(--violet)}
+.node-link.pending{opacity:.4}
+.node-link.pending .node-link-arrow{color:var(--subtle)}
+.node-staging{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 16px;border:1px dashed var(--border-strong);border-radius:16px;background:rgba(139,92,246,.06);align-self:center}
+.node-staging.start{align-self:flex-start}
+.node-staging.end{align-self:flex-end}
+.node-staging-tag{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--subtle);white-space:nowrap}
+.node-staging-body{display:flex;align-items:center;gap:12px}
+.node-staging .node{cursor:default}
+.node-staging .node:hover{transform:none;border-color:var(--border-strong)}
+.node-staging-status{display:flex;flex-direction:column;gap:5px}
 .node-legend{display:flex;justify-content:center;flex-wrap:wrap;gap:16px;color:var(--subtle);font-size:9px}
 .node-legend span{display:flex;align-items:center;gap:6px}
 @media(max-width:720px){.node-stage{padding-inline:14px}.node-chain{justify-content:flex-start}.node-links{padding:0 3px;gap:3px}.node-link-label{display:none}}
