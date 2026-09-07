@@ -115,6 +115,16 @@ Sem `isFull`, `set` ou `get` por posição: a lista é encadeada por nós com po
 
 Diferente das demais listas encadeadas, mantém apenas a referência início (sem fim): o último nó aponta de volta para início, fechando um ciclo. Por isso, inserir no início ou no final sempre percorre a lista inteira em busca do último nó, e mostrar usa um laço "faça...enquanto" (executa ao menos uma vez antes de comparar), já que não existe um ponteiro nulo natural para parar.
 
+### Listas Duplamente Encadeadas
+
+- Criação da lista duplamente encadeada
+- Inserir no início (`inserirNoInicio`)
+- Inserir no final (`inserirNoFim`)
+- Remover um valor (`removerNo`)
+- Mostrar elementos (`mostrar`)
+
+Cada nó guarda uma referência para o próximo nó e outra para o anterior, permitindo navegação nos dois sentidos. Também mantém apenas início (sem fim), então inserir no final ainda percorre a lista; a vantagem do ponteiro anterior aparece em `removerNo`, que religa os vizinhos do nó removido sem precisar de uma referência auxiliar para "o nó de trás".
+
 Os módulos possuem execução automática, avanço e retorno manuais, controle de velocidade, pseudocódigo destacado, variáveis, console, entrada manual, geração aleatória e tema claro/escuro.
 
 ## Estrutura
@@ -139,7 +149,9 @@ simulator-web/
 │   │   └── index.html
 │   ├── listas-dinamicas/
 │   │   └── index.html
-│   └── listas-circulares/
+│   ├── listas-circulares/
+│   │   └── index.html
+│   └── listas-duplamente-encadeadas/
 │       └── index.html
 ├── src/
 │   ├── css/
@@ -157,7 +169,8 @@ simulator-web/
 │       │   ├── dynamic-stacks/
 │       │   ├── dynamic-queues/
 │       │   ├── dynamic-lists/
-│       │   └── circular-lists/
+│       │   ├── circular-lists/
+│       │   └── doubly-linked-lists/
 │       └── pages/
 ├── docs/ARCHITECTURE.md
 └── .github/workflows/deploy-pages.yml
@@ -233,13 +246,19 @@ Listas Circulares:
 http://localhost:8000/simuladores/listas-circulares/
 ```
 
+Listas Duplamente Encadeadas:
+
+```text
+http://localhost:8000/simuladores/listas-duplamente-encadeadas/
+```
+
 Não use `npm run dev`: o projeto não depende de Node, Vite ou processo de build.
 
 ## Enviar atualizações
 
 ```bash
 git add -A
-git commit -m "Add circular list simulators"
+git commit -m "Add doubly linked list simulators"
 git push
 ```
 
