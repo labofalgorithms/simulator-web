@@ -101,7 +101,9 @@ export const doublyLinkedListModule = {
       if (hasIndex(step.foundIndices, index)) classes.push('found');
       if (state.inspectedItem === index) classes.push('inspected');
       const box = `<button type="button" class="${classes.join(' ')}" data-module-action="inspect-item" data-index="${index}" aria-label="Nó ${index}, valor ${escapeText(value)}">${escapeText(value)}</button>`;
-      const arrow = index < total - 1 ? '<span class="node-arrow">⇄</span>' : '<span class="node-arrow">→</span>';
+      const arrow = index < total - 1
+        ? '<span class="node-links"><span class="node-link node-link-next"><span class="node-link-arrow">→</span><span class="node-link-label">próximo</span></span><span class="node-link node-link-prev"><span class="node-link-label">anterior</span><span class="node-link-arrow">←</span></span></span>'
+        : '<span class="node-arrow">→</span>';
       return `<span class="node-wrap">${box}</span>${arrow}`;
     }).join('');
 
