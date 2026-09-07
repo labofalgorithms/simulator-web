@@ -67,7 +67,7 @@ function inserirNoInicioSteps(valores, dado) {
   }
 
   const novosValores = [dado, ...valores];
-  steps.push(frame(novosValores, 5, 'Ligando o novo nó ao antigo início', 'novoNo.proximo aponta para o antigo início.', 'update', { activeIndices: [0, 1], variables: { dado } }));
+  steps.push(frame(novosValores, 5, 'Ligando o novo nó ao antigo início', 'novoNo.proximo aponta para o antigo início.', 'update', { activeIndices: [0, 1], variables: { dado }, pendingConnector: { index: 0, missing: 'prev' } }));
   steps.push(frame(novosValores, 6, 'Ligando o antigo início de volta', 'inicio.anterior passa a apontar para o novo nó.', 'update', { activeIndices: [1], changedIndices: [1], variables: { dado } }));
   steps.push(frame(novosValores, 7, 'Atualizando o início', 'início passa a apontar para o novo nó.', 'update', { activeIndices: [0], changedIndices: [0], variables: { dado } }));
   steps.push(frame(novosValores, 9, 'inserirNoInicio() concluído', `${fmt(dado)} agora é o primeiro nó da lista.`, 'done', { foundIndices: [0], variables: { dado }, output: [`inserirNoInicio(${fmt(dado)}) inseriu o valor no início.`] }));
@@ -98,7 +98,7 @@ function inserirNoFimSteps(valores, dado) {
 
   const novosValores = [...valores, dado];
   const novoIndice = novosValores.length - 1;
-  steps.push(frame(novosValores, 9, 'Ligando o último nó ao novo nó', `temp.proximo passa a apontar para ${fmt(dado)}.`, 'update', { activeIndices: [lastIndex, novoIndice], changedIndices: [lastIndex], variables: { dado, temp: fmt(valores[lastIndex]) } }));
+  steps.push(frame(novosValores, 9, 'Ligando o último nó ao novo nó', `temp.proximo passa a apontar para ${fmt(dado)}.`, 'update', { activeIndices: [lastIndex, novoIndice], changedIndices: [lastIndex], variables: { dado, temp: fmt(valores[lastIndex]) }, pendingConnector: { index: lastIndex, missing: 'prev' } }));
   steps.push(frame(novosValores, 10, 'Ligando o novo nó de volta', `novoNo.anterior aponta para ${fmt(valores[lastIndex])}.`, 'update', { activeIndices: [novoIndice], variables: { dado } }));
   steps.push(frame(novosValores, 12, 'inserirNoFim() concluído', `${fmt(dado)} agora é o último nó da lista.`, 'done', { foundIndices: [novoIndice], variables: { dado }, output: [`inserirNoFim(${fmt(dado)}) inseriu o valor no final.`] }));
   return steps;
