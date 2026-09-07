@@ -94,6 +94,12 @@
 .node-link-prev.linked{color:var(--violet)}
 .node-link.pending{opacity:.4}
 .node-link.pending .node-link-arrow{color:var(--subtle)}
+.node-link.just-linked{animation:node-link-fade-in 480ms ease-out}
+.node-link-next.just-linked .node-link-arrow{animation:node-link-arrow-right 480ms ease-out}
+.node-link-prev.just-linked .node-link-arrow{animation:node-link-arrow-left 480ms ease-out}
+@keyframes node-link-fade-in{0%{opacity:0}60%{opacity:1}100%{opacity:1}}
+@keyframes node-link-arrow-right{0%{opacity:0;transform:translateX(-10px)}100%{opacity:1;transform:translateX(0)}}
+@keyframes node-link-arrow-left{0%{opacity:0;transform:translateX(10px)}100%{opacity:1;transform:translateX(0)}}
 .node-staging{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 16px;border:1px dashed var(--border-strong);border-radius:16px;background:rgba(139,92,246,.06);align-self:center}
 .node-staging.start{align-self:flex-start}
 .node-staging.end{align-self:flex-end}

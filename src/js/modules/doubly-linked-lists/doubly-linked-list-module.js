@@ -101,9 +101,14 @@ export const doublyLinkedListModule = {
       if (hasIndex(step.foundIndices, index)) classes.push('found');
       if (state.inspectedItem === index) classes.push('inspected');
       const box = `<button type="button" class="${classes.join(' ')}" data-module-action="inspect-item" data-index="${index}" aria-label="Nó ${index}, valor ${escapeText(value)}">${escapeText(value)}</button>`;
-      const arrow = index < total - 1
-        ? '<span class="node-links"><span class="node-link node-link-next linked"><span class="node-link-arrow">→</span><span class="node-link-label">próximo</span></span><span class="node-link node-link-prev linked"><span class="node-link-label">anterior</span><span class="node-link-arrow">←</span></span></span>'
-        : '<span class="node-arrow">→</span>';
+      let arrow;
+      if (index < total - 1) {
+        const justFormed = hasIndex(step.changedIndices, index) || hasIndex(step.changedIndices, index + 1);
+        const animClass = justFormed ? ' just-linked' : '';
+        arrow = `<span class="node-links"><span class="node-link node-link-next linked${animClass}"><span class="node-link-arrow">→</span><span class="node-link-label">próximo</span></span><span class="node-link node-link-prev linked${animClass}"><span class="node-link-label">anterior</span><span class="node-link-arrow">←</span></span></span>`;
+      } else {
+        arrow = '<span class="node-arrow">→</span>';
+      }
       return `<span class="node-wrap">${box}</span>${arrow}`;
     }).join('');
 
@@ -117,8 +122,8 @@ export const doublyLinkedListModule = {
           <div class="node-staging-body">
             <div class="node">${escapeText(step.stagingNode.value)}</div>
             <div class="node-staging-status">
-              <span class="node-link node-link-next ${step.stagingNode.next ? 'linked' : 'pending'}"><span class="node-link-arrow">→</span><span class="node-link-label">próximo${step.stagingNode.next ? '' : ' (pendente)'}</span></span>
-              <span class="node-link node-link-prev ${step.stagingNode.prev ? 'linked' : 'pending'}"><span class="node-link-label">anterior${step.stagingNode.prev ? '' : ' (pendente)'}</span><span class="node-link-arrow">←</span></span>
+              <span class="node-link node-link-next ${step.stagingNode.next ? 'linked just-linked' : 'pending'}"><span class="node-link-arrow">→</span><span class="node-link-label">próximo${step.stagingNode.next ? '' : ' (pendente)'}</span></span>
+              <span class="node-link node-link-prev ${step.stagingNode.prev ? 'linked just-linked' : 'pending'}"><span class="node-link-label">anterior${step.stagingNode.prev ? '' : ' (pendente)'}</span><span class="node-link-arrow">←</span></span>
             </div>
           </div>
         </div>`
