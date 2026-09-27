@@ -43,11 +43,21 @@
         </div>
       </section>
 
-      <div class="workspace-grid">
-        <div class="workspace-main">
+      <div class="intro-stack">
+        <div class="intro-main">
           <section id="data-editor" class="panel vector-editor" aria-labelledby="data-editor-title"></section>
           <section id="config-panel" class="panel config-panel" aria-labelledby="config-title" hidden></section>
+        </div>
+        <aside class="intro-side">
+          <section class="panel learning-panel">
+            <span class="eyebrow">Interação sugerida</span><h2>Teste você mesmo</h2><p id="interaction-text"></p>
+            <div class="concept-note"><span id="info-icon"></span><span id="complexity-note"></span></div>
+          </section>
+        </aside>
+      </div>
 
+      <div class="workspace-grid">
+        <div class="workspace-main">
           <section class="panel simulator-panel" aria-labelledby="visualization-title">
             <div class="panel-heading simulator-heading">
               <div><span class="eyebrow">Execução visual</span><h2 id="visualization-title"></h2></div>
@@ -92,10 +102,6 @@
           <article class="panel variables-card">
             <span class="eyebrow">Estado do algoritmo</span><h2>Variáveis</h2><div id="variables"></div>
           </article>
-          <section class="panel learning-panel">
-            <span class="eyebrow">Interação sugerida</span><h2>Teste você mesmo</h2><p id="interaction-text"></p>
-            <div class="concept-note"><span id="info-icon"></span><span id="complexity-note"></span></div>
-          </section>
         </aside>
       </div>
 

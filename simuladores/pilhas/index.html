@@ -33,10 +33,17 @@
         <div><div id="lesson-kicker" class="lesson-kicker"></div><h1 id="lesson-title"></h1><p id="lesson-description"></p></div>
         <div class="complexity-strip"><div><small>Tempo</small><strong id="time-complexity"></strong></div><div><small>Espaço</small><strong id="space-complexity"></strong></div></div>
       </section>
-      <div class="workspace-grid">
-        <div class="workspace-main">
+      <div class="intro-stack">
+        <div class="intro-main">
           <section id="data-editor" class="panel stack-editor" aria-labelledby="data-editor-title"></section>
           <section id="config-panel" class="panel config-panel" aria-labelledby="config-title" hidden></section>
+        </div>
+        <aside class="intro-side">
+          <section class="panel learning-panel"><span class="eyebrow">Interação sugerida</span><h2>Teste você mesmo</h2><p id="interaction-text"></p><div class="concept-note"><span id="info-icon"></span><span id="complexity-note"></span></div></section>
+        </aside>
+      </div>
+      <div class="workspace-grid">
+        <div class="workspace-main">
           <section class="panel simulator-panel" aria-labelledby="visualization-title">
             <div class="panel-heading simulator-heading"><div><span class="eyebrow">Execução visual</span><h2 id="visualization-title"></h2></div><span id="status-pill" class="status-pill"><i></i><span></span></span></div>
             <div id="visualization-stage"></div>
@@ -57,7 +64,6 @@
         <aside class="workspace-side">
           <section class="panel code-panel" aria-labelledby="pseudocode-title"><div class="panel-heading code-heading"><div><span class="eyebrow">Acompanhamento</span><h2 id="pseudocode-title">Pseudocódigo</h2></div><span class="language-badge">PT-BR</span></div><ol id="code-lines" class="code-lines"></ol></section>
           <article class="panel variables-card"><span class="eyebrow">Estado do algoritmo</span><h2>Variáveis</h2><div id="variables"></div></article>
-          <section class="panel learning-panel"><span class="eyebrow">Interação sugerida</span><h2>Teste você mesmo</h2><p id="interaction-text"></p><div class="concept-note"><span id="info-icon"></span><span id="complexity-note"></span></div></section>
         </aside>
       </div>
       <footer class="site-footer"><span>LabOfAlgorithms · Simuladores de Estruturas de Dados</span><span id="footer-module"></span></footer>
