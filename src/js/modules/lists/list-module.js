@@ -24,7 +24,6 @@ export const listModule = {
   version: '1.0',
   visualizationTitle: 'Lista na memória',
   defaultAlgorithmId: 'creation',
-  storageKey: 'loa-lista',
   defaultData: DEFAULT_DATA,
   defaultRandomCount: 4,
   algorithms,

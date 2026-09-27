@@ -76,7 +76,6 @@ export const module = {
   name: 'Nome',
   version: '1.0',
   defaultAlgorithmId: 'algoritmo-inicial',
-  storageKey: 'loa-chave',
   defaultData: [],
   algorithms,
   buildSteps,

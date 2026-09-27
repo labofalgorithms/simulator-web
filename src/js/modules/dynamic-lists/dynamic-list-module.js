@@ -24,7 +24,6 @@ export const dynamicListModule = {
   version: '1.0',
   visualizationTitle: 'Lista encadeada na memória',
   defaultAlgorithmId: 'creation',
-  storageKey: 'loa-lista-dinamica',
   defaultData: DEFAULT_DATA,
   defaultRandomCount: 3,
   algorithms,

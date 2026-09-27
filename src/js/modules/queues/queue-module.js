@@ -32,7 +32,6 @@ export const queueModule = {
   version: '1.0',
   visualizationTitle: 'Fila na memória',
   defaultAlgorithmId: 'creation',
-  storageKey: 'loa-fila',
   defaultData: DEFAULT_DATA,
   defaultRandomCount: 3,
   algorithms,

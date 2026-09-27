@@ -6,8 +6,7 @@ import { $, escapeText, speedLabel } from './utils.js';
 export class SimulatorApp {
   constructor(module) {
     this.module = module;
-    const storedData = storage.getJSON(module.storageKey, module.defaultData, module.isValidData);
-    const data = module.sanitizeData(storedData);
+    const data = module.sanitizeData(module.defaultData);
 
     this.state = {
       algorithmId: module.defaultAlgorithmId,
@@ -28,8 +27,7 @@ export class SimulatorApp {
 
   start() {
     this.bindEvents();
-    this.rebuildSteps(false);
-    this.renderAll();
+    this.module.handleAction('random-data', null, this);
   }
 
   get algorithm() {
@@ -191,7 +189,6 @@ export class SimulatorApp {
     this.state.config = this.module.normalizeConfig(this.state.data, this.state.config);
     this.state.inspectedItem = null;
     this.state.inputError = '';
-    storage.setJSON(this.module.storageKey, this.state.data);
     this.rebuildSteps(false);
     this.renderAll();
   }

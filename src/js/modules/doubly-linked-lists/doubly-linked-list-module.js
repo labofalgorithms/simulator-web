@@ -24,7 +24,6 @@ export const doublyLinkedListModule = {
   version: '1.0',
   visualizationTitle: 'Lista duplamente encadeada na memória',
   defaultAlgorithmId: 'creation',
-  storageKey: 'loa-lista-dupla',
   defaultData: DEFAULT_DATA,
   defaultRandomCount: 3,
   algorithms,

@@ -24,7 +24,6 @@ export const dynamicQueueModule = {
   version: '1.0',
   visualizationTitle: 'Fila encadeada na memória',
   defaultAlgorithmId: 'creation',
-  storageKey: 'loa-fila-dinamica',
   defaultData: DEFAULT_DATA,
   defaultRandomCount: 3,
   algorithms,

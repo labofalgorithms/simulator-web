@@ -21,7 +21,6 @@ export const vectorModule = {
   version: '2.0',
   visualizationTitle: 'Vetor na memória',
   defaultAlgorithmId: 'indices',
-  storageKey: 'loa-vetor',
   defaultData: DEFAULT_VECTOR,
   defaultRandomCount: 8,
   algorithms,

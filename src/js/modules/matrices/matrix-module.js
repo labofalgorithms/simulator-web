@@ -83,7 +83,6 @@ export const matrixModule = {
   version: '1.0',
   visualizationTitle: 'Matriz na memória',
   defaultAlgorithmId: 'dimensions',
-  storageKey: 'loa-matriz',
   defaultData: DEFAULT_MATRIX,
   defaultRandomCount: 3,
   algorithms,

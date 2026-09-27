@@ -32,7 +32,6 @@ export const stackModule = {
   version: '1.0',
   visualizationTitle: 'Pilha na memória',
   defaultAlgorithmId: 'creation',
-  storageKey: 'loa-pilha',
   defaultData: DEFAULT_DATA,
   defaultRandomCount: 3,
   algorithms,

@@ -24,7 +24,6 @@ export const dynamicStackModule = {
   version: '1.0',
   visualizationTitle: 'Pilha encadeada na memória',
   defaultAlgorithmId: 'creation',
-  storageKey: 'loa-pilha-dinamica',
   defaultData: DEFAULT_DATA,
   defaultRandomCount: 3,
   algorithms,

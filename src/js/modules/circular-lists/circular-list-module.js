@@ -24,7 +24,6 @@ export const circularListModule = {
   version: '1.0',
   visualizationTitle: 'Lista circular na memória',
   defaultAlgorithmId: 'creation',
-  storageKey: 'loa-lista-circular',
   defaultData: DEFAULT_DATA,
   defaultRandomCount: 3,
   algorithms,
