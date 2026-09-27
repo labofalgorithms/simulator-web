@@ -177,11 +177,11 @@ function traversalSteps(matrix, useForEach = false) {
       rowOutput.push(fmt(matrix[i][j]));
       processed.push(coord(i, j));
       steps.push(step(matrix, 3, `Exibindo ${fmt(matrix[i][j])}`, `O valor da posição [${i}][${j}] é enviado para a saída.`, 'reading', { activeCells: [coord(i, j)], processedCells: [...processed], variables: useForEach ? { elemento: matrix[i][j] } : { i, j, valor: matrix[i][j] }, output: [...output, rowOutput.join(' ')] }));
-      steps.push(step(matrix, 4, 'Fim da iteração interna', j < matrix[i].length - 1 ? 'O laço interno avança para o próximo elemento da linha.' : 'A última coluna desta linha foi processada.', 'neutral', { activeRows: [i], processedCells: [...processed], variables: useForEach ? { linha: i } : { i, j }, output: [...output, rowOutput.join(' ')] }));
+      steps.push(step(matrix, j < matrix[i].length - 1 ? 2 : 4, 'Fim da iteração interna', j < matrix[i].length - 1 ? 'O laço interno avança para o próximo elemento da linha.' : 'A última coluna desta linha foi processada.', 'neutral', { activeRows: [i], processedCells: [...processed], variables: useForEach ? { linha: i } : { i, j }, output: [...output, rowOutput.join(' ')] }));
     }
     output.push(rowOutput.join(' '));
     steps.push(step(matrix, 5, 'Quebra de linha na saída', `A linha ${i} terminou; a próxima saída começa em uma nova linha.`, 'reading', { processedCells: [...processed], variables: { linhaConcluida: i }, output: [...output] }));
-    steps.push(step(matrix, 6, 'Fim da iteração externa', i < matrix.length - 1 ? `O percurso continua na linha ${i + 1}.` : 'Todas as linhas foram processadas.', 'neutral', { processedCells: [...processed], output: [...output] }));
+    steps.push(step(matrix, i < matrix.length - 1 ? 1 : 6, 'Fim da iteração externa', i < matrix.length - 1 ? `O percurso continua na linha ${i + 1}.` : 'Todas as linhas foram processadas.', 'neutral', { processedCells: [...processed], output: [...output] }));
   }
   steps.push(step(matrix, 7, 'Percurso concluído', 'Todos os elementos foram visitados.', 'done', { processedCells: allCells(matrix), output }));
   return steps;
@@ -200,9 +200,9 @@ function sumSteps(matrix) {
       sum += matrix[i][j];
       processed.push(coord(i, j));
       steps.push(step(matrix, 4, 'Atualizando S', `${fmt(before)} + ${fmt(matrix[i][j])} = ${fmt(sum)}.`, 'update', { activeCells: [coord(i, j)], processedCells: [...processed], variables: { i, j, anterior: before, valor: matrix[i][j], S: sum }, output: [`Soma parcial: ${fmt(sum)}`] }));
-      steps.push(step(matrix, 5, 'Fim do laço interno', j < matrix[i].length - 1 ? `j será incrementado para ${j + 1}.` : 'A linha atual terminou.', 'neutral', { processedCells: [...processed], variables: { i, j, S: sum } }));
+      steps.push(step(matrix, j < matrix[i].length - 1 ? 3 : 5, 'Fim do laço interno', j < matrix[i].length - 1 ? `j será incrementado para ${j + 1}.` : 'A linha atual terminou.', 'neutral', { processedCells: [...processed], variables: { i, j, S: sum } }));
     }
-    steps.push(step(matrix, 6, 'Fim do laço externo', i < matrix.length - 1 ? `i será incrementado para ${i + 1}.` : 'Todas as linhas foram somadas.', 'neutral', { processedCells: [...processed], variables: { i, S: sum } }));
+    steps.push(step(matrix, i < matrix.length - 1 ? 2 : 6, 'Fim do laço externo', i < matrix.length - 1 ? `i será incrementado para ${i + 1}.` : 'Todas as linhas foram somadas.', 'neutral', { processedCells: [...processed], variables: { i, S: sum } }));
   }
   steps.push(step(matrix, 7, 'Retornando S', `A soma total é ${fmt(sum)}.`, 'success', { processedCells: allCells(matrix), variables: { S: sum }, output: [`Soma total: ${fmt(sum)}`] }));
   steps.push(step(matrix, 8, 'Algoritmo concluído', 'SomaTotal terminou.', 'done', { processedCells: allCells(matrix), output: [`Soma total: ${fmt(sum)}`] }));
@@ -232,9 +232,9 @@ function maximumSteps(matrix) {
       }
       processed.push(coord(i, j));
       steps.push(step(matrix, 6, greater ? 'Fim da condição' : 'Mantendo maxVal', greater ? 'O novo maior valor foi registrado.' : `${fmt(matrix[i][j])} não supera ${fmt(maxVal)}.`, 'neutral', { activeCells: [coord(i, j)], resultCells: [maxCell], processedCells: [...processed], variables: { i, j, maxVal, condicao: greater } }));
-      steps.push(step(matrix, 7, 'Fim do laço interno', j < matrix[i].length - 1 ? `j avança para ${j + 1}.` : 'A última coluna desta linha foi examinada.', 'neutral', { resultCells: [maxCell], processedCells: [...processed], variables: { i, j, maxVal } }));
+      steps.push(step(matrix, j < matrix[i].length - 1 ? 3 : 7, 'Fim do laço interno', j < matrix[i].length - 1 ? `j avança para ${j + 1}.` : 'A última coluna desta linha foi examinada.', 'neutral', { resultCells: [maxCell], processedCells: [...processed], variables: { i, j, maxVal } }));
     }
-    steps.push(step(matrix, 8, 'Fim do laço externo', i < matrix.length - 1 ? `i avança para ${i + 1}.` : 'A matriz inteira foi examinada.', 'neutral', { resultCells: [maxCell], processedCells: [...processed], variables: { i, maxVal } }));
+    steps.push(step(matrix, i < matrix.length - 1 ? 2 : 8, 'Fim do laço externo', i < matrix.length - 1 ? `i avança para ${i + 1}.` : 'A matriz inteira foi examinada.', 'neutral', { resultCells: [maxCell], processedCells: [...processed], variables: { i, maxVal } }));
   }
   steps.push(step(matrix, 9, 'Retornando maxVal', `O maior valor é ${fmt(maxVal)}.`, 'success', { resultCells: [maxCell], processedCells: allCells(matrix), variables: { maxVal }, output: [`Maior valor: ${fmt(maxVal)}`, `Posição: [${maxCell.split(',').join('][')}]`] }));
   steps.push(step(matrix, 10, 'Algoritmo concluído', 'MaiorValor terminou.', 'done', { resultCells: [maxCell], output: [`Maior valor: ${fmt(maxVal)}`] }));
@@ -259,9 +259,9 @@ function averageSteps(matrix) {
       sum += matrix[i][j];
       processed.push(coord(i, j));
       steps.push(step(matrix, 8, 'Atualizando S', `${fmt(before)} + ${fmt(matrix[i][j])} = ${fmt(sum)}.`, 'update', { activeCells: [coord(i, j)], processedCells: [...processed], variables: { i, j, S: sum }, output: [`Soma parcial: ${fmt(sum)}`] }));
-      steps.push(step(matrix, 9, 'Fim do laço interno', j < n - 1 ? `j avança para ${j + 1}.` : 'Fim da linha.', 'neutral', { processedCells: [...processed], variables: { i, j, S: sum } }));
+      steps.push(step(matrix, j < n - 1 ? 7 : 9, 'Fim do laço interno', j < n - 1 ? `j avança para ${j + 1}.` : 'Fim da linha.', 'neutral', { processedCells: [...processed], variables: { i, j, S: sum } }));
     }
-    steps.push(step(matrix, 10, 'Fim do laço externo', i < m - 1 ? `i avança para ${i + 1}.` : 'Todas as linhas foram somadas.', 'neutral', { processedCells: [...processed], variables: { i, S: sum } }));
+    steps.push(step(matrix, i < m - 1 ? 6 : 10, 'Fim do laço externo', i < m - 1 ? `i avança para ${i + 1}.` : 'Todas as linhas foram somadas.', 'neutral', { processedCells: [...processed], variables: { i, S: sum } }));
   }
   const average = sum / total;
   steps.push(step(matrix, 11, 'Calculando media', `${fmt(sum)} ÷ ${total} = ${fmt(average)}.`, 'success', { processedCells: allCells(matrix), variables: { S: sum, totalElementos: total, media: fmt(average) }, output: [`Média: ${fmt(average)}`] }));
@@ -285,11 +285,11 @@ function rowSumSteps(matrix) {
       s += matrix[i][j];
       processed.push(coord(i, j));
       steps.push(step(matrix, 5, 'Atualizando s', `${fmt(before)} + ${fmt(matrix[i][j])} = ${fmt(s)}.`, 'update', { activeCells: [coord(i, j)], processedCells: [...processed], resultVector: [...rowSum], resultVectorLabel: 'rowSum', variables: { i, j, s } }));
-      steps.push(step(matrix, 6, 'Fim do laço interno', j < matrix[i].length - 1 ? `j avança para ${j + 1}.` : 'A soma da linha terminou.', 'neutral', { activeRows: [i], processedCells: [...processed], resultVector: [...rowSum], resultVectorLabel: 'rowSum', variables: { i, j, s } }));
+      steps.push(step(matrix, j < matrix[i].length - 1 ? 4 : 6, 'Fim do laço interno', j < matrix[i].length - 1 ? `j avança para ${j + 1}.` : 'A soma da linha terminou.', 'neutral', { activeRows: [i], processedCells: [...processed], resultVector: [...rowSum], resultVectorLabel: 'rowSum', variables: { i, j, s } }));
     }
     rowSum[i] = s;
     steps.push(step(matrix, 7, `Gravando rowSum[${i}]`, `rowSum[${i}] recebe ${fmt(s)}.`, 'success', { activeRows: [i], processedCells: [...processed], resultVector: [...rowSum], resultVectorLabel: 'rowSum', resultVectorActive: i, variables: { i, s, [`rowSum[${i}]`]: s } }));
-    steps.push(step(matrix, 8, 'Fim do laço externo', i < matrix.length - 1 ? `A próxima linha será ${i + 1}.` : 'Todas as linhas foram processadas.', 'neutral', { processedCells: [...processed], resultVector: [...rowSum], resultVectorLabel: 'rowSum' }));
+    steps.push(step(matrix, i < matrix.length - 1 ? 2 : 8, 'Fim do laço externo', i < matrix.length - 1 ? `A próxima linha será ${i + 1}.` : 'Todas as linhas foram processadas.', 'neutral', { processedCells: [...processed], resultVector: [...rowSum], resultVectorLabel: 'rowSum' }));
   }
   steps.push(step(matrix, 9, 'Retornando rowSum', `[${rowSum.map(fmt).join(', ')}]`, 'success', { processedCells: allCells(matrix), resultVector: [...rowSum], resultVectorLabel: 'rowSum', output: [`rowSum = [${rowSum.map(fmt).join(', ')}]`] }));
   steps.push(step(matrix, 10, 'Algoritmo concluído', 'SomaPorLinha terminou.', 'done', { processedCells: allCells(matrix), resultVector: [...rowSum], resultVectorLabel: 'rowSum', output: [`rowSum = [${rowSum.map(fmt).join(', ')}]`] }));
@@ -306,7 +306,7 @@ function colSumSteps(matrix) {
     steps.push(step(matrix, 2, `Inicialização: j = ${j}`, `Preparando colSum[${j}].`, 'reading', { activeCols: [j], resultVector: [...colSum], resultVectorLabel: 'colSum', resultVectorActive: j, variables: { j } }));
     colSum[j] = 0;
     steps.push(step(matrix, 3, `colSum[${j}] ← 0`, 'A posição começa zerada.', 'update', { activeCols: [j], resultVector: [...colSum], resultVectorLabel: 'colSum', resultVectorActive: j, variables: { j, [`colSum[${j}]`]: 0 } }));
-    steps.push(step(matrix, 4, 'Fim da inicialização', j < cols - 1 ? `j avança para ${j + 1}.` : 'Todas as colunas foram inicializadas.', 'neutral', { resultVector: [...colSum], resultVectorLabel: 'colSum' }));
+    steps.push(step(matrix, j < cols - 1 ? 2 : 4, 'Fim da inicialização', j < cols - 1 ? `j avança para ${j + 1}.` : 'Todas as colunas foram inicializadas.', 'neutral', { resultVector: [...colSum], resultVectorLabel: 'colSum' }));
   }
   for (let i = 0; i < matrix.length; i += 1) {
     steps.push(step(matrix, 5, `Laço externo: i = ${i}`, `A linha ${i} contribuirá para as somas de coluna.`, 'reading', { activeRows: [i], processedCells: [...processed], resultVector: [...colSum], resultVectorLabel: 'colSum', variables: { i } }));
@@ -316,9 +316,9 @@ function colSumSteps(matrix) {
       colSum[j] += matrix[i][j];
       processed.push(coord(i, j));
       steps.push(step(matrix, 7, `Atualizando colSum[${j}]`, `${fmt(before)} + ${fmt(matrix[i][j])} = ${fmt(colSum[j])}.`, 'update', { activeCells: [coord(i, j)], activeCols: [j], processedCells: [...processed], resultVector: [...colSum], resultVectorLabel: 'colSum', resultVectorActive: j, variables: { i, j, [`colSum[${j}]`]: colSum[j] } }));
-      steps.push(step(matrix, 8, 'Fim do laço interno', j < cols - 1 ? `j avança para ${j + 1}.` : 'Fim da linha atual.', 'neutral', { processedCells: [...processed], resultVector: [...colSum], resultVectorLabel: 'colSum' }));
+      steps.push(step(matrix, j < cols - 1 ? 6 : 8, 'Fim do laço interno', j < cols - 1 ? `j avança para ${j + 1}.` : 'Fim da linha atual.', 'neutral', { processedCells: [...processed], resultVector: [...colSum], resultVectorLabel: 'colSum' }));
     }
-    steps.push(step(matrix, 9, 'Fim do laço externo', i < matrix.length - 1 ? `i avança para ${i + 1}.` : 'Todas as linhas contribuíram.', 'neutral', { processedCells: [...processed], resultVector: [...colSum], resultVectorLabel: 'colSum' }));
+    steps.push(step(matrix, i < matrix.length - 1 ? 5 : 9, 'Fim do laço externo', i < matrix.length - 1 ? `i avança para ${i + 1}.` : 'Todas as linhas contribuíram.', 'neutral', { processedCells: [...processed], resultVector: [...colSum], resultVectorLabel: 'colSum' }));
   }
   steps.push(step(matrix, 10, 'Retornando colSum', `[${colSum.map(fmt).join(', ')}]`, 'success', { processedCells: allCells(matrix), resultVector: [...colSum], resultVectorLabel: 'colSum', output: [`colSum = [${colSum.map(fmt).join(', ')}]`] }));
   steps.push(step(matrix, 11, 'Algoritmo concluído', 'SomaPorColuna terminou.', 'done', { processedCells: allCells(matrix), resultVector: [...colSum], resultVectorLabel: 'colSum', output: [`colSum = [${colSum.map(fmt).join(', ')}]`] }));
@@ -340,9 +340,9 @@ function identitySteps(order) {
       steps.push(step(identity, diagonal ? 5 : 7, diagonal ? 'Escrevendo 1' : 'Escrevendo 0', diagonal ? 'A célula pertence à diagonal principal.' : 'A célula está fora da diagonal principal.', 'update', { activeCells: [coord(i, j)], changedCells: [coord(i, j)], resultCells: diagonal ? [coord(i, j)] : [], processedCells: [...processed], variables: { i, j, valor: identity[i][j] } }));
       processed.push(coord(i, j));
       steps.push(step(identity, 8, 'Fim da condição', 'A posição atual foi definida.', 'neutral', { activeCells: [coord(i, j)], processedCells: [...processed], variables: { i, j } }));
-      steps.push(step(identity, 9, 'Fim do laço interno', j < order - 1 ? `j avança para ${j + 1}.` : 'Fim da linha.', 'neutral', { processedCells: [...processed], variables: { i, j } }));
+      steps.push(step(identity, j < order - 1 ? 3 : 9, 'Fim do laço interno', j < order - 1 ? `j avança para ${j + 1}.` : 'Fim da linha.', 'neutral', { processedCells: [...processed], variables: { i, j } }));
     }
-    steps.push(step(identity, 10, 'Fim do laço externo', i < order - 1 ? `i avança para ${i + 1}.` : 'Todas as linhas foram preenchidas.', 'neutral', { processedCells: [...processed], variables: { i } }));
+    steps.push(step(identity, i < order - 1 ? 2 : 10, 'Fim do laço externo', i < order - 1 ? `i avança para ${i + 1}.` : 'Todas as linhas foram preenchidas.', 'neutral', { processedCells: [...processed], variables: { i } }));
   }
   const diagonalCells = Array.from({ length: order }, (_, i) => coord(i, i));
   steps.push(step(identity, 11, 'Retornando I', 'A matriz identidade está pronta.', 'success', { processedCells: allCells(identity), resultCells: diagonalCells, output: [`Identidade ${order} × ${order} criada.`] }));
@@ -366,9 +366,9 @@ function transposeSteps(matrix) {
       processedSource.push(coord(i, j));
       processedTarget.push(coord(j, i));
       steps.push(step(matrix, 4, 'Copiando a célula', `T[${j}][${i}] recebe ${fmt(matrix[i][j])}.`, 'update', { activeCells: [coord(i, j)], processedCells: [...processedSource], secondaryMatrix: cloneMatrix(transposed), secondaryActiveCells: [coord(j, i)], secondaryChangedCells: [coord(j, i)], secondaryProcessedCells: [...processedTarget], primaryLabel: 'A — original', secondaryLabel: 'T — transposta', variables: { i, j, valor: matrix[i][j] } }));
-      steps.push(step(matrix, 5, 'Fim do laço interno', j < n - 1 ? `j avança para ${j + 1}.` : 'Fim da linha de A.', 'neutral', { processedCells: [...processedSource], secondaryMatrix: cloneMatrix(transposed), secondaryProcessedCells: [...processedTarget], primaryLabel: 'A — original', secondaryLabel: 'T — transposta' }));
+      steps.push(step(matrix, j < n - 1 ? 3 : 5, 'Fim do laço interno', j < n - 1 ? `j avança para ${j + 1}.` : 'Fim da linha de A.', 'neutral', { processedCells: [...processedSource], secondaryMatrix: cloneMatrix(transposed), secondaryProcessedCells: [...processedTarget], primaryLabel: 'A — original', secondaryLabel: 'T — transposta' }));
     }
-    steps.push(step(matrix, 6, 'Fim do laço externo', i < m - 1 ? `i avança para ${i + 1}.` : 'Todos os elementos foram copiados.', 'neutral', { processedCells: [...processedSource], secondaryMatrix: cloneMatrix(transposed), secondaryProcessedCells: [...processedTarget], primaryLabel: 'A — original', secondaryLabel: 'T — transposta' }));
+    steps.push(step(matrix, i < m - 1 ? 2 : 6, 'Fim do laço externo', i < m - 1 ? `i avança para ${i + 1}.` : 'Todos os elementos foram copiados.', 'neutral', { processedCells: [...processedSource], secondaryMatrix: cloneMatrix(transposed), secondaryProcessedCells: [...processedTarget], primaryLabel: 'A — original', secondaryLabel: 'T — transposta' }));
   }
   steps.push(step(matrix, 7, 'Retornando T', 'A transposição está completa.', 'success', { processedCells: allCells(matrix), secondaryMatrix: cloneMatrix(transposed), secondaryResultCells: allCells(transposed), primaryLabel: 'A — original', secondaryLabel: 'T — transposta', output: [`T possui dimensão ${n} × ${m}.`] }));
   steps.push(step(matrix, 8, 'Algoritmo concluído', 'Cada linha de A tornou-se uma coluna de T.', 'done', { secondaryMatrix: cloneMatrix(transposed), secondaryResultCells: allCells(transposed), primaryLabel: 'A — original', secondaryLabel: 'T — transposta' }));
@@ -403,9 +403,9 @@ function symmetricSteps(matrix) {
       }
       processed.push(first, mirror);
       steps.push(step(matrix, 8, 'Fim da condição', 'Os dois valores são iguais; a verificação continua.', 'success', { comparedCells: [first, mirror], processedCells: [...processed], variables: { i, j } }));
-      steps.push(step(matrix, 9, 'Fim do laço interno', j < n - 1 ? `j avança para ${j + 1}.` : 'Todos os pares desta linha foram verificados.', 'neutral', { processedCells: [...processed] }));
+      steps.push(step(matrix, j < n - 1 ? 5 : 9, 'Fim do laço interno', j < n - 1 ? `j avança para ${j + 1}.` : 'Todos os pares desta linha foram verificados.', 'neutral', { processedCells: [...processed] }));
     }
-    steps.push(step(matrix, 10, 'Fim do laço externo', i < n - 1 ? `i avança para ${i + 1}.` : 'Todos os pares necessários foram comparados.', 'neutral', { processedCells: [...processed] }));
+    steps.push(step(matrix, i < n - 1 ? 4 : 10, 'Fim do laço externo', i < n - 1 ? `i avança para ${i + 1}.` : 'Todos os pares necessários foram comparados.', 'neutral', { processedCells: [...processed] }));
   }
   steps.push(step(matrix, 11, 'Retornando VERDADEIRO', 'Todos os pares espelhados são iguais.', 'success', { resultCells: allCells(matrix), output: ['Simétrica: VERDADEIRO'] }));
   steps.push(step(matrix, 12, 'Algoritmo concluído', 'A matriz é simétrica em relação à diagonal principal.', 'done', { resultCells: allCells(matrix), output: ['Simétrica: VERDADEIRO'] }));
@@ -425,7 +425,7 @@ function jaggedSteps(config) {
     jagged[i] = Array(lengths[i]).fill(0);
     allocated.push(i);
     steps.push(step(jagged, 4, `Alocando jagged[${i}]`, `Foi criado um vetor interno de tamanho ${lengths[i]}.`, 'update', { jagged: true, allocatedRows: [...allocated], activeRows: [i], changedCells: jagged[i].map((_, j) => coord(i, j)), variables: { i, [`jagged[${i}].length`]: lengths[i] } }));
-    steps.push(step(jagged, 5, 'Fim da iteração', i < rows - 1 ? `i avança para ${i + 1}.` : 'Todas as linhas foram alocadas.', 'neutral', { jagged: true, allocatedRows: [...allocated] }));
+    steps.push(step(jagged, i < rows - 1 ? 3 : 5, 'Fim da iteração', i < rows - 1 ? `i avança para ${i + 1}.` : 'Todas as linhas foram alocadas.', 'neutral', { jagged: true, allocatedRows: [...allocated] }));
   }
   steps.push(step(jagged, 6, 'Retornando jagged', `Tamanhos das linhas: [${lengths.join(', ')}].`, 'success', { jagged: true, allocatedRows: [...allocated], processedCells: allCells(jagged), output: [`Comprimentos: [${lengths.join(', ')}]`] }));
   steps.push(step(jagged, 7, 'Algoritmo concluído', 'Cada linha possui seu próprio tamanho.', 'done', { jagged: true, allocatedRows: [...allocated], output: [`Total de posições: ${lengths.reduce((a, b) => a + b, 0)}`] }));

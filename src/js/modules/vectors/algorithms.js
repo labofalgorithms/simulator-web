@@ -211,7 +211,7 @@ function extremeSteps(values, mode) {
       variables: { i, [label]: candidate, [indexLabel]: candidateIndex, condicao: compare },
     }));
 
-    steps.push(step(values, 8, `Fim da iteração i = ${i}`, i < values.length - 1
+    steps.push(step(values, i < values.length - 1 ? 3 : 8, `Fim da iteração i = ${i}`, i < values.length - 1
       ? `O laço retorna ao PARA e incrementa i para ${i + 1}.`
       : 'O último elemento foi processado; o laço será encerrado.', 'reading', {
       processedIndices: range(i + 1),
