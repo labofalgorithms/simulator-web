@@ -105,6 +105,20 @@ export class SimulatorApp {
     });
   }
 
+  renderStepTrack(total) {
+    const track = $('.progress-track');
+    if (!track) return;
+    const current = this.controller.index;
+    if (Number(track.dataset.steps) !== total) {
+      track.dataset.steps = total;
+      track.innerHTML = Array.from({ length: total }, () => '<span class="step-seg"><i></i></span>').join('');
+    }
+    track.classList.toggle('dense', total > 20);
+    [...track.children].forEach((seg, index) => {
+      seg.className = `step-seg ${index < current ? 'done' : index === current ? 'current' : ''}`.trim();
+    });
+  }
+
   renderPlayback() {
     const step = this.currentStep;
     const total = this.controller.steps.length;
@@ -112,7 +126,7 @@ export class SimulatorApp {
     const progress = total <= 1 ? 100 : (this.controller.index / (total - 1)) * 100;
     $('#status-pill').className = `status-pill ${step.tone}`;
     $('#status-pill').querySelector('span').textContent = step.title;
-    $('#progress-bar').style.width = `${progress}%`;
+    this.renderStepTrack(total);
     $('#mini-progress').style.width = `${progress}%`;
     $('#step-current').textContent = this.controller.index + 1;
     $('#step-total').textContent = `/ ${total} passos`;
