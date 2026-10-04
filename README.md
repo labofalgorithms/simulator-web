@@ -68,8 +68,8 @@ Portal estático e modular de simuladores interativos para Estruturas de Dados e
 
 ### Alocação Dinâmica
 
-- Alocar memória (variável × objeto com `new`)
-- Referência nula (`null` e `NullPointerException`)
+- Alocar memória (variável × objeto criado com `novo`)
+- Referência nula (`null` e o erro de referência nula)
 - Criar nós (classe `No` e seu construtor)
 - Conectar nós (`setProximoNo`)
 - Percorrer nós (variável auxiliar `atual`)
@@ -136,6 +136,15 @@ Diferente das demais listas encadeadas, mantém apenas a referência início (se
 
 Cada nó guarda uma referência para o próximo nó e outra para o anterior, permitindo navegação nos dois sentidos. Também mantém apenas início (sem fim), então inserir no final ainda percorre a lista; a vantagem do ponteiro anterior aparece em `removerNo`, que religa os vizinhos do nó removido sem precisar de uma referência auxiliar para "o nó de trás".
 
+### Tabelas Hash
+
+- Classe `EntradaChaveValor`
+- Função hash (`funcaoHash`)
+- Endereçamento aberto com sondagem linear: criar a tabela, `adicionar`, `buscar`, `remover` (marcando `DELETADO`) e `exibirTabela`
+- Encadeamento separado: criar a tabela, `adicionar`, `buscar`, `remover` e `exibirTabela`
+
+Todos os algoritmos são mostrados em pseudocódigo. Os dados são pares chave:valor (uma entrada pode ser marcada com `~` como já removida) e a capacidade da tabela é ajustável; clicar em uma entrada usa a chave dela como parâmetro.
+
 Os módulos possuem execução automática, avanço e retorno manuais, controle de velocidade, pseudocódigo destacado, variáveis, console, entrada manual, geração aleatória e tema claro/escuro.
 
 ## Estrutura
@@ -164,7 +173,9 @@ simulator-web/
 │   │   └── index.html
 │   ├── listas-circulares/
 │   │   └── index.html
-│   └── listas-duplamente-encadeadas/
+│   ├── listas-duplamente-encadeadas/
+│   │   └── index.html
+│   └── tabelas-hash/
 │       └── index.html
 ├── src/
 │   ├── css/
@@ -184,7 +195,8 @@ simulator-web/
 │       │   ├── dynamic-queues/
 │       │   ├── dynamic-lists/
 │       │   ├── circular-lists/
-│       │   └── doubly-linked-lists/
+│       │   ├── doubly-linked-lists/
+│       │   └── hash-tables/
 │       └── pages/
 ├── docs/ARCHITECTURE.md
 └── .github/workflows/deploy-pages.yml
@@ -270,6 +282,12 @@ Listas Duplamente Encadeadas:
 
 ```text
 http://localhost:8000/simuladores/listas-duplamente-encadeadas/
+```
+
+Tabelas Hash:
+
+```text
+http://localhost:8000/simuladores/tabelas-hash/
 ```
 
 Não use `npm run dev`: o projeto não depende de Node, Vite ou processo de build.

@@ -164,3 +164,47 @@
 @keyframes mem-shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
 @keyframes mem-vanish{0%{opacity:.7;transform:scale(1)}100%{opacity:0;transform:scale(.8)}}
 @media(max-width:720px){.mem-stage{padding-inline:14px}.mem-board{gap:14px}.mem-zone{min-width:140px}}
+/* Módulo de Tabelas Hash (endereçamento aberto e encadeamento separado) */
+.hash-open-row{display:flex;align-items:flex-start;gap:3px;min-width:max-content;margin:0 auto;padding:30px 0}
+.hash-slot{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;width:42px}
+.hash-slot-chip{position:absolute;left:50%;display:flex;transform:translateX(-50%)}
+.hash-slot-chip.top{bottom:100%;margin-bottom:6px}
+.hash-slot-chip.bottom{top:100%;margin-top:6px}
+.hash-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:42px;height:52px;padding:0;border:1px solid var(--border-strong);border-radius:10px;background:var(--surface-2);color:var(--text);font:inherit;transition:160ms ease}
+button.hash-cell{cursor:pointer}
+button.hash-cell:hover{border-color:var(--cyan);transform:translateY(-2px)}
+.hash-cell strong{font-size:14px;font-variant-numeric:tabular-nums;line-height:1}
+.hash-cell small{max-width:38px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);font-size:9px}
+.hash-null{color:var(--subtle);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px}
+.hash-del{color:var(--rose);font-size:10px;font-weight:800;letter-spacing:.06em}
+.hash-cell.empty{border-style:dashed;background:transparent}
+.hash-cell.deleted{border-style:dashed;border-color:rgba(251,113,133,.55);background:rgba(251,113,133,.07)}
+.hash-cell.processed{background:rgba(100,116,139,.12);color:var(--muted)}
+.hash-cell.changed{background:var(--amber-soft);box-shadow:inset 0 0 0 1px var(--amber);animation:node-pulse 520ms ease}
+.hash-cell.active{background:var(--cyan-soft);box-shadow:inset 0 0 0 2px var(--cyan),0 0 26px rgba(34,211,238,.10)}
+.hash-cell.found{background:var(--green-soft);box-shadow:inset 0 0 0 2px var(--green)}
+.hash-cell.collision{background:rgba(251,113,133,.1);box-shadow:inset 0 0 0 2px var(--rose);animation:mem-shake 420ms ease}
+.hash-cell.born{animation:mem-born 480ms ease-out}
+.hash-index{color:var(--subtle);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px}
+.hash-info{display:flex;flex-wrap:wrap;justify-content:center;gap:18px;color:var(--muted);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+.hash-info strong{color:var(--text)}
+.legend-dot.collision{background:var(--rose)}
+.hash-chain-rows{display:flex;flex-direction:column;gap:2px;min-width:max-content;margin:0 auto}
+.hash-bucket{display:flex;align-items:center;gap:8px;min-height:34px;padding:2px 8px;border:1px solid transparent;border-radius:10px;transition:160ms ease}
+.hash-bucket.active{background:var(--cyan-soft);border-color:rgba(34,211,238,.3)}
+.hash-bucket.processed{opacity:.7}
+.hash-bucket.changed{border-color:var(--amber)}
+.hash-bucket.born{animation:mem-born 480ms ease-out}
+.hash-bucket-mark{display:flex;justify-content:flex-end;width:54px}
+.hash-bucket-head{padding:5px 12px;border:1px solid rgba(34,211,238,.35);border-radius:8px;background:var(--cyan-soft);color:var(--cyan);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.hash-bucket-head.null{border-style:dashed;border-color:var(--border-strong);background:transparent;color:var(--subtle)}
+.hash-bucket-head.born{animation:mem-born 480ms ease-out}
+.hash-chain-arrow{color:var(--cyan);font-size:16px}
+.hash-entry{display:flex;align-items:baseline;gap:6px;padding:5px 10px;border:1px solid var(--border-strong);border-radius:8px;background:var(--surface-2);color:var(--text);font:inherit;cursor:pointer;transition:160ms ease}
+.hash-entry strong{font-size:13px;font-variant-numeric:tabular-nums}
+.hash-entry small{color:var(--muted);font-size:10px}
+.hash-entry:hover{border-color:var(--cyan)}
+.hash-entry.active{background:var(--cyan-soft);box-shadow:inset 0 0 0 2px var(--cyan)}
+.hash-entry.found{background:var(--green-soft);box-shadow:inset 0 0 0 2px var(--green)}
+.hash-entry.changed{background:var(--amber-soft);box-shadow:inset 0 0 0 1px var(--amber);animation:node-pulse 520ms ease}
+.hash-empty-list{color:var(--subtle);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}

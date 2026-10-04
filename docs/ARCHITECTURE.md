@@ -50,9 +50,12 @@ modules/
 ├── circular-lists/
 │   ├── algorithms.js
 │   └── circular-list-module.js
-└── doubly-linked-lists/
+├── doubly-linked-lists/
+│   ├── algorithms.js
+│   └── doubly-linked-list-module.js
+└── hash-tables/
     ├── algorithms.js
-    └── doubly-linked-list-module.js
+    └── hash-table-module.js
 ```
 
 `algorithms.js` contém metadados, pseudocódigos e a geração dos estados da simulação. O arquivo `*-module.js` define entrada de dados, parâmetros, renderização e eventos específicos da estrutura.
@@ -70,7 +73,8 @@ modules/
 - `dynamic-queue-simulator.js`: conecta `SimulatorApp` ao `dynamicQueueModule`;
 - `dynamic-list-simulator.js`: conecta `SimulatorApp` ao `dynamicListModule`;
 - `circular-list-simulator.js`: conecta `SimulatorApp` ao `circularListModule`;
-- `doubly-linked-list-simulator.js`: conecta `SimulatorApp` ao `doublyLinkedListModule`.
+- `doubly-linked-list-simulator.js`: conecta `SimulatorApp` ao `doublyLinkedListModule`;
+- `hash-table-simulator.js`: conecta `SimulatorApp` ao `hashTableModule`.
 
 ## Contrato de um módulo
 
@@ -125,7 +129,7 @@ Os dados do módulo têm o formato `{ capacity, values }`, em que `values` guard
 
 ## Módulo de Alocação Dinâmica
 
-Único módulo conceitual: em vez de uma estrutura de dados, mostra o modelo de memória que as estruturas dinâmicas pressupõem (variável × objeto, referência, `null`, nós ligados). Os dados são `{ values }` com exatamente três inteiros, usados como valores de n1, n2 e n3 nos algoritmos de nós; os dois primeiros algoritmos (`int idade = 20` e `Aluno a1`) usam os exemplos fixos da aula e ignoram esses valores.
+Único módulo conceitual: em vez de uma estrutura de dados, mostra o modelo de memória que as estruturas dinâmicas pressupõem (variável × objeto, referência, `null`, nós ligados). Os dados são `{ values }` com exatamente três inteiros, usados como valores de n1, n2 e n3 nos algoritmos de nós; os dois primeiros algoritmos (`idade ← 20` e `a1 ← novo Aluno()`) usam os exemplos fixos da aula e ignoram esses valores.
 
 Em vez de `step.values`, cada passo carrega uma `scene` com um de dois formatos, escolhidos por `scene.kind`:
 
@@ -153,6 +157,14 @@ A diferença estrutural chave: só existe `values[0]` como início — não há 
 ## Módulo de Listas Duplamente Encadeadas
 
 Mesma forma de dados `{ values }` que os demais módulos de lista dinâmica (sem `capacity`, sem `fim`), mas o renderer troca a seta `.node-arrow` entre nós adjacentes de `→` para `⇄` (o glifo já existente, sem nenhuma classe nova), refletindo que cada nó guarda referências `próximo` e `anterior`. `início → primeiro nó` e `último nó → nulo` continuam de mão única, pois `início` não é um nó e `nulo` não aponta de volta. Sem um `fim` guardado, `inserirNoFim()` continua `O(n)` (percorre até achar o último nó, igual às Listas Dinâmicas), mas `removerNo(valor)` fica mais simples que o das outras listas: como cada nó já conhece seu `anterior`, não é preciso manter uma referência auxiliar "um passo atrás" durante a busca — a religação lê `temp.anterior` e `temp.proximo` diretamente.
+
+## Módulo de Tabelas Hash
+
+Um único módulo cobre as duas estratégias da aula, separadas em grupos no menu: **endereçamento aberto com sondagem linear** e **encadeamento separado**, mais os fundamentos (`EntradaChaveValor` e `funcaoHash`). Todo o código é exibido em pseudocódigo, inclusive criação das tabelas e as classes, que na aula aparecem em Java.
+
+Os dados são `{ capacity, entries }`, com `entries` uma lista de `{ chave, valor, removida? }` na ordem de inserção. Cada algoritmo monta a tabela inicial inserindo as entradas na estratégia correspondente (`buildOpenTable` ou `buildChains`) e então simula a operação sobre uma cópia. `removida: true` representa uma entrada inserida e depois removida: no endereçamento aberto a posição fica `DELETADO` (permitindo ver a busca atravessá-lo e a inserção reaproveitá-lo, como nos slides); no encadeamento separado ela simplesmente não existe. O editor limita as entradas a `capacidade − 1`, o que garante ao menos uma posição `null` e, portanto, que as sondagens sempre terminam (o pseudocódigo da aula não trata tabela cheia).
+
+Cada passo carrega uma `scene` com um dos formatos `open` (vetor horizontal; `markers` `indice` e `original` e o contador `i`), `chain` (uma linha por posição, com a lista encadeada à direita) ou `entry` (uma `EntradaChaveValor`). Os realces vêm de `activeCells`/`collisionCells`/`changedCells`/`foundCells`/`processedCells` (índices de posição) e, no encadeamento, de `activeBuckets`/`activeEntries`/`foundEntries`/`changedEntries` (com ids `"posição:ordem"`). Como as condições do pseudocódigo ocupam várias linhas (por exemplo o `ENQUANTO ... E ... E`), `step.line` pode ser um número ou uma lista de linhas, e o motor destaca todas elas. Clicar em uma entrada preenche a chave dos parâmetros.
 
 ## Módulo de Filas
 

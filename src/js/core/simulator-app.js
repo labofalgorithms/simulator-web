@@ -157,8 +157,9 @@ export class SimulatorApp {
 
   renderPseudocode() {
     const activeLine = this.currentStep?.line;
+    const isActive = (index) => (Array.isArray(activeLine) ? activeLine.includes(index) : index === activeLine);
     $('#code-lines').innerHTML = this.algorithm.pseudocode.map((line, index) => `
-      <li class="${index === activeLine ? 'active' : ''}"><span class="line-number">${String(index + 1).padStart(2, '0')}</span><code>${escapeText(line || ' ')}</code></li>`).join('');
+      <li class="${isActive(index) ? 'active' : ''}"><span class="line-number">${String(index + 1).padStart(2, '0')}</span><code>${escapeText(line || ' ')}</code></li>`).join('');
   }
 
   renderSimulation() {
