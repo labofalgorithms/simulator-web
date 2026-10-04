@@ -150,6 +150,17 @@ function shotgunSteps(values, rng) {
       phase: checking, stats: stats(attempt), variables: vars, output: clone(log),
     }));
 
+    // Percorre os pares como isOrdenado: PARA e SE para cada um, até o primeiro fora de ordem.
+    const pairs = bad === -1 ? n - 1 : bad + 1;
+    for (let i = 0; i < pairs; i += 1) {
+      const outOfOrder = i === bad;
+      const at = { sortedCount: verified(i), pointers: { i, next: i + 1 }, phase: checking, stats: stats(attempt), variables: { ...vars, i }, output: clone(log) };
+      steps.push(step(current, LINE.loop, `${name}: avançando i para ${i}`, `i recebe ${i}: ainda há um vizinho à direita (posição ${i + 1}) para comparar.`, 'reading', at));
+      steps.push(step(current, LINE.test, `${name}: comparando as posições ${i} e ${i + 1}`, `${fmt(current[i])} > ${fmt(current[i + 1])} é ${outOfOrder ? 'verdadeiro: o par está fora de ordem.' : 'falso: o par está em ordem.'}`, 'comparison', {
+        ...at, activeIndices: [i, i + 1], compare: compareOf(current, i, outOfOrder),
+      }));
+    }
+
     if (bad === -1) {
       steps.push(step(current, LINE.endLoop, `${name}: todos os pares em ordem`, `isOrdenado percorreu os ${n - 1} pares e nenhum estava fora de ordem.`, 'success', {
         sortedCount: n, phase: checking, stats: stats(attempt), variables: vars, output: clone(log),
@@ -166,9 +177,6 @@ function shotgunSteps(values, rng) {
     }
 
     const pairAt = { sortedCount: verified(bad), pointers: { i: bad, next: bad + 1 }, compare: compareOf(current, bad, true), phase: checking, stats: stats(attempt) };
-    steps.push(step(current, LINE.test, `${name}: par fora de ordem`, `${bad === 0 ? 'No primeiro par' : `Os pares anteriores estão em ordem, mas nas posições ${bad} e ${bad + 1}`}: ${fmt(current[bad])} > ${fmt(current[bad + 1])}.`, 'comparison', {
-      ...pairAt, activeIndices: [bad, bad + 1], variables: { ...vars, i: bad }, output: clone(log),
-    }));
     log.push(`${name}: ${list(current)} → falso`);
     steps.push(step(current, LINE.returnFalse, `${name}: isOrdenado devolve falso`, 'Basta um par fora de ordem para a função devolver falso, sem olhar o resto do vetor.', 'warning', {
       ...pairAt, warnIndices: [bad, bad + 1], variables: { ...vars, i: bad, retorno: 'falso' }, output: clone(log),
