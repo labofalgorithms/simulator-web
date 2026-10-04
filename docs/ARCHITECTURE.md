@@ -56,12 +56,12 @@ modules/
 ├── hash-tables/
 │   ├── algorithms.js
 │   └── hash-table-module.js
-├── selection-sort/
-│   ├── algorithms.js
-│   └── selection-sort-module.js
 ├── shotgun-sort/
 │   ├── algorithms.js
 │   └── shotgun-sort-module.js
+├── selection-sort/
+│   ├── algorithms.js
+│   └── selection-sort-module.js
 └── shared/
     └── sort-view.js
 ```
@@ -85,8 +85,8 @@ modules/
 - `circular-list-simulator.js`: conecta `SimulatorApp` ao `circularListModule`;
 - `doubly-linked-list-simulator.js`: conecta `SimulatorApp` ao `doublyLinkedListModule`;
 - `hash-table-simulator.js`: conecta `SimulatorApp` ao `hashTableModule`;
-- `selection-sort-simulator.js`: conecta `SimulatorApp` ao `selectionSortModule`;
-- `shotgun-sort-simulator.js`: conecta `SimulatorApp` ao `shotgunSortModule`.
+- `shotgun-sort-simulator.js`: conecta `SimulatorApp` ao `shotgunSortModule`;
+- `selection-sort-simulator.js`: conecta `SimulatorApp` ao `selectionSortModule`.
 
 ## Contrato de um módulo
 
@@ -175,7 +175,7 @@ Mesma forma de dados `{ values }` que os demais módulos de lista dinâmica (sem
 
 ## Módulo de Selection Sort
 
-Primeiro módulo da categoria **Algoritmos**. Os dados são um vetor de 2 a 10 números e o pseudocódigo segue o da aula, inclusive a última passada (`i` vai até `vetor.length - 1`) e a troca executada em todas as passadas. O menu tem cinco simuladores: `find-min` (a varredura isolada, com `config.inicio`), `selection-sort` (execução completa), `counting` (complexidade de tempo), `adaptability` e `stability`.
+Módulo da categoria **Algoritmos** (ALG1 · 02, depois do Shotgun Sort na aula). Os dados são um vetor de 2 a 10 números e o pseudocódigo segue o da aula, inclusive a última passada (`i` vai até `vetor.length - 1`) e a troca executada em todas as passadas. O menu tem cinco simuladores: `find-min` (a varredura isolada, com `config.inicio`), `selection-sort` (execução completa), `counting` (complexidade de tempo), `adaptability` e `stability`.
 
 `find-min` e `selection-sort` geram um passo por comparação, no nível de detalhe das linhas do pseudocódigo. Os três de análise trabalham por passada (varredura + troca) a partir de `runPasses`, que devolve, para cada passada, o vetor antes e depois, a posição do menor e quais elementos iguais o primeiro elemento ultrapassou (usado para detectar a inversão de ordem). Os itens são `{ v, tag }`; `tagDuplicates` marca os valores repetidos com letras pela ordem original.
 
@@ -188,13 +188,13 @@ Cada passo pode fornecer:
 - `phase` (`Varredura 01 · Busca o menor`) e `stats` (comparações e trocas acumuladas);
 - `tags` (letras dos valores repetidos), `chart` (barras de comparações por passada, em `counting`) e `rows` (os três vetores lado a lado, em `adaptability`).
 
-`step.line` pode ser uma lista de linhas, como nas condições compostas. `step.stats` é um objeto `{ rótulo: valor }`. Na estabilidade, o botão "Gerar exemplo" e a geração aleatória daquele simulador usam `stabilityExample`, que sorteia vetores até encontrar um em que o algoritmo inverte a ordem de dois iguais.
+Nos módulos de ordenação cada passo destaca uma única linha do pseudocódigo, na ordem em que ela executa (`step.line` é sempre um número). `step.stats` é um objeto `{ rótulo: valor }`. Os simuladores de análise (`counting`, `adaptability`, `stability`) resumem a varredura em um passo, na linha do `SE`, e dividem a troca em três passos, um por atribuição. Na estabilidade, o botão "Gerar exemplo" e a geração aleatória daquele simulador usam `stabilityExample`, que sorteia vetores até encontrar um em que o algoritmo inverte a ordem de dois iguais.
 
 ## Módulo de Shotgun Sort
 
-Segundo módulo de **Algoritmos**, com três simuladores: `is-sorted` (a função `isOrdenado`), `shotgun-sort` (o laço de embaralhamento) e `why-worst` (a análise do custo). Reaproveita o renderer de `shared/sort-view.js`; os dados são de 2 a 8 números.
+Módulo da categoria **Algoritmos** (ALG1 · 01), com três simuladores: `is-sorted` (a função `isOrdenado`), `shotgun-sort` (o laço de embaralhamento) e `why-worst` (a análise do custo). Reaproveita o renderer de `shared/sort-view.js`; os dados são de 2 a 8 números.
 
-O pseudocódigo da aula está em base 0: o laço de `isOrdenado` vai até `vetor.length - 2`, porque na versão do slide o último par sairia do vetor. `shotgun-sort` gera dois passos por tentativa (verificação e embaralhamento) e para em `MAX_ATTEMPTS` (100): o algoritmo não tem limite, o simulador sim. O embaralhamento (Fisher-Yates) usa `Math.random` e é refeito a cada `rebuildSteps`; o botão "Sortear outra execução" apenas dispara esse rebuild. `buildSteps` aceita um gerador aleatório opcional como quarto argumento, o que permite testar execuções reproduzíveis.
+O pseudocódigo da aula está em base 0: o laço de `isOrdenado` vai até `vetor.length - 2`, porque na versão do slide o último par sairia do vetor. `shotgun-sort` percorre as linhas na ordem de execução, com quatro passos por tentativa que falha (chamada de `isOrdenado`, o `SE` que acha o par fora de ordem, `RETORNE falso` e o embaralhamento); a varredura dos pares anteriores é resumida no passo do `SE`. A simulação para em `MAX_ATTEMPTS` (100): o algoritmo não tem limite, o simulador sim. O embaralhamento (Fisher-Yates) usa `Math.random` e é refeito a cada `rebuildSteps`; o botão "Sortear outra execução" apenas dispara esse rebuild. `buildSteps` aceita um gerador aleatório opcional como quarto argumento, o que permite testar execuções reproduzíveis.
 
 Além dos campos do Selection Sort, os passos usam `pointers.next` (marcador `i+1`), `compare.alarm` (inverte as cores: "Sim" é o resultado ruim, par fora de ordem), `odds` (ordens possíveis, exibidas como pontos até 144) e `table` (linhas de n, comparações do Selection Sort, tentativas esperadas e tempo estimado, com fatoriais calculados em `BigInt`). `arrangements` conta as ordens distintas do vetor (n! dividido pelas repetições).
 

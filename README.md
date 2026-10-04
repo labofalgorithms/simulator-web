@@ -147,6 +147,14 @@ Todos os algoritmos são mostrados em pseudocódigo. Os dados são pares chave:v
 
 ## Algoritmos
 
+### Shotgun Sort
+
+- `isOrdenado`: compara pares vizinhos e para no primeiro fora de ordem
+- Shotgun Sort: enquanto não estiver ordenado, embaralha e tenta de novo, com contadores de verificações e embaralhamentos
+- Por que é o pior algoritmo: ordens possíveis, chance de acertar, tentativas esperadas (n!) e uma tabela comparando com o Selection Sort
+
+O pseudocódigo segue o da aula, em base 0 (o laço de `isOrdenado` termina em `vetor.length - 2`; na aula, o último par sairia do vetor). Os dados são de 2 a 8 números e o simulador para em 100 tentativas, já que o algoritmo não tem limite. Dá para sortear outra execução com a mesma entrada ou usar um vetor já ordenado e ver o melhor caso (O(n)).
+
 ### Selection Sort
 
 - Encontrar o menor: a varredura do sub-vetor, com posição inicial ajustável (clique em uma célula para escolher)
@@ -156,14 +164,6 @@ Todos os algoritmos são mostrados em pseudocódigo. Os dados são pares chave:v
 - Estabilidade: valores repetidos marcados com letras, mostrando a troca que inverte a ordem relativa deles
 
 O pseudocódigo segue o da aula (`para i ← 0 até tamanho - 1`, com a troca executada em todas as passadas). Os dados são de 2 a 10 números; há geração aleatória e, na estabilidade, um gerador de vetores com repetidos em que a inversão realmente acontece.
-
-### Shotgun Sort
-
-- `isOrdenado`: compara pares vizinhos e para no primeiro fora de ordem
-- Shotgun Sort: enquanto não estiver ordenado, embaralha e tenta de novo, com contadores de verificações e embaralhamentos
-- Por que é o pior algoritmo: ordens possíveis, chance de acertar, tentativas esperadas (n!) e uma tabela comparando com o Selection Sort
-
-O pseudocódigo segue o da aula, em base 0 (o laço de `isOrdenado` termina em `vetor.length - 2`; na aula, o último par sairia do vetor). Os dados são de 2 a 8 números e o simulador para em 100 tentativas, já que o algoritmo não tem limite. Dá para sortear outra execução com a mesma entrada ou usar um vetor já ordenado e ver o melhor caso (O(n)).
 
 ## Recursos comuns
 
@@ -199,9 +199,9 @@ simulator-web/
 │   │   └── index.html
 │   ├── tabelas-hash/
 │   │   └── index.html
-│   ├── selection-sort/
+│   ├── shotgun-sort/
 │   │   └── index.html
-│   └── shotgun-sort/
+│   └── selection-sort/
 │       └── index.html
 ├── src/
 │   ├── css/
@@ -223,8 +223,8 @@ simulator-web/
 │       │   ├── circular-lists/
 │       │   ├── doubly-linked-lists/
 │       │   ├── hash-tables/
-│       │   ├── selection-sort/
 │       │   ├── shotgun-sort/
+│       │   ├── selection-sort/
 │       │   └── shared/
 │       └── pages/
 ├── docs/ARCHITECTURE.md
@@ -319,16 +319,16 @@ Tabelas Hash:
 http://localhost:8000/simuladores/tabelas-hash/
 ```
 
-Selection Sort:
-
-```text
-http://localhost:8000/simuladores/selection-sort/
-```
-
 Shotgun Sort:
 
 ```text
 http://localhost:8000/simuladores/shotgun-sort/
+```
+
+Selection Sort:
+
+```text
+http://localhost:8000/simuladores/selection-sort/
 ```
 
 Não use `npm run dev`: o projeto não depende de Node, Vite ou processo de build.

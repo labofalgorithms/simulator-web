@@ -17,6 +17,9 @@ const SHOTGUN_CODE = [
   'FIM',
 ];
 
+// Linhas do SHOTGUN_CODE (base 0). Cada passo da simulação destaca uma única linha.
+const LINE = { loop: 1, test: 2, returnFalse: 3, endLoop: 5, returnTrue: 6, procedure: 9, whileLoop: 10, shuffle: 11, end: 13 };
+
 /** O simulador desiste depois de tantas tentativas: o algoritmo, em si, não tem limite. */
 export const MAX_ATTEMPTS = 100;
 
@@ -84,6 +87,7 @@ const compareOf = (values, i, result) => ({
 
 // ---------------------------------------------------------------------------
 // 01 · isOrdenado
+// Linhas: 1 PARA i · 2 SE · 3 RETORNE falso · 5 FIM PARA · 6 RETORNE verdadeiro
 // ---------------------------------------------------------------------------
 
 function isSortedSteps(values) {
@@ -96,18 +100,23 @@ function isSortedSteps(values) {
   for (let i = 0; i < n - 1; i += 1) {
     const bad = values[i] > values[i + 1];
     const vars = { i, 'vetor[i]': values[i], 'vetor[i+1]': values[i + 1] };
-    steps.push(step(values, [1, 2], `Comparando as posições ${i} e ${i + 1}`, `${fmt(values[i])} > ${fmt(values[i + 1])} é ${bad ? 'verdadeiro: o par está fora de ordem.' : 'falso: o par está em ordem.'}`, 'comparison', {
-      sortedCount: verified(i), pointers: { i, next: i + 1 }, activeIndices: [i, i + 1], compare: compareOf(values, i, bad), phase, variables: vars,
+    const pointers = { i, next: i + 1 };
+    steps.push(step(values, LINE.loop, `Avançando i para ${i}`, `i recebe ${i}: ainda há um vizinho à direita (posição ${i + 1}) para comparar.`, 'reading', {
+      sortedCount: verified(i), pointers, phase, variables: { i },
+    }));
+    steps.push(step(values, LINE.test, `Comparando as posições ${i} e ${i + 1}`, `${fmt(values[i])} > ${fmt(values[i + 1])} é ${bad ? 'verdadeiro: o par está fora de ordem.' : 'falso: o par está em ordem.'}`, 'comparison', {
+      sortedCount: verified(i), pointers, activeIndices: [i, i + 1], compare: compareOf(values, i, bad), phase, variables: vars,
     }));
     if (bad) {
-      steps.push(step(values, 3, 'Retornando falso', `O par das posições ${i} e ${i + 1} está fora de ordem (${fmt(values[i])} > ${fmt(values[i + 1])}). A função retorna falso na hora, sem olhar o restante do vetor.`, 'warning', {
-        sortedCount: verified(i), pointers: { i, next: i + 1 }, warnIndices: [i, i + 1], compare: compareOf(values, i, true), phase, variables: { ...vars, retorno: 'falso' }, output: ['isOrdenado → falso'],
+      steps.push(step(values, LINE.returnFalse, 'Retornando falso', `O par das posições ${i} e ${i + 1} está fora de ordem (${fmt(values[i])} > ${fmt(values[i + 1])}). A função retorna falso na hora, sem olhar o restante do vetor.`, 'warning', {
+        sortedCount: verified(i), pointers, warnIndices: [i, i + 1], compare: compareOf(values, i, true), phase, variables: { ...vars, retorno: 'falso' }, output: ['isOrdenado → falso'],
       }));
       return steps;
     }
   }
 
-  steps.push(step(values, 6, 'Retornando verdadeiro', `Os ${n - 1} pares estão em ordem: o vetor está ordenado. Para dizer isso foi preciso comparar todos os pares.`, 'done', {
+  steps.push(step(values, LINE.endLoop, 'Fim do laço', `i passou de ${n - 2}: os ${n - 1} pares foram verificados e todos estão em ordem.`, 'success', { sortedCount: n, phase, variables: { i: n - 1 } }));
+  steps.push(step(values, LINE.returnTrue, 'Retornando verdadeiro', `O vetor está ordenado. Para dizer isso foi preciso comparar todos os ${n - 1} pares.`, 'done', {
     sortedCount: n, phase, variables: { retorno: 'verdadeiro' }, output: ['isOrdenado → verdadeiro', `Comparações: ${n - 1}`],
   }));
   return steps;
@@ -115,6 +124,8 @@ function isSortedSteps(values) {
 
 // ---------------------------------------------------------------------------
 // 02 · Shotgun Sort
+// Cada tentativa percorre as linhas na ordem em que são executadas. A varredura
+// de isOrdenado vira um passo só, na linha do SE que encontra o par fora de ordem.
 // ---------------------------------------------------------------------------
 
 function shotgunSteps(values, rng) {
@@ -126,18 +137,27 @@ function shotgunSteps(values, rng) {
   const stats = (attempt) => ({ 'verificações': attempt, embaralhamentos: shuffles });
 
   const steps = [
-    step(current, 9, 'Iniciando o Shotgun Sort', 'O algoritmo não tem estratégia: verifica se o vetor está ordenado e, se não estiver, embaralha tudo e tenta de novo.', 'neutral', { stats: stats(0) }),
+    step(current, LINE.procedure, 'Iniciando o Shotgun Sort', 'O algoritmo não tem estratégia: verifica se o vetor está ordenado e, se não estiver, embaralha tudo e tenta de novo.', 'neutral', { stats: stats(0) }),
   ];
 
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
     const bad = firstUnordered(current);
     const name = `Tentativa ${pad(attempt)}`;
+    const checking = { label: name, text: 'Verificando se está ordenado' };
+    const vars = { tentativa: attempt, embaralhamentos: shuffles };
+
+    steps.push(step(current, LINE.whileLoop, `${name}: chamando isOrdenado`, 'O laço ENQUANTO precisa saber se o vetor está ordenado, então chama isOrdenado(vetor).', 'reading', {
+      phase: checking, stats: stats(attempt), variables: vars, output: clone(log),
+    }));
 
     if (bad === -1) {
-      steps.push(step(current, [10, 5, 6], `${name}: isOrdenado devolve verdadeiro`, 'Todos os pares estão em ordem, então o laço ENQUANTO termina.', 'success', {
-        sortedCount: n, phase: { label: name, text: 'Verificando se está ordenado' }, stats: stats(attempt), variables: { tentativa: attempt, embaralhamentos: shuffles }, output: [...log, `${name}: ${list(current)} → verdadeiro`],
+      steps.push(step(current, LINE.endLoop, `${name}: todos os pares em ordem`, `isOrdenado percorreu os ${n - 1} pares e nenhum estava fora de ordem.`, 'success', {
+        sortedCount: n, phase: checking, stats: stats(attempt), variables: vars, output: clone(log),
       }));
-      steps.push(step(current, 13, 'Vetor ordenado', attempt === 1
+      steps.push(step(current, LINE.returnTrue, `${name}: isOrdenado devolve verdadeiro`, 'A função retorna verdadeiro, então a condição do ENQUANTO deixa de valer e o laço termina.', 'success', {
+        sortedCount: n, phase: checking, stats: stats(attempt), variables: { ...vars, retorno: 'verdadeiro' }, output: [...log, `${name}: ${list(current)} → verdadeiro`],
+      }));
+      steps.push(step(current, LINE.end, 'Vetor ordenado', attempt === 1
         ? 'O vetor já estava ordenado: a primeira verificação respondeu verdadeiro, sem nenhum embaralhamento. Esse é o melhor caso, de custo O(n) — mais barato que qualquer outro método de ordenação.'
         : `A sorte finalmente acertou, depois de ${attempt} verificações e ${shuffles} embaralhamentos. Para ${n} elementos eram esperadas, em média, ${total} tentativas.`, 'done', {
         sortedCount: n, stats: stats(attempt), output: [...log, `${name}: ${list(current)} → verdadeiro`, `Embaralhamentos: ${shuffles}`],
@@ -145,15 +165,18 @@ function shotgunSteps(values, rng) {
       return steps;
     }
 
+    const pairAt = { sortedCount: verified(bad), pointers: { i: bad, next: bad + 1 }, compare: compareOf(current, bad, true), phase: checking, stats: stats(attempt) };
+    steps.push(step(current, LINE.test, `${name}: par fora de ordem`, `${bad === 0 ? 'No primeiro par' : `Os pares anteriores estão em ordem, mas nas posições ${bad} e ${bad + 1}`}: ${fmt(current[bad])} > ${fmt(current[bad + 1])}.`, 'comparison', {
+      ...pairAt, activeIndices: [bad, bad + 1], variables: { ...vars, i: bad }, output: clone(log),
+    }));
     log.push(`${name}: ${list(current)} → falso`);
-    steps.push(step(current, [10, 2, 3], `${name}: isOrdenado devolve falso`, `Os pares até a posição ${bad} estão em ordem, mas ${fmt(current[bad])} > ${fmt(current[bad + 1])}. Basta um par fora de ordem para a função devolver falso.`, 'warning', {
-      sortedCount: verified(bad), pointers: { i: bad, next: bad + 1 }, warnIndices: [bad, bad + 1], compare: compareOf(current, bad, true),
-      phase: { label: name, text: 'Verificando se está ordenado' }, stats: stats(attempt), variables: { tentativa: attempt, i: bad }, output: clone(log),
+    steps.push(step(current, LINE.returnFalse, `${name}: isOrdenado devolve falso`, 'Basta um par fora de ordem para a função devolver falso, sem olhar o resto do vetor.', 'warning', {
+      ...pairAt, warnIndices: [bad, bad + 1], variables: { ...vars, i: bad, retorno: 'falso' }, output: clone(log),
     }));
 
     if (attempt === MAX_ATTEMPTS) {
-      steps.push(step(current, 10, 'Limite de tentativas do simulador', `Foram ${MAX_ATTEMPTS} tentativas sem acertar, e o simulador para aqui. O algoritmo, porém, continuaria: com ${n} elementos a média esperada é ${total} tentativas, e como o sorteio não tem memória nada garante que ele termine algum dia.`, 'warning', {
-        pointers: { i: bad, next: bad + 1 }, warnIndices: [bad, bad + 1], stats: stats(attempt), output: [...log, `Parei após ${MAX_ATTEMPTS} tentativas`, `Média esperada para n = ${n}: ${total}`],
+      steps.push(step(current, LINE.whileLoop, 'Limite de tentativas do simulador', `Foram ${MAX_ATTEMPTS} tentativas sem acertar, e o simulador para aqui. O algoritmo, porém, continuaria: com ${n} elementos a média esperada é ${total} tentativas, e como o sorteio não tem memória nada garante que ele termine algum dia.`, 'warning', {
+        stats: stats(attempt), output: [...log, `Parei após ${MAX_ATTEMPTS} tentativas`, `Média esperada para n = ${n}: ${total}`],
       }));
       return steps;
     }
@@ -161,7 +184,7 @@ function shotgunSteps(values, rng) {
     const next = shuffled(current, rng);
     const changedIndices = next.map((value, index) => (value !== current[index] ? index : -1)).filter((index) => index >= 0);
     shuffles += 1;
-    steps.push(step(next, 11, `${name}: embaralhando`, changedIndices.length
+    steps.push(step(next, LINE.shuffle, `${name}: embaralhando`, changedIndices.length
       ? 'Os elementos são reordenados ao acaso. Nada do que já estava certo é aproveitado: a próxima ordem é um novo sorteio.'
       : 'O sorteio devolveu a mesma ordem de antes, o que também é possível.', 'update', {
       changedIndices, phase: { label: name, text: 'Embaralha o vetor' }, stats: stats(attempt), variables: { tentativa: attempt, embaralhamentos: shuffles }, output: clone(log),
@@ -229,32 +252,32 @@ function oddsSteps(values) {
   const base = { sortedCount: 0 };
 
   const steps = [
-    step(values, 10, 'Cada tentativa é um sorteio', `Com ${n} elementos existem ${total} ordens possíveis${repeated ? ' (menos que n!, porque há valores repetidos)' : ` (${n}! = ${total})`}, e só uma delas está ordenada. Embaralhar é sortear uma dessas ordens.`, 'neutral', {
+    step(values, LINE.shuffle, 'Cada tentativa é um sorteio', `Com ${n} elementos existem ${total} ordens possíveis${repeated ? ' (menos que n!, porque há valores repetidos)' : ` (${n}! = ${total})`}, e só uma delas está ordenada. Embaralhar é sortear uma dessas ordens.`, 'neutral', {
       ...base, odds: odds(false), variables: { n, 'ordens possíveis': total },
     }),
-    step(values, [10, 11], 'A chance de acertar', `Cada embaralhamento acerta a ordem certa com probabilidade 1/${total} (cerca de ${chance}%). Errar é o resultado comum.`, 'comparison', {
+    step(values, LINE.shuffle, 'A chance de acertar', `Cada embaralhamento acerta a ordem certa com probabilidade 1/${total} (cerca de ${chance}%). Errar é o resultado comum.`, 'comparison', {
       ...base, odds: odds(true), variables: { n, 'ordens possíveis': total, 'chance por tentativa': `${chance}%` },
     }),
-    step(values, [10, 11], 'Quantas tentativas, em média?', `Como o sorteio não tem memória, em média são necessárias cerca de ${total} tentativas${total === 1 ? '' : ` para n = ${n}`}. Cada tentativa ainda custa uma verificação O(n) para o isOrdenado e um embaralhamento O(n).`, 'update', {
+    step(values, LINE.whileLoop, 'Quantas tentativas, em média?', `Como o sorteio não tem memória, em média são necessárias cerca de ${total} tentativas${total === 1 ? '' : ` para n = ${n}`}. Cada tentativa ainda custa uma verificação O(n) para o isOrdenado e um embaralhamento O(n).`, 'update', {
       ...base, odds: odds(true), variables: { n, 'tentativas esperadas': total },
     }),
-    step(values, 10, 'Comparando com o Selection Sort', `Para n = ${n} o Selection Sort faz ${(n * (n - 1)) / 2} comparações, sempre. O Shotgun Sort espera ${total} tentativas, e cada uma ainda inclui uma verificação e um embaralhamento. Com poucos elementos a diferença parece pequena...`, 'reading', withTable({
+    step(values, LINE.whileLoop, 'Comparando com o Selection Sort', `Para n = ${n} o Selection Sort faz ${(n * (n - 1)) / 2} comparações, sempre. O Shotgun Sort espera ${total} tentativas, e cada uma ainda inclui uma verificação e um embaralhamento. Com poucos elementos a diferença parece pequena...`, 'reading', withTable({
       ...base, variables: { n },
     })),
   ];
 
   growth(10);
-  steps.push(step(values, 10, 'Com n = 10', `10! = ${bigFactorial(10).toLocaleString('pt-BR')}. O Selection Sort faz 45 comparações; o Shotgun Sort, em média, mais de 3,6 milhões de tentativas.`, 'update', withTable({ ...base, variables: { n: 10 } })));
+  steps.push(step(values, LINE.whileLoop, 'Com n = 10', `10! = ${bigFactorial(10).toLocaleString('pt-BR')}. O Selection Sort faz 45 comparações; o Shotgun Sort, em média, mais de 3,6 milhões de tentativas.`, 'update', withTable({ ...base, variables: { n: 10 } })));
   growth(15);
-  steps.push(step(values, 10, 'Com n = 15', `15! passa de 1,3 trilhão. Mesmo testando um milhão de ordens por segundo, a média seria de uns ${humanTime(Number(bigFactorial(15)) / ATTEMPTS_PER_SECOND)}.`, 'update', withTable({ ...base, variables: { n: 15 } })));
+  steps.push(step(values, LINE.whileLoop, 'Com n = 15', `15! passa de 1,3 trilhão. Mesmo testando um milhão de ordens por segundo, a média seria de uns ${humanTime(Number(bigFactorial(15)) / ATTEMPTS_PER_SECOND)}.`, 'update', withTable({ ...base, variables: { n: 15 } })));
   growth(20);
-  steps.push(step(values, 10, 'Com n = 20', `20! é cerca de 2,4 quintilhões: em média ${humanTime(Number(bigFactorial(20)) / ATTEMPTS_PER_SECOND)}, para ordenar só 20 números. O Selection Sort faz 190 comparações.`, 'warning', withTable({ ...base, variables: { n: 20 } })));
+  steps.push(step(values, LINE.whileLoop, 'Com n = 20', `20! é cerca de 2,4 quintilhões: em média ${humanTime(Number(bigFactorial(20)) / ATTEMPTS_PER_SECOND)}, para ordenar só 20 números. O Selection Sort faz 190 comparações.`, 'warning', withTable({ ...base, variables: { n: 20 } })));
 
-  steps.push(step(values, [10, 5, 6], 'Ou será que não?', `Se o vetor já vier ordenado, isOrdenado responde verdadeiro na primeira tentativa: só ${n - 1} comparações, O(n) — menos que as ${(n * (n - 1)) / 2} do Selection Sort. O problema é o caso médio (n! tentativas) e o pior caso, que não tem limite.`, 'success', withTable({
+  steps.push(step(values, LINE.returnTrue, 'Ou será que não?', `Se o vetor já vier ordenado, isOrdenado responde verdadeiro na primeira tentativa: só ${n - 1} comparações, O(n) — menos que as ${(n * (n - 1)) / 2} do Selection Sort. O problema é o caso médio (n! tentativas) e o pior caso, que não tem limite.`, 'success', withTable({
     ...base, variables: { 'melhor caso': `${n - 1} comparações` },
   })));
 
-  steps.push(step(values, 13, 'Classificação do algoritmo', 'O Shotgun Sort é aceitável no melhor caso e inviável no resto: o custo médio cresce com n!, e nenhum tamanho de entrada realista termina em tempo útil.', 'done', withTable({
+  steps.push(step(values, LINE.end, 'Classificação do algoritmo', 'O Shotgun Sort é aceitável no melhor caso e inviável no resto: o custo médio cresce com n!, e nenhum tamanho de entrada realista termina em tempo útil.', 'done', withTable({
     ...base,
     output: [
       'Tempo: melhor O(n) · médio O(n·n!) · pior sem limite',
