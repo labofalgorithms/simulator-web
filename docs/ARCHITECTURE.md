@@ -53,16 +53,26 @@ modules/
 ├── doubly-linked-lists/
 │   ├── algorithms.js
 │   └── doubly-linked-list-module.js
-└── hash-tables/
-    ├── algorithms.js
-    └── hash-table-module.js
+├── hash-tables/
+│   ├── algorithms.js
+│   └── hash-table-module.js
+├── selection-sort/
+│   ├── algorithms.js
+│   └── selection-sort-module.js
+├── shotgun-sort/
+│   ├── algorithms.js
+│   └── shotgun-sort-module.js
+└── shared/
+    └── sort-view.js
 ```
+
+`shared/sort-view.js` reúne o que os módulos de ordenação têm em comum: o vetor com marcadores sobre as células, o cartão de comparação, os contadores, a legenda e o editor de números (`renderArray`, `renderCompare`, `renderStats`, `legend`, `renderVectorEditor`, `parseVector`, `randomVector`).
 
 `algorithms.js` contém metadados, pseudocódigos e a geração dos estados da simulação. O arquivo `*-module.js` define entrada de dados, parâmetros, renderização e eventos específicos da estrutura.
 
 ### `src/js/pages`
 
-- `home.js`: página inicial;
+- `home.js`: página inicial (o catálogo é dividido em duas seções, `#estruturas` e `#algoritmos`);
 - `vector-simulator.js`: conecta `SimulatorApp` ao `vectorModule`;
 - `matrix-simulator.js`: conecta `SimulatorApp` ao `matrixModule`;
 - `stack-simulator.js`: conecta `SimulatorApp` ao `stackModule`;
@@ -74,7 +84,9 @@ modules/
 - `dynamic-list-simulator.js`: conecta `SimulatorApp` ao `dynamicListModule`;
 - `circular-list-simulator.js`: conecta `SimulatorApp` ao `circularListModule`;
 - `doubly-linked-list-simulator.js`: conecta `SimulatorApp` ao `doublyLinkedListModule`;
-- `hash-table-simulator.js`: conecta `SimulatorApp` ao `hashTableModule`.
+- `hash-table-simulator.js`: conecta `SimulatorApp` ao `hashTableModule`;
+- `selection-sort-simulator.js`: conecta `SimulatorApp` ao `selectionSortModule`;
+- `shotgun-sort-simulator.js`: conecta `SimulatorApp` ao `shotgunSortModule`.
 
 ## Contrato de um módulo
 
@@ -82,6 +94,7 @@ modules/
 export const module = {
   id: 'nome',
   name: 'Nome',
+  category: { name: 'Algoritmos', anchor: 'algoritmos' }, // opcional; o padrão é Estruturas de Dados
   version: '1.0',
   defaultAlgorithmId: 'algoritmo-inicial',
   defaultData: [],
@@ -99,6 +112,8 @@ export const module = {
   handleAction(action, button, app) {},
 };
 ```
+
+`category` define o segundo item do breadcrumb (`Simuladores / Categoria / Módulo / Simulador`) e o âncora da home para onde ele aponta. Módulos de estruturas de dados não precisam declará-lo; os de algoritmos usam `{ name: 'Algoritmos', anchor: 'algoritmos' }`.
 
 O `SimulatorApp` cuida do menu, cabeçalho, pseudocódigo, variáveis, console, reprodução automática, atalhos e tema.
 
@@ -157,6 +172,31 @@ A diferença estrutural chave: só existe `values[0]` como início — não há 
 ## Módulo de Listas Duplamente Encadeadas
 
 Mesma forma de dados `{ values }` que os demais módulos de lista dinâmica (sem `capacity`, sem `fim`), mas o renderer troca a seta `.node-arrow` entre nós adjacentes de `→` para `⇄` (o glifo já existente, sem nenhuma classe nova), refletindo que cada nó guarda referências `próximo` e `anterior`. `início → primeiro nó` e `último nó → nulo` continuam de mão única, pois `início` não é um nó e `nulo` não aponta de volta. Sem um `fim` guardado, `inserirNoFim()` continua `O(n)` (percorre até achar o último nó, igual às Listas Dinâmicas), mas `removerNo(valor)` fica mais simples que o das outras listas: como cada nó já conhece seu `anterior`, não é preciso manter uma referência auxiliar "um passo atrás" durante a busca — a religação lê `temp.anterior` e `temp.proximo` diretamente.
+
+## Módulo de Selection Sort
+
+Primeiro módulo da categoria **Algoritmos**. Os dados são um vetor de 2 a 10 números e o pseudocódigo segue o da aula, inclusive a última passada (`i` vai até `vetor.length - 1`) e a troca executada em todas as passadas. O menu tem cinco simuladores: `find-min` (a varredura isolada, com `config.inicio`), `selection-sort` (execução completa), `counting` (complexidade de tempo), `adaptability` e `stability`.
+
+`find-min` e `selection-sort` geram um passo por comparação, no nível de detalhe das linhas do pseudocódigo. Os três de análise trabalham por passada (varredura + troca) a partir de `runPasses`, que devolve, para cada passada, o vetor antes e depois, a posição do menor e quais elementos iguais o primeiro elemento ultrapassou (usado para detectar a inversão de ordem). Os itens são `{ v, tag }`; `tagDuplicates` marca os valores repetidos com letras pela ordem original.
+
+Cada passo pode fornecer:
+
+- `pointers: { i, j, min }`, que o renderer mostra como marcadores sobre as células e usa para destacar `j` (ativo) e `min`;
+- `sortedCount` (as primeiras posições já definitivas) e `outsideIndices` (fora do sub-vetor, em `find-min`);
+- `comparedIndices`, `changedIndices`, `activeIndices` e `warnIndices` (ordem invertida);
+- `compare` (`left`, `op`, `right`, `result`), exibido no cartão `vetor[j] < vetor[minimo]? Sim/Não`;
+- `phase` (`Varredura 01 · Busca o menor`) e `stats` (comparações e trocas acumuladas);
+- `tags` (letras dos valores repetidos), `chart` (barras de comparações por passada, em `counting`) e `rows` (os três vetores lado a lado, em `adaptability`).
+
+`step.line` pode ser uma lista de linhas, como nas condições compostas. `step.stats` é um objeto `{ rótulo: valor }`. Na estabilidade, o botão "Gerar exemplo" e a geração aleatória daquele simulador usam `stabilityExample`, que sorteia vetores até encontrar um em que o algoritmo inverte a ordem de dois iguais.
+
+## Módulo de Shotgun Sort
+
+Segundo módulo de **Algoritmos**, com três simuladores: `is-sorted` (a função `isOrdenado`), `shotgun-sort` (o laço de embaralhamento) e `why-worst` (a análise do custo). Reaproveita o renderer de `shared/sort-view.js`; os dados são de 2 a 8 números.
+
+O pseudocódigo da aula está em base 0: o laço de `isOrdenado` vai até `vetor.length - 2`, porque na versão do slide o último par sairia do vetor. `shotgun-sort` gera dois passos por tentativa (verificação e embaralhamento) e para em `MAX_ATTEMPTS` (100): o algoritmo não tem limite, o simulador sim. O embaralhamento (Fisher-Yates) usa `Math.random` e é refeito a cada `rebuildSteps`; o botão "Sortear outra execução" apenas dispara esse rebuild. `buildSteps` aceita um gerador aleatório opcional como quarto argumento, o que permite testar execuções reproduzíveis.
+
+Além dos campos do Selection Sort, os passos usam `pointers.next` (marcador `i+1`), `compare.alarm` (inverte as cores: "Sim" é o resultado ruim, par fora de ordem), `odds` (ordens possíveis, exibidas como pontos até 144) e `table` (linhas de n, comparações do Selection Sort, tentativas esperadas e tempo estimado, com fatoriais calculados em `BigInt`). `arrangements` conta as ordens distintas do vetor (n! dividido pelas repetições).
 
 ## Módulo de Tabelas Hash
 

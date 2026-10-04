@@ -17,7 +17,8 @@
         <span><strong>LabOfAlgorithms</strong><small>Aprenda vendo o algoritmo acontecer</small></span>
       </a>
       <div class="home-actions">
-        <a href="#simuladores">Simuladores</a>
+        <a href="#estruturas">Estruturas de Dados</a>
+        <a href="#algoritmos">Algoritmos</a>
         <a href="#arquitetura">Sobre o projeto</a>
         <button id="theme-button" class="theme-button" type="button" aria-label="Alternar tema"></button>
       </div>
@@ -26,11 +27,12 @@
       <section class="hero">
         <div>
           <span class="hero-kicker"><i></i> laboratório interativo</span>
-          <h1>Estruturas de dados que você pode <span>ver e controlar.</span></h1>
+          <h1>Estruturas e algoritmos que você pode <span>ver e controlar.</span></h1>
           <p>Execute algoritmos passo a passo, acompanhe o pseudocódigo, inspecione variáveis e experimente seus próprios dados. O LabOfAlgorithms transforma cada operação em uma sequência visual.</p>
           <div class="hero-buttons">
             <a class="home-button primary" href="./simuladores/vetores/">Abrir Vetores <span aria-hidden="true">→</span></a>
-            <a class="home-button secondary" href="#simuladores">Explorar módulos</a>
+            <a class="home-button secondary" href="#estruturas">Estruturas de Dados</a>
+            <a class="home-button secondary" href="#algoritmos">Algoritmos</a>
           </div>
         </div>
         <div class="hero-visual" aria-label="Prévia de uma simulação de vetor">
@@ -39,9 +41,9 @@
           <div class="visual-code"><span></span><span></span><span></span><span></span></div>
         </div>
       </section>
-      <section id="simuladores">
+      <section id="estruturas">
         <div class="section-heading">
-          <div><span>Catálogo</span><h2>Escolha uma estrutura</h2></div>
+          <div><span>Estruturas de Dados</span><h2>Escolha uma estrutura</h2></div>
           <p>Todos os módulos compartilham o mesmo motor de execução, os mesmos controles e a mesma identidade visual.</p>
         </div>
         <div class="module-grid">
@@ -157,6 +159,37 @@
           </article>
         </div>
       </section>
+      <section id="algoritmos" class="catalog-section">
+        <div class="section-heading">
+          <div><span>Algoritmos</span><h2>Escolha um algoritmo</h2></div>
+          <p>Veja o algoritmo executar passo a passo, acompanhe o custo de cada operação e descubra como ele se comporta com diferentes entradas.</p>
+        </div>
+        <div class="module-grid">
+          <article class="module-card available">
+            <div class="module-number"><span>ALG1 · 01</span><span class="module-state">Disponível</span></div>
+            <div class="module-icon">⇅</div>
+            <h3>Selection Sort</h3>
+            <p>Busca do menor valor, troca com a primeira posição do sub-vetor, complexidade de tempo e espaço, adaptabilidade e estabilidade.</p>
+            <div class="module-footer"><span>5 simuladores</span><strong>Abrir →</strong></div>
+            <a class="module-link" href="./simuladores/selection-sort/">Abrir simuladores de Selection Sort</a>
+          </article>
+          <article class="module-card available">
+            <div class="module-number"><span>ALG1 · 02</span><span class="module-state">Disponível</span></div>
+            <div class="module-icon">⚄</div>
+            <h3>Shotgun Sort</h3>
+            <p>A verificação isOrdenado, o embaralhamento até acertar e a análise do custo: por que n! faz dele o pior algoritmo de ordenação.</p>
+            <div class="module-footer"><span>3 simuladores</span><strong>Abrir →</strong></div>
+            <a class="module-link" href="./simuladores/shotgun-sort/">Abrir simuladores de Shotgun Sort</a>
+          </article>
+          <article class="module-card">
+            <div class="module-number"><span>ALG1 · 03</span><span class="module-state">Em breve</span></div>
+            <div class="module-icon">≋</div>
+            <h3>Outros métodos de ordenação</h3>
+            <p>Insertion Sort, Bubble Sort e Merge Sort, comparados em custo, adaptabilidade e estabilidade.</p>
+            <div class="module-footer"><span>Expansão futura</span><span>Planejado</span></div>
+          </article>
+        </div>
+      </section>
       <section id="arquitetura" class="architecture">
         <div>
           <span class="hero-kicker"><i></i> arquitetura modular</span>
@@ -166,11 +199,11 @@
         <div class="architecture-flow">
           <div class="flow-item"><b>Core</b><strong>SimulationController</strong><small>Executar, pausar, avançar, voltar e controlar velocidade.</small></div>
           <div class="flow-item"><b>Módulo</b><strong>Algoritmos</strong><small>Geração dos estados e explicações de cada operação.</small></div>
-          <div class="flow-item"><b>Renderer</b><strong>Visualização</strong><small>Vetor, matriz, pilha, fila, lista, árvore ou grafo.</small></div>
+          <div class="flow-item"><b>Renderer</b><strong>Visualização</strong><small>Vetor, matriz, pilha, fila, lista, ordenação, árvore ou grafo.</small></div>
         </div>
       </section>
     </main>
-    <footer class="home-footer"><span>LabOfAlgorithms · Estruturas de Dados</span><span>© <span id="current-year"></span> Bruno de A. Iizuka Moritani</span></footer>
+    <footer class="home-footer"><span>LabOfAlgorithms · Estruturas de Dados e Algoritmos</span><span>© <span id="current-year"></span> Bruno de A. Iizuka Moritani</span></footer>
   </div>
   <script type="module" src="./src/js/pages/home.js"></script>
 </body>

@@ -2,7 +2,7 @@
 
 Portal estático e modular de simuladores interativos para Estruturas de Dados e Algoritmos.
 
-## Módulos disponíveis
+## Estruturas de Dados
 
 ### Vetores
 
@@ -145,6 +145,28 @@ Cada nó guarda uma referência para o próximo nó e outra para o anterior, per
 
 Todos os algoritmos são mostrados em pseudocódigo. Os dados são pares chave:valor (uma entrada pode ser marcada com `~` como já removida) e a capacidade da tabela é ajustável; clicar em uma entrada usa a chave dela como parâmetro.
 
+## Algoritmos
+
+### Selection Sort
+
+- Encontrar o menor: a varredura do sub-vetor, com posição inicial ajustável (clique em uma célula para escolher)
+- Selection Sort: execução completa, com os marcadores `i`, `j` e `min`, o resultado de cada comparação e os contadores de comparações e trocas
+- Complexidade de tempo: comparações por passada, o total `n(n−1)/2` e as trocas
+- Adaptabilidade: o mesmo algoritmo em três vetores (já ordenado, ordem inversa e o seu), com contadores idênticos
+- Estabilidade: valores repetidos marcados com letras, mostrando a troca que inverte a ordem relativa deles
+
+O pseudocódigo segue o da aula (`para i ← 0 até tamanho - 1`, com a troca executada em todas as passadas). Os dados são de 2 a 10 números; há geração aleatória e, na estabilidade, um gerador de vetores com repetidos em que a inversão realmente acontece.
+
+### Shotgun Sort
+
+- `isOrdenado`: compara pares vizinhos e para no primeiro fora de ordem
+- Shotgun Sort: enquanto não estiver ordenado, embaralha e tenta de novo, com contadores de verificações e embaralhamentos
+- Por que é o pior algoritmo: ordens possíveis, chance de acertar, tentativas esperadas (n!) e uma tabela comparando com o Selection Sort
+
+O pseudocódigo segue o da aula, em base 0 (o laço de `isOrdenado` termina em `vetor.length - 2`; na aula, o último par sairia do vetor). Os dados são de 2 a 8 números e o simulador para em 100 tentativas, já que o algoritmo não tem limite. Dá para sortear outra execução com a mesma entrada ou usar um vetor já ordenado e ver o melhor caso (O(n)).
+
+## Recursos comuns
+
 Os módulos possuem execução automática, avanço e retorno manuais, controle de velocidade, pseudocódigo destacado, variáveis, console, entrada manual, geração aleatória e tema claro/escuro.
 
 ## Estrutura
@@ -175,7 +197,11 @@ simulator-web/
 │   │   └── index.html
 │   ├── listas-duplamente-encadeadas/
 │   │   └── index.html
-│   └── tabelas-hash/
+│   ├── tabelas-hash/
+│   │   └── index.html
+│   ├── selection-sort/
+│   │   └── index.html
+│   └── shotgun-sort/
 │       └── index.html
 ├── src/
 │   ├── css/
@@ -196,7 +222,10 @@ simulator-web/
 │       │   ├── dynamic-lists/
 │       │   ├── circular-lists/
 │       │   ├── doubly-linked-lists/
-│       │   └── hash-tables/
+│       │   ├── hash-tables/
+│       │   ├── selection-sort/
+│       │   ├── shotgun-sort/
+│       │   └── shared/
 │       └── pages/
 ├── docs/ARCHITECTURE.md
 └── .github/workflows/deploy-pages.yml
@@ -288,6 +317,18 @@ Tabelas Hash:
 
 ```text
 http://localhost:8000/simuladores/tabelas-hash/
+```
+
+Selection Sort:
+
+```text
+http://localhost:8000/simuladores/selection-sort/
+```
+
+Shotgun Sort:
+
+```text
+http://localhost:8000/simuladores/shotgun-sort/
 ```
 
 Não use `npm run dev`: o projeto não depende de Node, Vite ou processo de build.

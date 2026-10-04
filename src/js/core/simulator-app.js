@@ -3,6 +3,8 @@ import { SimulationController } from './simulation-controller.js';
 import { storage } from './storage.js';
 import { $, escapeText, speedLabel } from './utils.js';
 
+const DEFAULT_CATEGORY = { name: 'Estruturas de Dados', anchor: 'estruturas' };
+
 export class SimulatorApp {
   constructor(module) {
     this.module = module;
@@ -70,7 +72,13 @@ export class SimulatorApp {
   renderHeader() {
     const item = this.algorithm;
     $('#module-chip-name').textContent = `Módulo: ${this.module.name}`;
-    $('#breadcrumb').innerHTML = `<a href="../../index.html">Simuladores</a> <b>/</b> ${escapeText(this.module.name)} <b>/</b> ${escapeText(item.menuLabel)}`;
+    const category = this.module.category || DEFAULT_CATEGORY;
+    $('#breadcrumb').innerHTML = [
+      '<a href="../../index.html">Simuladores</a>',
+      `<a href="../../index.html#${escapeText(category.anchor)}">${escapeText(category.name)}</a>`,
+      escapeText(this.module.name),
+      escapeText(item.menuLabel),
+    ].join(' <b>/</b> ');
     $('#lesson-kicker').innerHTML = `<span>${escapeText(item.number)}</span> algoritmo interativo`;
     $('#lesson-title').textContent = item.title;
     $('#lesson-description').textContent = item.description;
