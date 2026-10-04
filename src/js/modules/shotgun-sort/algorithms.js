@@ -18,7 +18,10 @@ const SHOTGUN_CODE = [
 ];
 
 // Linhas do SHOTGUN_CODE (base 0). Cada passo da simulação destaca uma única linha.
-const LINE = { loop: 1, test: 2, returnFalse: 3, endLoop: 5, returnTrue: 6, procedure: 9, whileLoop: 10, shuffle: 11, end: 13 };
+const LINE = { loop: 1, test: 2, returnFalse: 3, returnTrue: 6, procedure: 9, whileLoop: 10, shuffle: 11, end: 13 };
+
+/** Valor mostrado para uma variável que ainda não foi atribuída. */
+const NONE = '—';
 
 /** O simulador desiste depois de tantas tentativas: o algoritmo, em si, não tem limite. */
 export const MAX_ATTEMPTS = 100;
@@ -87,45 +90,62 @@ const compareOf = (values, i, result) => ({
 
 // ---------------------------------------------------------------------------
 // 01 · isOrdenado
-// Linhas: 1 PARA i · 2 SE · 3 RETORNE falso · 5 FIM PARA · 6 RETORNE verdadeiro
+// Execução como num depurador: cada passo é a linha que acabou de executar e as
+// variáveis valem o que valeriam naquele ponto (— = ainda sem valor).
+// Linhas: 1 PARA i · 2 SE · 3 RETORNE falso · 6 RETORNE verdadeiro
 // ---------------------------------------------------------------------------
+
+/** Variáveis locais de uma chamada de isOrdenado: nascem sem valor. */
+const newFrame = () => ({ i: NONE, 'vetor[i]': NONE, 'vetor[i+1]': NONE, retorno: NONE });
+
+/** Aponta o quadro para o par (i, i+1); fora do vetor, o vizinho não existe. */
+function pointFrame(frame, values, i) {
+  frame.i = i;
+  frame['vetor[i]'] = i < values.length ? values[i] : NONE;
+  frame['vetor[i+1]'] = i + 1 < values.length ? values[i + 1] : NONE;
+}
 
 function isSortedSteps(values) {
   const n = values.length;
-  const phase = { label: 'isOrdenado', text: 'Procura um par fora de ordem' };
+  const phase = { label: 'isOrdenado()', text: 'Procura um par fora de ordem', code: true };
+  const frame = newFrame();
+  const at = (extra) => ({ phase, variables: { ...frame }, ...extra });
   const steps = [
-    step(values, 0, 'Chamando isOrdenado', 'A função compara cada elemento com o vizinho da direita. Se algum par estiver fora de ordem, o vetor não está ordenado.', 'neutral', { phase }),
+    step(values, 0, 'Chamando isOrdenado', 'A função compara cada elemento com o vizinho da direita. Se algum par estiver fora de ordem, o vetor não está ordenado. As variáveis locais ainda não têm valor.', 'neutral', at({})),
   ];
 
   for (let i = 0; i < n - 1; i += 1) {
     const bad = values[i] > values[i + 1];
-    const vars = { i, 'vetor[i]': values[i], 'vetor[i+1]': values[i + 1] };
     const pointers = { i, next: i + 1 };
-    steps.push(step(values, LINE.loop, `Avançando i para ${i}`, `i recebe ${i}: ainda há um vizinho à direita (posição ${i + 1}) para comparar.`, 'reading', {
-      sortedCount: verified(i), pointers, phase, variables: { i },
-    }));
-    steps.push(step(values, LINE.test, `Comparando as posições ${i} e ${i + 1}`, `${fmt(values[i])} > ${fmt(values[i + 1])} é ${bad ? 'verdadeiro: o par está fora de ordem.' : 'falso: o par está em ordem.'}`, 'comparison', {
-      sortedCount: verified(i), pointers, activeIndices: [i, i + 1], compare: compareOf(values, i, bad), phase, variables: vars,
-    }));
+    pointFrame(frame, values, i);
+    steps.push(step(values, LINE.loop, `PARA i (i = ${i})`, `i recebe ${i} e a condição i ≤ ${n - 2} é verdadeira: o laço entra, e ainda há um vizinho à direita (posição ${i + 1}) para comparar.`, 'reading', at({
+      sortedCount: verified(i), pointers,
+    })));
+    steps.push(step(values, LINE.test, 'SE vetor[i] > vetor[i + 1]', `${fmt(values[i])} > ${fmt(values[i + 1])} é ${bad ? 'verdadeiro: o par está fora de ordem.' : 'falso: o par está em ordem.'}`, 'comparison', at({
+      sortedCount: verified(i), pointers, activeIndices: [i, i + 1], compare: compareOf(values, i, bad),
+    })));
     if (bad) {
-      steps.push(step(values, LINE.returnFalse, 'Retornando falso', `O par das posições ${i} e ${i + 1} está fora de ordem (${fmt(values[i])} > ${fmt(values[i + 1])}). A função retorna falso na hora, sem olhar o restante do vetor.`, 'warning', {
-        sortedCount: verified(i), pointers, warnIndices: [i, i + 1], compare: compareOf(values, i, true), phase, variables: { ...vars, retorno: 'falso' }, output: ['isOrdenado → falso'],
-      }));
+      frame.retorno = 'falso';
+      steps.push(step(values, LINE.returnFalse, 'RETORNE falso', `O par das posições ${i} e ${i + 1} está fora de ordem (${fmt(values[i])} > ${fmt(values[i + 1])}). A função retorna falso na hora, sem olhar o restante do vetor.`, 'warning', at({
+        sortedCount: verified(i), pointers, warnIndices: [i, i + 1], compare: compareOf(values, i, true), output: ['isOrdenado → falso'],
+      })));
       return steps;
     }
   }
 
-  steps.push(step(values, LINE.endLoop, 'Fim do laço', `i passou de ${n - 2}: os ${n - 1} pares foram verificados e todos estão em ordem.`, 'success', { sortedCount: n, phase, variables: { i: n - 1 } }));
-  steps.push(step(values, LINE.returnTrue, 'Retornando verdadeiro', `O vetor está ordenado. Para dizer isso foi preciso comparar todos os ${n - 1} pares.`, 'done', {
-    sortedCount: n, phase, variables: { retorno: 'verdadeiro' }, output: ['isOrdenado → verdadeiro', `Comparações: ${n - 1}`],
-  }));
+  pointFrame(frame, values, n - 1);
+  steps.push(step(values, LINE.loop, `PARA i (i = ${n - 1}): fim`, `i recebe ${n - 1} e a condição i ≤ ${n - 2} é falsa: o laço termina. Os ${n - 1} pares foram verificados e todos estão em ordem.`, 'success', at({ sortedCount: n })));
+  frame.retorno = 'verdadeiro';
+  steps.push(step(values, LINE.returnTrue, 'RETORNE verdadeiro', `O vetor está ordenado. Para dizer isso foi preciso comparar todos os ${n - 1} pares.`, 'done', at({
+    sortedCount: n, output: ['isOrdenado → verdadeiro', `Comparações: ${n - 1}`],
+  })));
   return steps;
 }
 
 // ---------------------------------------------------------------------------
 // 02 · Shotgun Sort
-// Cada tentativa percorre as linhas na ordem em que são executadas. A varredura
-// de isOrdenado vira um passo só, na linha do SE que encontra o par fora de ordem.
+// Cada tentativa percorre as linhas na ordem em que são executadas, com as
+// variáveis locais de isOrdenado nascendo sem valor a cada chamada.
 // ---------------------------------------------------------------------------
 
 function shotgunSteps(values, rng) {
@@ -137,54 +157,56 @@ function shotgunSteps(values, rng) {
   const stats = (attempt) => ({ 'verificações': attempt, embaralhamentos: shuffles });
 
   const steps = [
-    step(current, LINE.procedure, 'Iniciando o Shotgun Sort', 'O algoritmo não tem estratégia: verifica se o vetor está ordenado e, se não estiver, embaralha tudo e tenta de novo.', 'neutral', { stats: stats(0) }),
+    step(current, LINE.procedure, 'Iniciando o Shotgun Sort', 'O algoritmo não tem estratégia: verifica se o vetor está ordenado e, se não estiver, embaralha tudo e tenta de novo.', 'neutral', { stats: stats(0), variables: newFrame() }),
   ];
 
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
     const bad = firstUnordered(current);
     const name = `Tentativa ${pad(attempt)}`;
     const checking = { label: name, text: 'Verificando se está ordenado' };
-    const vars = { tentativa: attempt, embaralhamentos: shuffles };
+    const frame = newFrame();
+    const at = (extra) => ({ phase: checking, stats: stats(attempt), output: clone(log), variables: { ...frame }, ...extra });
 
-    steps.push(step(current, LINE.whileLoop, `${name}: chamando isOrdenado`, 'O laço ENQUANTO precisa saber se o vetor está ordenado, então chama isOrdenado(vetor).', 'reading', {
-      phase: checking, stats: stats(attempt), variables: vars, output: clone(log),
-    }));
+    steps.push(step(current, LINE.whileLoop, 'ENQUANTO isOrdenado(vetor) = falso', 'A condição do ENQUANTO chama isOrdenado(vetor). A cada chamada, as variáveis locais da função começam sem valor.', 'reading', at({})));
 
     // Percorre os pares como isOrdenado: PARA e SE para cada um, até o primeiro fora de ordem.
     const pairs = bad === -1 ? n - 1 : bad + 1;
     for (let i = 0; i < pairs; i += 1) {
       const outOfOrder = i === bad;
-      const at = { sortedCount: verified(i), pointers: { i, next: i + 1 }, phase: checking, stats: stats(attempt), variables: { ...vars, i }, output: clone(log) };
-      steps.push(step(current, LINE.loop, `${name}: avançando i para ${i}`, `i recebe ${i}: ainda há um vizinho à direita (posição ${i + 1}) para comparar.`, 'reading', at));
-      steps.push(step(current, LINE.test, `${name}: comparando as posições ${i} e ${i + 1}`, `${fmt(current[i])} > ${fmt(current[i + 1])} é ${outOfOrder ? 'verdadeiro: o par está fora de ordem.' : 'falso: o par está em ordem.'}`, 'comparison', {
-        ...at, activeIndices: [i, i + 1], compare: compareOf(current, i, outOfOrder),
-      }));
+      const pointers = { i, next: i + 1 };
+      pointFrame(frame, current, i);
+      steps.push(step(current, LINE.loop, `PARA i (i = ${i})`, `i recebe ${i} e a condição i ≤ ${n - 2} é verdadeira: o laço entra, e ainda há um vizinho à direita (posição ${i + 1}) para comparar.`, 'reading', at({
+        sortedCount: verified(i), pointers,
+      })));
+      steps.push(step(current, LINE.test, 'SE vetor[i] > vetor[i + 1]', `${fmt(current[i])} > ${fmt(current[i + 1])} é ${outOfOrder ? 'verdadeiro: o par está fora de ordem.' : 'falso: o par está em ordem.'}`, 'comparison', at({
+        sortedCount: verified(i), pointers, activeIndices: [i, i + 1], compare: compareOf(current, i, outOfOrder),
+      })));
     }
 
     if (bad === -1) {
-      steps.push(step(current, LINE.endLoop, `${name}: todos os pares em ordem`, `isOrdenado percorreu os ${n - 1} pares e nenhum estava fora de ordem.`, 'success', {
-        sortedCount: n, phase: checking, stats: stats(attempt), variables: vars, output: clone(log),
-      }));
-      steps.push(step(current, LINE.returnTrue, `${name}: isOrdenado devolve verdadeiro`, 'A função retorna verdadeiro, então a condição do ENQUANTO deixa de valer e o laço termina.', 'success', {
-        sortedCount: n, phase: checking, stats: stats(attempt), variables: { ...vars, retorno: 'verdadeiro' }, output: [...log, `${name}: ${list(current)} → verdadeiro`],
-      }));
+      pointFrame(frame, current, n - 1);
+      steps.push(step(current, LINE.loop, `PARA i (i = ${n - 1}): fim`, `i recebe ${n - 1} e a condição i ≤ ${n - 2} é falsa: o laço termina. Os ${n - 1} pares foram verificados e nenhum estava fora de ordem.`, 'success', at({ sortedCount: n })));
+      frame.retorno = 'verdadeiro';
+      steps.push(step(current, LINE.returnTrue, 'RETORNE verdadeiro', 'A função retorna verdadeiro, então a condição do ENQUANTO deixa de valer e o laço termina.', 'success', at({
+        sortedCount: n, output: [...log, `${name}: ${list(current)} → verdadeiro`],
+      })));
       steps.push(step(current, LINE.end, 'Vetor ordenado', attempt === 1
         ? 'O vetor já estava ordenado: a primeira verificação respondeu verdadeiro, sem nenhum embaralhamento. Esse é o melhor caso, de custo O(n) — mais barato que qualquer outro método de ordenação.'
         : `A sorte finalmente acertou, depois de ${attempt} verificações e ${shuffles} embaralhamentos. Para ${n} elementos eram esperadas, em média, ${total} tentativas.`, 'done', {
-        sortedCount: n, stats: stats(attempt), output: [...log, `${name}: ${list(current)} → verdadeiro`, `Embaralhamentos: ${shuffles}`],
+        sortedCount: n, stats: stats(attempt), variables: newFrame(), output: [...log, `${name}: ${list(current)} → verdadeiro`, `Embaralhamentos: ${shuffles}`],
       }));
       return steps;
     }
 
-    const pairAt = { sortedCount: verified(bad), pointers: { i: bad, next: bad + 1 }, compare: compareOf(current, bad, true), phase: checking, stats: stats(attempt) };
+    frame.retorno = 'falso';
     log.push(`${name}: ${list(current)} → falso`);
-    steps.push(step(current, LINE.returnFalse, `${name}: isOrdenado devolve falso`, 'Basta um par fora de ordem para a função devolver falso, sem olhar o resto do vetor.', 'warning', {
-      ...pairAt, warnIndices: [bad, bad + 1], variables: { ...vars, i: bad, retorno: 'falso' }, output: clone(log),
-    }));
+    steps.push(step(current, LINE.returnFalse, 'RETORNE falso', 'Basta um par fora de ordem para a função devolver falso, sem olhar o resto do vetor.', 'warning', at({
+      sortedCount: verified(bad), pointers: { i: bad, next: bad + 1 }, compare: compareOf(current, bad, true), warnIndices: [bad, bad + 1],
+    })));
 
     if (attempt === MAX_ATTEMPTS) {
       steps.push(step(current, LINE.whileLoop, 'Limite de tentativas do simulador', `Foram ${MAX_ATTEMPTS} tentativas sem acertar, e o simulador para aqui. O algoritmo, porém, continuaria: com ${n} elementos a média esperada é ${total} tentativas, e como o sorteio não tem memória nada garante que ele termine algum dia.`, 'warning', {
-        stats: stats(attempt), output: [...log, `Parei após ${MAX_ATTEMPTS} tentativas`, `Média esperada para n = ${n}: ${total}`],
+        stats: stats(attempt), variables: newFrame(), output: [...log, `Parei após ${MAX_ATTEMPTS} tentativas`, `Média esperada para n = ${n}: ${total}`],
       }));
       return steps;
     }
@@ -192,10 +214,10 @@ function shotgunSteps(values, rng) {
     const next = shuffled(current, rng);
     const changedIndices = next.map((value, index) => (value !== current[index] ? index : -1)).filter((index) => index >= 0);
     shuffles += 1;
-    steps.push(step(next, LINE.shuffle, `${name}: embaralhando`, changedIndices.length
-      ? 'Os elementos são reordenados ao acaso. Nada do que já estava certo é aproveitado: a próxima ordem é um novo sorteio.'
-      : 'O sorteio devolveu a mesma ordem de antes, o que também é possível.', 'update', {
-      changedIndices, phase: { label: name, text: 'Embaralha o vetor' }, stats: stats(attempt), variables: { tentativa: attempt, embaralhamentos: shuffles }, output: clone(log),
+    steps.push(step(next, LINE.shuffle, 'embaralha(vetor)', changedIndices.length
+      ? 'A função retornou falso, então o corpo do ENQUANTO executa: os elementos são reordenados ao acaso. Nada do que já estava certo é aproveitado.'
+      : 'A função retornou falso, então o corpo do ENQUANTO executa. O sorteio devolveu a mesma ordem de antes, o que também é possível.', 'update', {
+      changedIndices, phase: { label: name, text: 'Embaralha o vetor' }, stats: stats(attempt), variables: newFrame(), output: clone(log),
     }));
     current = next;
   }

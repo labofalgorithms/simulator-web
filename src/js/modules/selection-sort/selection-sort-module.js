@@ -30,14 +30,14 @@ function renderChart(step) {
   const longest = Math.max(1, n - 1);
   const rows = bars.map((bar, index) => `
     <div class="sort-bar-row${bar.current ? ' current' : ''}">
-      <span>Passada ${index + 1}</span>
+      <span>i = ${index}</span>
       <span class="sort-bar-track"><i style="width:${bar.value === null ? 0 : (bar.value / longest) * 100}%"></i></span>
       <b class="sort-bar-value">${bar.value === null ? '·' : bar.value}</b>
       <span class="sort-bar-swap" title="troca">${bar.swapped ? '⇄' : ''}</span>
     </div>`).join('');
   return `
     <div class="sort-chart">
-      <div class="sort-chart-title"><span>Comparações por passada</span><span>⇄ = uma troca</span></div>
+      <div class="sort-chart-title"><span>Comparações em cada passada (valor de i)</span><span>⇄ = uma troca</span></div>
       <div class="sort-bars">${rows}</div>
       <div class="sort-totals">
         <div class="sort-total${final ? ' final' : ''}"><small>Comparações</small><strong>${comparisons}</strong><span>${final ? `n(n−1)/2 = ${n}·${n - 1}/2 = ${expected}` : `esperado ao final: ${expected}`}</span></div>

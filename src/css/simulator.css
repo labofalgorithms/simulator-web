@@ -212,6 +212,7 @@ button.hash-cell:hover{border-color:var(--cyan);transform:translateY(-2px)}
 .sort-stage{min-height:300px;padding:14px 22px 22px;display:flex;flex-direction:column;justify-content:center;gap:14px}
 .sort-phase{display:flex;align-items:center;gap:10px;min-height:26px;color:var(--muted);font-size:12px}
 .sort-phase-badge{padding:5px 10px;border:1px solid rgba(34,211,238,.32);border-radius:999px;background:var(--cyan-soft);color:var(--cyan);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.sort-phase-badge.code{text-transform:none;letter-spacing:0;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 .sort-scroll{overflow-x:auto;max-width:100%;padding:4px 6px 6px;scrollbar-width:thin}
 .sort-row{display:flex;justify-content:center;gap:5px;width:100%;min-width:min-content}
 .sort-slot{flex:1 1 0;min-width:38px;max-width:66px;display:flex;flex-direction:column;align-items:center;gap:6px}

@@ -89,7 +89,7 @@ export function renderArray(step, state, escapeText, { showTags = false } = {}) 
 }
 
 export const renderPhase = (step, escapeText) => `<div class="sort-phase">${step.phase
-  ? `<span class="sort-phase-badge">${escapeText(step.phase.label)}</span><span>${escapeText(step.phase.text)}</span>`
+  ? `<span class="sort-phase-badge${step.phase.code ? ' code' : ''}">${escapeText(step.phase.label)}</span><span>${escapeText(step.phase.text)}</span>`
   : ''}</div>`;
 
 /** `compare.alarm` inverte as cores: "Sim" é o resultado ruim (par fora de ordem). */

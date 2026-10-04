@@ -15,7 +15,10 @@ const SORT_CODE = [
 ];
 
 // Linhas do SORT_CODE (base 0). Cada passo da simulação destaca uma única linha.
-const LINE = { loopI: 1, minInit: 2, loopJ: 3, test: 4, minUpdate: 5, endLoopJ: 7, temp: 8, copy: 9, put: 10, end: 12 };
+const LINE = { loopI: 1, minInit: 2, loopJ: 3, test: 4, minUpdate: 5, temp: 8, copy: 9, put: 10, end: 12 };
+
+/** Valor mostrado para uma variável que ainda não foi atribuída. */
+const NONE = '—';
 
 export const algorithms = [
   {
@@ -141,7 +144,9 @@ export function stabilityExample(count) {
 
 // ---------------------------------------------------------------------------
 // 01 · Encontrar o menor
-// Linhas: 1 minimo ← inicio · 2 PARA j · 3 SE · 4 minimo ← j · 6 FIM PARA · 7 RETORNE
+// Execução como num depurador: cada passo é a linha que acabou de executar e as
+// variáveis valem o que valeriam naquele ponto. Linhas: 1 minimo ← inicio ·
+// 2 PARA j · 3 SE · 4 minimo ← j · 7 RETORNE
 // ---------------------------------------------------------------------------
 
 function findMinSteps(values, config) {
@@ -149,45 +154,45 @@ function findMinSteps(values, config) {
   const start = Math.max(0, Math.min(n - 1, Number(config.inicio) || 0));
   const outsideIndices = range(start);
   const phase = { label: 'Varredura', text: 'Busca o menor' };
-  const base = (extra) => ({ outsideIndices, phase, ...extra });
-  const vars = (j, min) => ({ inicio: start, ...(j === null ? {} : { j }), minimo: min, 'vetor[minimo]': values[min] });
-  let min = start;
+  const scope = { inicio: start, j: NONE, minimo: NONE };
+  const base = (extra) => ({ outsideIndices, phase, variables: { ...scope }, ...extra });
 
+  let min = start;
   const steps = [
-    step(values, 0, 'Iniciando a varredura', `Procuraremos o menor valor do sub-vetor que vai da posição ${start} até a ${n - 1}.`, 'neutral', base({ variables: { inicio: start } })),
-    step(values, 1, 'Primeiro candidato', `minimo recebe ${start}: por enquanto, ${fmt(values[start])} é o menor valor conhecido.`, 'update', base({ pointers: { min }, variables: vars(null, min) })),
+    step(values, 0, 'Iniciando a varredura', `Procuraremos o menor valor do sub-vetor que vai da posição ${start} até a ${n - 1}. Os parâmetros já têm valor (inicio = ${start}); as demais variáveis ainda não foram atribuídas.`, 'neutral', base({})),
   ];
 
-  if (start === n - 1) {
-    steps.push(step(values, 2, 'O laço não executa', `j começaria em ${start + 1}, depois do último índice (${n - 1}), então o laço PARA não executa e o único elemento já é o menor.`, 'reading', base({ pointers: { min }, variables: vars(null, min) })));
-  }
+  scope.minimo = min;
+  steps.push(step(values, 1, 'minimo ← inicio', `minimo recebe ${start}: por enquanto, ${fmt(values[start])} é o menor valor conhecido.`, 'update', base({ pointers: { min } })));
 
   for (let j = start + 1; j < n; j += 1) {
-    steps.push(step(values, 2, `Avançando j para ${j}`, `j recebe ${j}: ainda está dentro do sub-vetor, que vai até a posição ${n - 1}.`, 'reading', base({ pointers: { j, min }, variables: vars(j, min) })));
+    scope.j = j;
+    steps.push(step(values, 2, `PARA j (j = ${j})`, `j recebe ${j} e a condição j ≤ ${n - 1} é verdadeira: o laço entra.`, 'reading', base({ pointers: { j, min } })));
     const less = values[j] < values[min];
     const verdict = less
       ? 'Encontramos um valor menor.'
       : values[j] === values[min] ? 'Os valores são iguais; o teste estrito (<) mantém o candidato atual.' : `O candidato continua sendo ${fmt(values[min])}.`;
-    steps.push(step(values, 3, `Comparando as posições ${j} e ${min}`, `${fmt(values[j])} < ${fmt(values[min])} é ${less ? 'verdadeiro' : 'falso'}. ${verdict}`, 'comparison', base({ pointers: { j, min }, compare: compareOf(values, j, min, less), variables: vars(j, min) })));
+    steps.push(step(values, 3, 'SE vetor[j] < vetor[minimo]', `${fmt(values[j])} < ${fmt(values[min])} é ${less ? 'verdadeiro' : 'falso'}. ${verdict}`, 'comparison', base({ pointers: { j, min }, compare: compareOf(values, j, min, less) })));
     if (less) {
       min = j;
-      steps.push(step(values, 4, 'Atualizando o menor', `minimo recebe ${j}: agora o menor candidato é ${fmt(values[min])}.`, 'update', base({ pointers: { j, min }, changedIndices: [j], variables: vars(j, min) })));
+      scope.minimo = min;
+      steps.push(step(values, 4, 'minimo ← j', `minimo recebe ${j}: agora o menor candidato é ${fmt(values[min])}.`, 'update', base({ pointers: { j, min }, changedIndices: [j] })));
     }
   }
 
-  if (start < n - 1) {
-    steps.push(step(values, 6, 'Varredura concluída', `j passou de ${n - 1}: todas as posições do sub-vetor foram examinadas. O menor valor é ${fmt(values[min])}.`, 'success', base({ pointers: { min }, variables: vars(null, min) })));
-  }
-  steps.push(step(values, 7, 'Retornando a posição do menor', `A função retorna ${min}: o menor valor do sub-vetor, ${fmt(values[min])}, está na posição ${min}.`, 'done', base({
+  scope.j = n;
+  steps.push(step(values, 2, `PARA j (j = ${n}): fim`, start === n - 1
+    ? `j recebe ${n} e a condição j ≤ ${n - 1} é falsa: o laço nem chega a entrar, e o único elemento já é o menor.`
+    : `j recebe ${n} e a condição j ≤ ${n - 1} é falsa: o laço termina. Todas as posições do sub-vetor foram examinadas e o menor valor é ${fmt(values[min])}.`, 'success', base({ pointers: { min } })));
+  steps.push(step(values, 7, 'RETORNE minimo', `A função retorna ${min}: o menor valor do sub-vetor, ${fmt(values[min])}, está na posição ${min}.`, 'done', base({
     pointers: { min },
-    variables: vars(null, min),
     output: [`Menor valor: ${fmt(values[min])}`, `Posição: ${min}`],
   })));
   return steps;
 }
 
 // ---------------------------------------------------------------------------
-// 02 · Selection Sort completo
+// 02 · Selection Sort completo, passo a passo como num depurador
 // ---------------------------------------------------------------------------
 
 function sortSteps(values) {
@@ -197,59 +202,65 @@ function sortSteps(values) {
   let comparisons = 0;
   let swaps = 0;
   const stats = () => ({ 'comparações': comparisons, trocas: swaps });
+  const scope = { i: NONE, j: NONE, minimo: NONE, temp: NONE };
   const steps = [
-    step(a, 0, 'Iniciando o Selection Sort', `O vetor tem ${n} posições. A cada passada, o menor valor do sub-vetor não ordenado vai para a primeira posição dele.`, 'neutral', { stats: stats() }),
+    step(a, 0, 'Iniciando o Selection Sort', `O vetor tem ${n} posições. As variáveis i, j, minimo e temp ainda não foram atribuídas. A cada passada, o menor valor do sub-vetor não ordenado vai para a primeira posição dele.`, 'neutral', { stats: stats(), variables: { ...scope } }),
   ];
 
   for (let i = 0; i < n; i += 1) {
-    const scan = { label: `Varredura ${pad(i + 1)}`, text: 'Busca o menor' };
-    const swap = { label: `Varredura ${pad(i + 1)}`, text: 'Troca o menor com a primeira posição do sub-vetor' };
+    const scan = { label: `i = ${i}`, text: 'Busca o menor', code: true };
+    const swap = { label: `i = ${i}`, text: 'Troca o menor com a primeira posição do sub-vetor', code: true };
     let min = i;
-    const at = (extra) => ({ sortedCount: i, stats: stats(), output: clone(log), ...extra });
+    const at = (extra) => ({ sortedCount: i, stats: stats(), output: clone(log), variables: { ...scope }, ...extra });
 
-    steps.push(step(a, LINE.loopI, `Iniciando a varredura ${i + 1}`, i < n - 1
-      ? `i recebe ${i}. O sub-vetor não ordenado vai da posição ${i} até a ${n - 1}; tudo à esquerda de i já está em sua posição final.`
-      : `i recebe ${i}: resta apenas a última posição.`, 'reading', at({ pointers: { i }, phase: scan, variables: { i } })));
-    steps.push(step(a, LINE.minInit, 'Assumindo o primeiro como menor', `minimo recebe ${i}: por enquanto, ${fmt(a[i])} é o menor candidato.`, 'update', at({ pointers: { i, min }, phase: scan, variables: { i, minimo: min } })));
-
-    if (i === n - 1) {
-      steps.push(step(a, LINE.loopJ, 'O laço PARA j não executa', `j começaria em ${i + 1}, depois do último índice (${n - 1}): não há posições depois de i, e o único elemento já é o menor.`, 'reading', at({ pointers: { i, min }, phase: scan, variables: { i, minimo: min } })));
-    }
+    scope.i = i;
+    steps.push(step(a, LINE.loopI, `PARA i (i = ${i})`, `i recebe ${i} e a condição i ≤ ${n - 1} é verdadeira: o laço entra. O sub-vetor não ordenado vai da posição ${i} até a ${n - 1}; tudo à esquerda de i já está em sua posição final.`, 'reading', at({ pointers: { i }, phase: scan })));
+    scope.minimo = i;
+    steps.push(step(a, LINE.minInit, 'minimo ← i', `minimo recebe ${i}: por enquanto, ${fmt(a[i])} é o menor candidato.`, 'update', at({ pointers: { i, min }, phase: scan })));
 
     for (let j = i + 1; j < n; j += 1) {
-      steps.push(step(a, LINE.loopJ, `Avançando j para ${j}`, `j recebe ${j}: ainda está dentro do sub-vetor, que vai até a posição ${n - 1}.`, 'reading', at({ pointers: { i, j, min }, phase: scan, variables: { i, j, minimo: min } })));
+      scope.j = j;
+      steps.push(step(a, LINE.loopJ, `PARA j (j = ${j})`, `j recebe ${j} e a condição j ≤ ${n - 1} é verdadeira: o laço entra.`, 'reading', at({ pointers: { i, j, min }, phase: scan })));
       comparisons += 1;
       const less = a[j] < a[min];
       const verdict = less ? 'Há um novo menor.' : a[j] === a[min] ? 'Valores iguais: o candidato não muda.' : `O candidato continua sendo ${fmt(a[min])}.`;
-      steps.push(step(a, LINE.test, `Comparando as posições ${j} e ${min}`, `${fmt(a[j])} < ${fmt(a[min])} é ${less ? 'verdadeiro' : 'falso'}. ${verdict}`, 'comparison', at({ pointers: { i, j, min }, compare: compareOf(a, j, min, less), phase: scan, variables: { i, j, minimo: min } })));
+      steps.push(step(a, LINE.test, 'SE vetor[j] < vetor[minimo]', `${fmt(a[j])} < ${fmt(a[min])} é ${less ? 'verdadeiro' : 'falso'}. ${verdict}`, 'comparison', at({ pointers: { i, j, min }, compare: compareOf(a, j, min, less), phase: scan })));
       if (less) {
         min = j;
-        steps.push(step(a, LINE.minUpdate, 'Atualizando o menor', `minimo recebe ${j}: o novo candidato é ${fmt(a[min])}.`, 'update', at({ pointers: { i, j, min }, changedIndices: [j], phase: scan, variables: { i, j, minimo: min } })));
+        scope.minimo = min;
+        steps.push(step(a, LINE.minUpdate, 'minimo ← j', `minimo recebe ${j}: o novo candidato é ${fmt(a[min])}.`, 'update', at({ pointers: { i, j, min }, changedIndices: [j], phase: scan })));
       }
     }
 
-    if (i < n - 1) {
-      steps.push(step(a, LINE.endLoopJ, `Varredura ${i + 1} concluída`, `j passou de ${n - 1}: o menor valor do sub-vetor é ${fmt(a[min])}, na posição ${min}.`, 'success', at({ pointers: { i, min }, phase: scan, variables: { i, minimo: min } })));
-    }
+    scope.j = n;
+    steps.push(step(a, LINE.loopJ, `PARA j (j = ${n}): fim`, i === n - 1
+      ? `j recebe ${n} e a condição j ≤ ${n - 1} é falsa: o laço nem chega a entrar, porque não há posições depois de i. O único elemento já é o menor.`
+      : `j recebe ${n} e a condição j ≤ ${n - 1} é falsa: o laço termina. O menor valor do sub-vetor é ${fmt(a[min])}, na posição ${min}.`, 'success', at({ pointers: { i, min }, phase: scan })));
 
     const pair = i === min ? [i] : [i, min];
     const temp = a[i];
-    steps.push(step(a, LINE.temp, 'Guardando vetor[i] em temp', `temp recebe ${fmt(temp)}, o valor que está na primeira posição do sub-vetor.`, 'update', at({ pointers: { i, min }, comparedIndices: pair, phase: swap, variables: { i, minimo: min, temp } })));
+    scope.temp = temp;
+    steps.push(step(a, LINE.temp, 'temp ← vetor[i]', `temp recebe ${fmt(temp)}, o valor que está na primeira posição do sub-vetor.`, 'update', at({ pointers: { i, min }, comparedIndices: pair, phase: swap })));
     a[i] = a[min];
-    steps.push(step(a, LINE.copy, 'Copiando o menor para vetor[i]', i === min
+    steps.push(step(a, LINE.copy, 'vetor[i] ← vetor[minimo]', i === min
       ? `vetor[${i}] recebe ${fmt(a[i])}: o mesmo valor que já estava lá.`
-      : `vetor[${i}] recebe ${fmt(a[i])}. Por um instante, ${fmt(a[i])} aparece duas vezes; o valor original está salvo em temp.`, 'update', at({ pointers: { i, min }, comparedIndices: pair, changedIndices: [i], phase: swap, variables: { i, minimo: min, temp } })));
+      : `vetor[${i}] recebe ${fmt(a[i])}. Por um instante, ${fmt(a[i])} aparece duas vezes; o valor original está salvo em temp.`, 'update', at({ pointers: { i, min }, comparedIndices: pair, changedIndices: [i], phase: swap })));
     a[min] = temp;
     swaps += 1;
-    log.push(`Varredura ${pad(i + 1)}: menor = ${fmt(a[i])} → posição ${i}`);
-    steps.push(step(a, LINE.put, 'Completando a troca', i === min
+    log.push(`i = ${i}: menor = ${fmt(a[i])} → posição ${i}`);
+    steps.push(step(a, LINE.put, 'vetor[minimo] ← temp', i === min
       ? `vetor[${min}] recebe ${fmt(temp)}. O menor já estava na posição certa, então a troca não altera o vetor.`
-      : `vetor[${min}] recebe ${fmt(temp)}. A posição ${i} agora guarda ${fmt(a[i])}, seu valor definitivo.`, 'success', at({ sortedCount: i + 1, pointers: { i, min }, comparedIndices: pair, changedIndices: pair, phase: swap, variables: { i, minimo: min, temp } })));
+      : `vetor[${min}] recebe ${fmt(temp)}. A posição ${i} agora guarda ${fmt(a[i])}, seu valor definitivo.`, 'success', at({ sortedCount: i + 1, pointers: { i, min }, comparedIndices: pair, changedIndices: pair, phase: swap })));
   }
 
+  scope.i = n;
+  steps.push(step(a, LINE.loopI, `PARA i (i = ${n}): fim`, `i recebe ${n} e a condição i ≤ ${n - 1} é falsa: o laço termina. Todas as posições já estão em sua posição final.`, 'success', {
+    sortedCount: n, stats: stats(), output: clone(log), variables: { ...scope },
+  }));
   steps.push(step(a, LINE.end, 'Ordenação concluída', `Todas as posições estão em ordem crescente, após ${comparisons} comparações e ${swaps} trocas.`, 'done', {
     sortedCount: n,
     stats: stats(),
+    variables: { ...scope },
     output: [...log, `Vetor ordenado: [${a.map(fmt).join(', ')}]`, `Comparações: ${comparisons} · Trocas: ${swaps}`],
   }));
   return steps;
@@ -291,27 +302,27 @@ function countingSteps(values) {
 
   passes.forEach((pass, index) => {
     const { i, min } = pass;
-    const phaseName = `Varredura ${pad(i + 1)}`;
+    const phaseName = `i = ${i}`;
     const pair = i === min ? [i] : [i, min];
-    const swapPhase = { label: phaseName, text: 'Troca o menor com a primeira posição' };
+    const swapPhase = { label: phaseName, text: 'Troca o menor com a primeira posição', code: true };
     bars.forEach((bar, position) => { bar.current = position === index; });
     comparisons += pass.comparisons;
     bars[index].value = pass.comparisons;
 
-    steps.push(step(valuesOf(pass.before), scanLine(pass), `Passada ${i + 1}: varredura`, pass.comparisons
+    steps.push(step(valuesOf(pass.before), scanLine(pass), `i = ${i}: varredura`, pass.comparisons
       ? `A linha SE vetor[j] < vetor[minimo] executa ${n - 1 - i} vezes, uma para cada j de ${i + 1} a ${n - 1}. O menor está na posição ${min}.`
       : 'Não há posições depois de i: o laço PARA j não executa e nenhuma comparação é feita nesta passada.', 'comparison', common({
-      sortedCount: i, pointers: { i, min }, phase: { label: phaseName, text: 'Busca o menor' }, variables: { i, minimo: min, 'comparações da passada': pass.comparisons, 'comparações acumuladas': comparisons },
+      sortedCount: i, pointers: { i, min }, phase: { label: phaseName, text: 'Busca o menor', code: true }, variables: { i, minimo: min, 'comparações da passada': pass.comparisons, 'comparações acumuladas': comparisons },
     })));
-    steps.push(step(valuesOf(pass.before), LINE.temp, `Passada ${i + 1}: guardando em temp`, 'A troca são três atribuições (temp, vetor[i], vetor[minimo]). Esse custo é constante, não depende do tamanho do vetor.', 'update', common({
+    steps.push(step(valuesOf(pass.before), LINE.temp, `i = ${i}: guardando em temp`, 'A troca são três atribuições (temp, vetor[i], vetor[minimo]). Esse custo é constante, não depende do tamanho do vetor.', 'update', common({
       sortedCount: i, comparedIndices: pair, pointers: { i, min }, phase: swapPhase, variables: { i, minimo: min, temp: pass.before[i].v },
     })));
-    steps.push(step(valuesOf(midSwap(pass.before, i, min)), LINE.copy, `Passada ${i + 1}: copiando o menor`, `vetor[${i}] recebe ${fmt(pass.before[min].v)}.`, 'update', common({
+    steps.push(step(valuesOf(midSwap(pass.before, i, min)), LINE.copy, `i = ${i}: copiando o menor`, `vetor[${i}] recebe ${fmt(pass.before[min].v)}.`, 'update', common({
       sortedCount: i, comparedIndices: pair, changedIndices: [i], pointers: { i, min }, phase: swapPhase, variables: { i, minimo: min, temp: pass.before[i].v },
     })));
     swaps += 1;
     bars[index].swapped = true;
-    steps.push(step(valuesOf(pass.after), LINE.put, `Passada ${i + 1}: completando a troca`, `vetor[${min}] recebe ${fmt(pass.before[i].v)}. Mais uma troca contada.`, 'success', common({
+    steps.push(step(valuesOf(pass.after), LINE.put, `i = ${i}: completando a troca`, `vetor[${min}] recebe ${fmt(pass.before[i].v)}. Mais uma troca contada.`, 'success', common({
       sortedCount: i + 1, comparedIndices: pair, changedIndices: pair, pointers: { i, min }, phase: swapPhase, variables: { i, minimo: min, trocas: swaps, 'comparações acumuladas': comparisons },
     })));
   });
@@ -350,7 +361,7 @@ function adaptabilitySteps(values) {
   ];
 
   for (let index = 0; index < n; index += 1) {
-    const phase = `Varredura ${pad(index + 1)}`;
+    const phase = `i = ${index}`;
     const remaining = n - 1 - index;
     scenarios.forEach((scenario) => { scenario.comparisons += scenario.passes[index].comparisons; });
     steps.push(step(values, scanLine(scenarios[0].passes[index]), `${phase}: varredura`, remaining
@@ -405,15 +416,15 @@ function stabilitySteps(values) {
 
   passes.forEach((pass) => {
     const { i, min } = pass;
-    const phase = `Varredura ${pad(i + 1)}`;
-    const swapPhase = { label: phase, text: 'Troca o menor com a primeira posição' };
+    const phase = `i = ${i}`;
+    const swapPhase = { label: phase, text: 'Troca o menor com a primeira posição', code: true };
     const minItem = pass.before[min];
     const tied = pass.before.slice(min + 1).some((item) => item.v === minItem.v);
     const pair = i === min ? [i] : [i, min];
     const at = (extra) => ({ pointers: { i, min }, variables: { i, minimo: min }, output: clone(log), ...extra });
 
     steps.push(step(valuesOf(pass.before), scanLine(pass), `${phase}: o menor é ${label(minItem)}`, `${pass.comparisons ? '' : 'O laço PARA j não executa: '}O menor valor do sub-vetor está na posição ${min}.${tied ? ` Há outro ${fmt(minItem.v)} mais adiante; o teste estrito (<) fica com o primeiro que encontrou.` : ''}`, 'comparison', at({
-      tags: tagsOf(pass.before), sortedCount: i, phase: { label: phase, text: 'Busca o menor' },
+      tags: tagsOf(pass.before), sortedCount: i, phase: { label: phase, text: 'Busca o menor', code: true },
     })));
     steps.push(step(valuesOf(pass.before), LINE.temp, `${phase}: guardando em temp`, `temp recebe ${label(pass.moved)}, o elemento que está na posição ${i}.`, 'update', at({
       tags: tagsOf(pass.before), sortedCount: i, comparedIndices: pair, phase: swapPhase,
