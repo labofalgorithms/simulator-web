@@ -169,6 +169,10 @@ O pseudocódigo segue o da aula (`para i ← 0 até tamanho - 1`, com a troca ex
 
 Os módulos possuem execução automática, avanço e retorno manuais, controle de velocidade, pseudocódigo destacado, variáveis, console, entrada manual, geração aleatória e tema claro/escuro.
 
+## Contagem de acessos
+
+O site conta acessos de forma anônima com o [GoatCounter](https://www.goatcounter.com): sem cookies e sem guardar o IP. O painel fica em `https://labofalgorithms.goatcounter.com`. A contagem não roda em `localhost`, e as trocas de simulador no menu lateral aparecem como eventos (`modulo/simulador`). O código está em `src/js/core/analytics.js`.
+
 ## Estrutura
 
 ```text

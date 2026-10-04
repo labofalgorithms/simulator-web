@@ -1,3 +1,4 @@
+import { initAnalytics, trackEvent } from './analytics.js';
 import { icons } from './icons.js';
 import { SimulationController } from './simulation-controller.js';
 import { storage } from './storage.js';
@@ -28,6 +29,7 @@ export class SimulatorApp {
   }
 
   start() {
+    initAnalytics();
     this.bindEvents();
     this.module.handleAction('random-data', null, this);
   }
@@ -186,6 +188,7 @@ export class SimulatorApp {
 
   changeAlgorithm(id) {
     this.state.algorithmId = id;
+    trackEvent(`${this.module.id}/${id}`, `${this.module.name} · ${this.algorithm.menuLabel}`);
     this.state.inspectedItem = null;
     this.rebuildSteps(false);
     this.renderAll();

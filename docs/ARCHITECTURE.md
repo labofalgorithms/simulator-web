@@ -11,6 +11,7 @@ Código compartilhado por todos os simuladores:
 - `simulation-controller.js`: controla passos, execução automática, pausa, retorno e velocidade;
 - `simulator-app.js`: conecta um módulo à interface comum;
 - `storage.js`: acesso seguro ao `localStorage`;
+- `analytics.js`: contagem anônima de acessos com o GoatCounter (ver abaixo);
 - `icons.js`: ícones compartilhados;
 - `utils.js`: funções utilitárias.
 
@@ -87,6 +88,12 @@ modules/
 - `hash-table-simulator.js`: conecta `SimulatorApp` ao `hashTableModule`;
 - `shotgun-sort-simulator.js`: conecta `SimulatorApp` ao `shotgunSortModule`;
 - `selection-sort-simulator.js`: conecta `SimulatorApp` ao `selectionSortModule`.
+
+## Contagem de acessos
+
+`core/analytics.js` carrega o script do GoatCounter (`labofalgorithms.goatcounter.com`), que conta cada abertura de página sem cookies e sem guardar o IP. O site continua no GitHub Pages; o GoatCounter só recebe o aviso de acesso. O arquivo é chamado por `home.js` e por `SimulatorApp.start()`, então nenhuma página HTML precisa ser editada. A contagem fica desligada em `localhost`, `127.0.0.1` e `file:`, para os testes não entrarem nos números, e insere no rodapé uma nota de transparência com link para a política de privacidade.
+
+Como trocar de simulador pelo menu lateral não recarrega a página, `SimulatorApp.changeAlgorithm` registra um evento `modulo/simulador` (por exemplo `selection-sort/counting`) por `trackEvent`. O nome do evento não pode começar com `/` e precisa incluir o módulo, porque o GoatCounter não guarda o caminho da página junto com o evento. Para trocar de serviço, basta alterar `analytics.js`.
 
 ## Contrato de um módulo
 

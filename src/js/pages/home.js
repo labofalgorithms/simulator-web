@@ -1,3 +1,4 @@
+import { initAnalytics } from '../core/analytics.js';
 import { icons } from '../core/icons.js';
 import { storage } from '../core/storage.js';
 
@@ -17,3 +18,4 @@ themeButton.addEventListener('click', () => {
 
 document.querySelector('#current-year').textContent = new Date().getFullYear();
 renderTheme();
+initAnalytics();
