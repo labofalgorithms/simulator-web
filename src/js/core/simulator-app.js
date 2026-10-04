@@ -105,12 +105,14 @@ export class SimulatorApp {
   }
 
   renderVisualization() {
-    $('#visualization-stage').innerHTML = this.module.renderVisualization({
+    const stage = $('#visualization-stage');
+    stage.innerHTML = this.module.renderVisualization({
       state: this.state,
       step: this.currentStep,
       icons,
       escapeText,
     });
+    this.module.afterRender?.({ step: this.currentStep, stage });
   }
 
   renderStepTrack(total) {

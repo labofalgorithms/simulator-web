@@ -64,10 +64,13 @@ modules/
 │   ├── algorithms.js
 │   └── selection-sort-module.js
 └── shared/
-    └── sort-view.js
+    ├── sort-view.js
+    └── node-scene.js
 ```
 
 `shared/sort-view.js` reúne o que os módulos de ordenação têm em comum: o vetor com marcadores sobre as células, o cartão de comparação, os contadores, a legenda e o editor de números (`renderArray`, `renderCompare`, `renderStats`, `legend`, `renderVectorEditor`, `parseVector`, `randomVector`).
+
+`shared/node-scene.js` reúne o que os módulos de lista circular e de lista duplamente encadeada têm em comum: a execução do algoritmo "como num depurador" (`trace`), o layout, as fichas das variáveis, as setas e as animações (`renderScene`, `afterRenderScene`). Veja "Cena de nós com ponteiros" abaixo.
 
 `algorithms.js` contém metadados, pseudocódigos e a geração dos estados da simulação. O arquivo `*-module.js` define entrada de dados, parâmetros, renderização e eventos específicos da estrutura.
 
@@ -115,12 +118,15 @@ export const module = {
   renderEditor(context) {},
   renderConfig(context) {},
   renderVisualization(context) {},
+  afterRender(context) {}, // opcional: ajusta o DOM logo depois de a visualização ser redesenhada
   handleInput(name, input, app) {},
   handleAction(action, button, app) {},
 };
 ```
 
 `category` define o segundo item do breadcrumb (`Simuladores / Categoria / Módulo / Simulador`) e o âncora da home para onde ele aponta. Módulos de estruturas de dados não precisam declará-lo; os de algoritmos usam `{ name: 'Algoritmos', anchor: 'algoritmos' }`.
+
+`afterRender({ step, stage })` roda depois que o `SimulatorApp` troca o conteúdo de `#visualization-stage`; serve para o que só dá para fazer com o DOM pronto, como restaurar a rolagem horizontal.
 
 O `SimulatorApp` cuida do menu, cabeçalho, pseudocódigo, variáveis, console, reprodução automática, atalhos e tema.
 
@@ -172,13 +178,42 @@ Reaproveita a mesma renderização em cadeia de nós do módulo de Pilhas Dinâm
 
 Reaproveita a mesma renderização em cadeia de nós e o mesmo par de ponteiros início/fim do módulo de Filas Dinâmicas, mas com muito mais operações: `insertAtFront`, `insertAtBack` e `insertAtPosition` (que recebem `config.item`, e a última também `config.position`), `removeAtFront`, `removeAtBack` e `remove(item)` (busca e remove pelo valor, não pela posição), além de `find(item)` (busca sem remover). Diferente do módulo de Listas (estáticas), não existem `set`/`get` por posição nem `isFull()` — o acesso por posição em uma lista encadeada sempre exige percorrê-la a partir do início, então operações como `insertAtPosition` e `remove` são `O(n)`. Clicar em um nó só preenche `config.position` quando o algoritmo ativo é `insertAtPosition`, já que as demais operações não recebem uma posição como parâmetro.
 
+## Cena de nós com ponteiros
+
+Os módulos de lista circular e de lista duplamente encadeada não guardam um vetor `values` nos passos: cada um traz uma `scene` com os ponteiros de verdade, e `shared/node-scene.js` desenha exatamente o que o código fez até aquela linha. O `algorithms.js` de cada módulo executa o algoritmo como num depurador com `trace({ kind, valores, params, locals, lane })`: `step` registra o estado como um passo e `link`, `linkPrev`, `create`, `join` e `drop` mudam esse estado (atribuir um `proximo` ou `anterior`, criar o nó novo, encaixá-lo na fileira, removê-lo) antes do passo seguinte; `finish` devolve os passos. O painel de variáveis lista sempre os parâmetros e as variáveis do código (`dado`, `inicio`, `novoNo`, `temp`, `auxiliar`, `d`), com `—` até serem atribuídas, e mostra o valor do nó para o qual cada uma aponta.
+
+A `scene` tem:
+
+- `nodes`: `{ id, value, next, prev }`, com `next` e `prev` iguais ao id do nó apontado ou `null` (`prev` só é usado na lista duplamente encadeada). O id de um nó da lista é a sua posição original e o nó novo recebe o id `n`;
+- `row`: ids dos nós que já estão na fileira, na ordem em que são desenhados;
+- `float`: `{ id, at }`, o nó recém-criado, que ainda não pertence à lista. Ele fica solto abaixo da fileira, em frente à vaga onde vai entrar (`at`: `'start'` abre a vaga antes do primeiro nó, `'end'` depois do último) e só entra em `row` (`join`) no passo em que um nó da lista passa a apontar para ele. Seus ponteiros nascem nulos;
+- `refs`: as variáveis que apontam para nós. `null` é uma referência nula (`inicio` nulo mostra o selo `nulo`) e uma chave ausente é uma variável ainda não atribuída. As fichas permanecem até o último passo, como o painel de variáveis (as de um nó já removido ficam só na barra de variáveis);
+- `vars`: `{ name, target, text, status, changed }` de cada parâmetro e variável do código, na ordem em que aparecem (`status`: `param`, `unset` ainda sem valor, `null` ou `set`; `changed`: atribuída naquele passo);
+- `linked` e `linkedPrev`: ids dos nós cujo `proximo` / `anterior` foi atribuído naquele passo, e por isso têm a seta animada em amarelo;
+- `lane`: reserva a faixa do nó solto, para a altura da cena não mudar durante a execução;
+- `doubly` e `tail`: desenham também o ponteiro `anterior` (célula, seta violeta) e reservam no fim da fileira a vaga do selo `nulo`, onde fica a ficha de uma variável que passou do último nó (`temp` nulo).
+
+`activeIndices`, `changedIndices`, `foundIndices` e `processedIndices` referem-se a ids de nó. Um nó da fileira que deixa de ser alcançado a partir de `inicio` pelos ponteiros `proximo` (removido pelo algoritmo de remoção) é desenhado tracejado, como "fora da lista", até o passo final.
+
+O renderer posiciona tudo em coordenadas fixas (`layout`), o que permite calcular as setas sem medir o DOM: nós e fichas são elementos HTML (o nó é um `button`, para continuar clicável) e as setas são um SVG sobreposto, uma por ponteiro não nulo, saindo do ponto da célula do ponteiro. Na lista circular o nó é `valor | próximo`; na duplamente encadeada, `anterior | valor | próximo`, com a seta de ida (ciano) e a de volta (violeta) em alturas diferentes. Setas entre vizinhos são retas; as que voltam (o fechamento do ciclo), pulam nós (remoção) ou apontam o nó de si mesmo passam por baixo da fileira, e as que ligam o nó solto são curvas. As fichas (`inicio`, `temp`, `auxiliar`, `d`, `novoNo`) ficam acima do nó para o qual a variável aponta, ou abaixo, no caso do nó solto.
+
+Acima da fileira, fora da área rolada, uma barra de variáveis lista todas as variáveis do código o tempo todo (`nome → valor`), com as cores das fichas: as ainda não atribuídas aparecem tracejadas com `—`, as nulas com `nulo`, a que acabou de mudar fica destacada e a que aponta para um nó já removido leva "(removido)". Assim nenhuma variável some da execução visual quando a fileira rola, quando é nula ou antes de ser atribuída.
+
+Cada passo tem um `run` (a execução a que pertence). Dentro da mesma execução, nós e fichas deslizam da posição que tinham no passo anterior e a seta recém-atribuída é desenhada; ao redesenhar o mesmo passo (por exemplo, ao selecionar um nó) nada é animado. Para que todas as fichas fiquem à vista, `afterRenderScene` (o `afterRender` dos dois módulos) encolhe a cena com `zoom` até caber na largura do painel (no mínimo 72%). Se mesmo assim ela não couber, como a cena é recriada a cada passo, a função restaura a rolagem horizontal e leva o que mudou no passo (o nó alterado, a ficha `temp` ou o nó solto) para a área visível.
+
+A largura do painel também depende do layout da página: nas páginas com a cena (`.workspace-grid:has(.circ-board)` em `simulator.css`) a coluna do pseudocódigo desce para baixo da simulação já em 1220px, em vez de 980px, e fica com 420px de 1221px a 1500px. Sem isso, em janelas de ~1000px sobravam ~200px para a lista e quase todas as fichas ficavam fora da área visível.
+
 ## Módulo de Listas Circulares
 
-A diferença estrutural chave: só existe `values[0]` como início — não há um `fim` guardado, então o último nó (`values[values.length - 1]`) é encontrado percorrendo a lista, e seu "próximo" volta implicitamente para `values[0]` em vez de apontar para nulo. O renderer reaproveita a cadeia de nós dos demais módulos dinâmicos, mas substitui o marcador `.node-null` do final por `.node-loop` (um selo violeta "↺ início") sempre que a lista tem ao menos um nó; com a lista vazia, mostra `.node-null` normalmente, já que não existe ciclo para desenhar. Como não há `fim`, tanto `inserirNoInicio()` quanto `inserirNoFim()` são `O(n)` (precisam percorrer a lista para achar o último nó), diferente de Listas Dinâmicas onde inserir no fim é `O(1)`. `mostrar()` usa um laço "faça...enquanto" — testar a condição antes do primeiro passo sempre falharia, pois `temp` começa igual a `inicio`.
+A diferença estrutural chave: só existe `inicio` — não há um `fim` guardado, então o último nó é encontrado percorrendo a lista, e seu `proximo` volta para o primeiro em vez de apontar para nulo (com a lista vazia, `inicio` é nulo e o renderer mostra o selo `nulo`, já que não existe ciclo para desenhar). Como não há `fim`, tanto `inserirNoInicio()` quanto `inserirNoFim()` são `O(n)` (precisam percorrer a lista para achar o último nó), diferente de Listas Dinâmicas onde inserir no fim é `O(1)`. `mostrar()` usa um laço "faça...enquanto" — testar a condição antes do primeiro passo sempre falharia, pois `temp` começa igual a `inicio`. Os passos usam `trace` com `kind: 'circular'`, em que o último nó nasce apontando para o primeiro.
+
+Na inserção, o nó novo entra na fileira no passo em que o último nó passa a apontar para ele (`temp.proximo ← novoNo`); o fechamento do ciclo aparece como o arco que volta por baixo da fileira, e em `inserirNoInicio()` o arco do último nó troca de destino antes de `inicio` mudar.
 
 ## Módulo de Listas Duplamente Encadeadas
 
-Mesma forma de dados `{ values }` que os demais módulos de lista dinâmica (sem `capacity`, sem `fim`), mas o renderer troca a seta `.node-arrow` entre nós adjacentes de `→` para `⇄` (o glifo já existente, sem nenhuma classe nova), refletindo que cada nó guarda referências `próximo` e `anterior`. `início → primeiro nó` e `último nó → nulo` continuam de mão única, pois `início` não é um nó e `nulo` não aponta de volta. Sem um `fim` guardado, `inserirNoFim()` continua `O(n)` (percorre até achar o último nó, igual às Listas Dinâmicas), mas `removerNo(valor)` fica mais simples que o das outras listas: como cada nó já conhece seu `anterior`, não é preciso manter uma referência auxiliar "um passo atrás" durante a busca — a religação lê `temp.anterior` e `temp.proximo` diretamente.
+Mesma forma de dados `{ values }` que os demais módulos de lista dinâmica (sem `capacity`, sem `fim`), mas desenhada pela cena de nós com `kind: 'doubly'`: cada nó tem `proximo` e `anterior`, `inicio → primeiro nó` continua de mão única, o primeiro nó tem `anterior` nulo e o último tem `proximo` nulo (o `temp` que passa do último nó aparece sobre o selo `nulo` do fim da fileira). Sem um `fim` guardado, `inserirNoFim()` continua `O(n)`, mas `removerNo(valor)` fica mais simples que o das outras listas: como cada nó já conhece seu `anterior`, não é preciso manter uma referência auxiliar "um passo atrás" durante a busca — a religação lê `temp.anterior` e `temp.proximo` diretamente, um ponteiro por passo (`temp.proximo.anterior` e depois `temp.anterior.proximo`, cada um precedido do teste de `nulo` do pseudocódigo).
+
+Na inserção, o nó novo nasce solto e entra na lista no passo em que um nó da lista passa a apontar para ele: no início, `inicio.anterior ← novoNo` (depois de `novoNo.proximo ← inicio`); no fim, `temp.proximo ← novoNo` (e só depois `novoNo.anterior ← temp` liga o caminho de volta).
 
 ## Módulo de Selection Sort
 

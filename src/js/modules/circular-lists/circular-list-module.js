@@ -1,5 +1,5 @@
 import { algorithms, buildSteps } from './algorithms.js';
-import { hasIndex } from '../../core/utils.js';
+import { afterRenderScene, renderScene } from '../shared/node-scene.js';
 
 const DEFAULT_DATA = { values: [10, 20, 30] };
 const MAX_NODES = 8;
@@ -91,45 +91,10 @@ export const circularListModule = {
   },
 
   renderVisualization({ state, step, icons, escapeText }) {
-    const total = step.values.length;
-    const nodes = step.values.map((value, index) => {
-      const classes = ['node'];
-      if (hasIndex(step.processedIndices, index)) classes.push('processed');
-      if (hasIndex(step.changedIndices, index)) classes.push('changed');
-      if (hasIndex(step.activeIndices, index)) classes.push('active');
-      if (hasIndex(step.foundIndices, index)) classes.push('found');
-      if (state.inspectedItem === index) classes.push('inspected');
-      const box = `<button type="button" class="${classes.join(' ')}" data-module-action="inspect-item" data-index="${index}" aria-label="Nó ${index}, valor ${escapeText(value)}">${escapeText(value)}</button>`;
-      return `<span class="node-wrap">${box}</span><span class="node-arrow">→</span>`;
-    }).join('');
-
-    const inspection = state.inspectedItem !== null && state.inspectedItem < step.values.length
-      ? `<div class="inspection-card">${icons.info}<span>Nó selecionado</span><strong>nó[${state.inspectedItem}] = ${escapeText(step.values[state.inspectedItem])}</strong></div>`
-      : '';
-
-    const tail = total === 0
-      ? '<span class="node-null">nulo</span>'
-      : '<span class="node-loop">↺ início</span>';
-
-    return `
-      <div class="node-stage">
-        <div class="node-dimensions"><span>nós: ${total}</span></div>
-        <div class="node-scroll">
-          <div class="node-chain">
-            <span class="node-topo-badge">início</span>
-            <span class="node-arrow">→</span>
-            ${nodes}
-            ${tail}
-          </div>
-        </div>
-        <div class="node-legend" aria-label="Legenda">
-          <span><i class="legend-dot current"></i> atual</span>
-          <span><i class="legend-dot compared"></i> alterado</span>
-          <span><i class="legend-dot processed"></i> processado</span>
-          <span><i class="legend-dot result"></i> resultado</span>
-        </div>
-      </div>${inspection}`;
+    return renderScene({ state, step, icons, escapeText, showLost: state.algorithmId === 'deletarNo' });
   },
+
+  afterRender: afterRenderScene,
 
   handleInput(name, input, app) {
     switch (name) {

@@ -1,5 +1,5 @@
 import { algorithms, buildSteps } from './algorithms.js';
-import { hasIndex } from '../../core/utils.js';
+import { afterRenderScene, renderScene } from '../shared/node-scene.js';
 
 const DEFAULT_DATA = { values: [10, 20, 30] };
 const MAX_NODES = 8;
@@ -91,63 +91,10 @@ export const doublyLinkedListModule = {
   },
 
   renderVisualization({ state, step, icons, escapeText }) {
-    const total = step.values.length;
-    const nodes = step.values.map((value, index) => {
-      const classes = ['node'];
-      if (hasIndex(step.processedIndices, index)) classes.push('processed');
-      if (hasIndex(step.changedIndices, index)) classes.push('changed');
-      if (hasIndex(step.activeIndices, index)) classes.push('active');
-      if (hasIndex(step.foundIndices, index)) classes.push('found');
-      if (state.inspectedItem === index) classes.push('inspected');
-      const box = `<button type="button" class="${classes.join(' ')}" data-module-action="inspect-item" data-index="${index}" aria-label="Nó ${index}, valor ${escapeText(value)}">${escapeText(value)}</button>`;
-      let arrow;
-      if (index < total - 1) {
-        const justFormed = hasIndex(step.changedIndices, index) || hasIndex(step.changedIndices, index + 1);
-        const animClass = justFormed ? ' just-linked' : '';
-        arrow = `<span class="node-links"><span class="node-link node-link-next linked${animClass}"><span class="node-link-arrow">→</span><span class="node-link-label">próximo</span></span><span class="node-link node-link-prev linked${animClass}"><span class="node-link-label">anterior</span><span class="node-link-arrow">←</span></span></span>`;
-      } else {
-        arrow = '<span class="node-arrow">→</span>';
-      }
-      return `<span class="node-wrap">${box}</span>${arrow}`;
-    }).join('');
-
-    const inspection = state.inspectedItem !== null && state.inspectedItem < step.values.length
-      ? `<div class="inspection-card">${icons.info}<span>Nó selecionado</span><strong>nó[${state.inspectedItem}] = ${escapeText(step.values[state.inspectedItem])}</strong></div>`
-      : '';
-
-    const staging = step.stagingNode
-      ? `<div class="node-staging ${step.stagingNode.position === 'end' ? 'end' : 'start'}">
-          <span class="node-staging-tag">novoNo (ainda não ligado)</span>
-          <div class="node-staging-body">
-            <div class="node">${escapeText(step.stagingNode.value)}</div>
-            <div class="node-staging-status">
-              <span class="node-link node-link-next ${step.stagingNode.next ? 'linked just-linked' : 'pending'}"><span class="node-link-arrow">→</span><span class="node-link-label">próximo${step.stagingNode.next ? '' : ' (pendente)'}</span></span>
-              <span class="node-link node-link-prev ${step.stagingNode.prev ? 'linked just-linked' : 'pending'}"><span class="node-link-label">anterior${step.stagingNode.prev ? '' : ' (pendente)'}</span><span class="node-link-arrow">←</span></span>
-            </div>
-          </div>
-        </div>`
-      : '';
-
-    return `
-      <div class="node-stage">
-        <div class="node-dimensions"><span>nós: ${total}</span></div>
-        ${staging}
-        <div class="node-scroll">
-          <div class="node-chain">
-            <span class="node-topo-badge">início</span>
-            <span class="node-arrow">→</span>
-            ${nodes}
-            <span class="node-null">nulo</span>
-          </div>
-        </div>
-        <div class="node-legend" aria-label="Legenda">
-          <span><i class="legend-dot current"></i> atual</span>
-          <span><i class="legend-dot compared"></i> alterado</span>
-          <span><i class="legend-dot processed"></i> processado</span>
-          <span><i class="legend-dot result"></i> resultado</span>
-        </div>
-      </div>${inspection}`;
+    return renderScene({ state, step, icons, escapeText, showLost: state.algorithmId === 'removerNo' });
   },
+
+  afterRender: afterRenderScene,
 
   handleInput(name, input, app) {
     switch (name) {

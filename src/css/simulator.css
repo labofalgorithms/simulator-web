@@ -311,3 +311,67 @@ button.sort-cell:hover{border-color:var(--cyan);transform:translateY(-2px)}
 .legend-dot.dup{background:transparent;box-shadow:inset 0 0 0 1px var(--violet)}
 .legend-dot.warn{background:var(--rose)}
 @media(max-width:720px){.sort-stage{padding-inline:14px}.sort-compare{gap:10px;padding:9px 12px}.config-note-row{flex-direction:column;align-items:stretch}.config-buttons{justify-content:flex-start}.sort-table-head,.sort-table-row{grid-template-columns:.9fr 1fr 1.2fr 1fr;gap:6px;padding-inline:8px;font-size:11px}.sort-bar-row{grid-template-columns:62px minmax(0,1fr) 22px 16px;gap:8px}}
+/* Módulo de Listas Circulares (nós com ponteiros, fichas das variáveis e nó solto) */
+.circ-board{position:relative;flex:0 0 auto;margin:0 auto;overflow:hidden}
+.circ-slot{position:absolute;z-index:1;width:var(--w);height:46px}
+.circ-slot.glide{animation:circ-glide 360ms ease}
+.circ-slot.born,.circ-pos.born{animation:mem-born 420ms ease-out}
+.circ-pos.glide{animation:circ-glide 360ms ease}
+@keyframes circ-glide{from{transform:translate(var(--dx),var(--dy))}to{transform:translate(0,0)}}
+.circ-node{display:flex;align-items:stretch;width:var(--w);height:46px;padding:0;border:1px solid var(--border-strong);border-radius:11px;background:var(--surface-2);color:var(--text);overflow:hidden;cursor:pointer;transition:160ms ease}
+.circ-node:hover{border-color:var(--cyan);transform:translateY(-2px)}
+.circ-value{flex:0 0 var(--vw);display:grid;place-items:center;font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.circ-next,.circ-prev{flex:1;display:grid;place-items:center;border-left:1px solid var(--border-strong);color:var(--subtle);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:9px}
+.circ-prev{flex:0 0 var(--pw);border-left:0;border-right:1px solid var(--border-strong)}
+.circ-board.doubly .circ-next,.circ-board.doubly .circ-prev{font-size:8px}
+.circ-node.detached{border-style:dashed;border-color:rgba(139,92,246,.6);background:var(--violet-soft)}
+.circ-node.lost{border-style:dashed;border-color:var(--rose);color:var(--muted);opacity:.75}
+.circ-node.processed{background:rgba(100,116,139,.12);color:var(--muted)}
+.circ-node.changed{box-shadow:inset 0 0 0 1px var(--amber);animation:node-pulse 520ms ease}
+.circ-node.active{background:var(--cyan-soft);box-shadow:inset 0 0 0 2px var(--cyan),0 0 26px rgba(34,211,238,.10);color:var(--cyan)}
+.circ-node.found{background:var(--green-soft);box-shadow:inset 0 0 0 2px var(--green);color:var(--green)}
+.circ-node.inspected{outline:1px dashed var(--violet);outline-offset:4px}
+.circ-null{position:absolute;z-index:1;display:grid;place-items:center;width:56px;height:28px;border:1px dashed var(--border-strong);border-radius:999px;color:var(--subtle);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px}
+.circ-wires{position:absolute;left:0;top:0;z-index:2;pointer-events:none;overflow:visible}
+.circ-link{color:var(--cyan)}
+.circ-link.prev{color:var(--violet)}
+.circ-link.fresh{color:var(--amber)}
+.circ-link.lost{color:var(--subtle)}
+.circ-wire{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.circ-head,.circ-dot{fill:currentColor;stroke:none}
+.circ-link.lost .circ-wire{stroke-dasharray:4 4}
+.circ-link.fresh .circ-wire{stroke-dasharray:1;animation:circ-draw 420ms ease-out}
+.circ-link.fresh .circ-head{animation:circ-fade 420ms ease-out both}
+.circ-link.fade{animation:circ-fade 360ms ease-out}
+@keyframes circ-draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes circ-fade{from{opacity:0}to{opacity:1}}
+.circ-pos{position:absolute;z-index:3;width:70px;height:20px;pointer-events:none}
+.circ-chip{position:relative;display:block;height:20px;border:1px solid;border-radius:999px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;font-weight:800;line-height:18px;text-align:center}
+.circ-chip.inicio{border-color:rgba(34,211,238,.45);background:var(--surface);color:var(--cyan)}
+.circ-chip.cursor{border-color:rgba(139,92,246,.5);background:var(--surface);color:var(--violet)}
+.circ-chip.novo{border-color:rgba(52,211,153,.5);background:var(--surface);color:var(--green)}
+.circ-chip.alvo{border-color:rgba(251,113,133,.55);background:var(--surface);color:var(--rose)}
+.circ-chip.near:after{content:"";position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);border:4px solid transparent;border-bottom-width:0;border-top-color:currentColor}
+.circ-chip.below.near:after{bottom:auto;top:-5px;border-top-width:0;border-top-color:transparent;border-bottom-width:4px;border-bottom-color:currentColor}
+.legend-dot.lost{background:var(--rose);opacity:.7}
+.legend-dot.next{background:var(--cyan)}
+.legend-dot.prev{background:var(--violet)}
+
+/* Barra de variáveis das listas (sempre visível, fora da área rolada) */
+.circ-vars{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:100%}
+.circ-var{display:inline-flex;align-items:center;gap:7px;padding:4px 12px;border:1px solid var(--border-strong);border-radius:999px;background:var(--surface-2);color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;font-weight:700}
+.circ-var b{font-weight:800}
+.circ-var i{font-style:normal;color:var(--subtle)}
+.circ-var.inicio{border-color:rgba(34,211,238,.45)}.circ-var.inicio b{color:var(--cyan)}
+.circ-var.cursor{border-color:rgba(139,92,246,.5)}.circ-var.cursor b{color:var(--violet)}
+.circ-var.novo{border-color:rgba(52,211,153,.5)}.circ-var.novo b{color:var(--green)}
+.circ-var.alvo{border-color:rgba(251,113,133,.55)}.circ-var.alvo b{color:var(--rose)}
+.circ-var.param b{color:var(--muted)}
+.circ-var.unset,.circ-var.null{color:var(--subtle)}
+.circ-var.unset{border-style:dashed}
+.circ-var.changed{background:var(--amber-soft);box-shadow:inset 0 0 0 1px var(--amber);animation:node-pulse 520ms ease}
+.circ-var.gone span{color:var(--subtle)}
+/* Páginas com a cena de nós: a lista precisa de largura, então a coluna do pseudocódigo desce já em 1220px (antes, só em 980px, sobravam ~200px para a lista) e fica mais estreita até 1500px */
+@media(max-width:1220px){.workspace-grid:has(.circ-board){grid-template-columns:1fr}.workspace-grid:has(.circ-board) .workspace-side{position:static;grid-template-columns:minmax(0,1.3fr) minmax(240px,.7fr)}}
+@media(max-width:720px){.workspace-grid:has(.circ-board) .workspace-side{grid-template-columns:1fr}}
+@media(min-width:1221px) and (max-width:1500px){.workspace-grid:has(.circ-board){grid-template-columns:minmax(0,1fr) 420px}}
