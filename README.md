@@ -66,6 +66,17 @@ Portal estático e modular de simuladores interativos para Estruturas de Dados e
 - Mostrar elementos (`show`)
 - Tamanho da lista (`size`)
 
+### Alocação Dinâmica
+
+- Alocar memória (variável × objeto com `new`)
+- Referência nula (`null` e `NullPointerException`)
+- Criar nós (classe `No` e seu construtor)
+- Conectar nós (`setProximoNo`)
+- Percorrer nós (variável auxiliar `atual`)
+- Perder a referência (Garbage Collector)
+
+Aula conceitual que prepara as estruturas dinâmicas: mostra que uma variável de objeto guarda apenas uma referência, e que uma estrutura encadeada é feita de nós ligados por essas referências. Os algoritmos de nós usam três valores editáveis (n1, n2 e n3).
+
 ### Pilhas Dinâmicas
 
 - Criação da pilha dinâmica
@@ -143,6 +154,8 @@ simulator-web/
 │   │   └── index.html
 │   ├── listas/
 │   │   └── index.html
+│   ├── alocacao-dinamica/
+│   │   └── index.html
 │   ├── pilhas-dinamicas/
 │   │   └── index.html
 │   ├── filas-dinamicas/
@@ -166,6 +179,7 @@ simulator-web/
 │       │   ├── stacks/
 │       │   ├── queues/
 │       │   ├── lists/
+│       │   ├── dynamic-allocation/
 │       │   ├── dynamic-stacks/
 │       │   ├── dynamic-queues/
 │       │   ├── dynamic-lists/
@@ -220,6 +234,12 @@ Listas:
 
 ```text
 http://localhost:8000/simuladores/listas/
+```
+
+Alocação Dinâmica:
+
+```text
+http://localhost:8000/simuladores/alocacao-dinamica/
 ```
 
 Pilhas Dinâmicas:

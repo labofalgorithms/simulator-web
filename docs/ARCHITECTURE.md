@@ -35,6 +35,9 @@ modules/
 ├── lists/
 │   ├── algorithms.js
 │   └── list-module.js
+├── dynamic-allocation/
+│   ├── algorithms.js
+│   └── dynamic-allocation-module.js
 ├── dynamic-stacks/
 │   ├── algorithms.js
 │   └── dynamic-stack-module.js
@@ -62,6 +65,7 @@ modules/
 - `stack-simulator.js`: conecta `SimulatorApp` ao `stackModule`;
 - `queue-simulator.js`: conecta `SimulatorApp` ao `queueModule`;
 - `list-simulator.js`: conecta `SimulatorApp` ao `listModule`;
+- `dynamic-allocation-simulator.js`: conecta `SimulatorApp` ao `dynamicAllocationModule`;
 - `dynamic-stack-simulator.js`: conecta `SimulatorApp` ao `dynamicStackModule`;
 - `dynamic-queue-simulator.js`: conecta `SimulatorApp` ao `dynamicQueueModule`;
 - `dynamic-list-simulator.js`: conecta `SimulatorApp` ao `dynamicListModule`;
@@ -118,6 +122,17 @@ Os dados do módulo têm o formato `{ capacity, values }`, em que `values` guard
 - `topo`, quando o índice exibido difere do calculado a partir de `values` (por exemplo, durante o incremento/decremento antes de gravar ou remover um elemento).
 
 `push()` recebe o valor a empilhar por `config.pushValue`; as demais operações (`isFull`, `isEmpty`, `pop`, `peek`, `size`, `show`) operam apenas sobre os dados atuais da pilha.
+
+## Módulo de Alocação Dinâmica
+
+Único módulo conceitual: em vez de uma estrutura de dados, mostra o modelo de memória que as estruturas dinâmicas pressupõem (variável × objeto, referência, `null`, nós ligados). Os dados são `{ values }` com exatamente três inteiros, usados como valores de n1, n2 e n3 nos algoritmos de nós; os dois primeiros algoritmos (`int idade = 20` e `Aluno a1`) usam os exemplos fixos da aula e ignoram esses valores.
+
+Em vez de `step.values`, cada passo carrega uma `scene` com um de dois formatos, escolhidos por `scene.kind`:
+
+- `objects`: `{ vars, objects, error }`. Variáveis de valor (`idade`) ou de referência (`a1`, com `target` = id do objeto, `null` ou `pending`), e objetos com campos. A referência aparece como o endereço do objeto (`a199bh`), como nos slides, sem traçar linhas entre elementos. Campos de realce opcionais: `changedVar`, `activeVar`, `bornObject`, `changedField`.
+- `nodes`: `{ nodes, refs, nullSlot }`. Cada nó tem `id`, `value` (`null` = ainda indefinido) e `next` (`undefined` = indefinido, `null` = nulo, número = id do nó apontado). `refs` são as variáveis (`n1`, `atual`...) e aparecem como fichas acima do nó para o qual apontam; `nullSlot` acrescenta um alvo `null` no fim da fileira, onde `atual` termina o percurso. Realces: `activeIndices`/`changedIndices`/`foundIndices`/`processedIndices` (por id de nó), `bornNode`, `justLinked` (anima a seta recém-criada) e `state` (`lost` marca um nó sem referências; `freed` o desvanece, simulando o Garbage Collector).
+
+A seta entre dois nós só fica visível quando o `next` do primeiro realmente é o segundo, então ela aparece exatamente no passo em que `setProximoNo` é executado.
 
 ## Módulo de Pilhas Dinâmicas
 

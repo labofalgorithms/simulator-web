@@ -111,3 +111,56 @@
 .node-legend{display:flex;justify-content:center;flex-wrap:wrap;gap:16px;color:var(--subtle);font-size:9px}
 .node-legend span{display:flex;align-items:center;gap:6px}
 @media(max-width:720px){.node-stage{padding-inline:14px}.node-chain{justify-content:flex-start}.node-links{padding:0 3px;gap:3px}.node-link-label{display:none}}
+/* Módulo de Alocação Dinâmica (variáveis, referências e nós) */
+.mem-stage{min-height:260px;padding:16px 22px 22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+.mem-board{display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap;width:100%}
+.mem-zone{display:flex;flex-direction:column;gap:10px;min-width:170px}
+.mem-zone-label{color:var(--subtle);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em}
+.mem-var{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 12px;border:1px solid var(--border-strong);border-radius:11px;background:var(--surface-2);transition:160ms ease}
+.mem-var-name{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;color:var(--muted)}
+.mem-var-value{color:var(--text);font-size:18px;font-weight:800;font-variant-numeric:tabular-nums}
+.mem-var.active{background:var(--cyan-soft);box-shadow:inset 0 0 0 2px var(--cyan)}
+.mem-var.changed{background:var(--amber-soft);box-shadow:inset 0 0 0 1px var(--amber);animation:node-pulse 520ms ease}
+.mem-ref{padding:4px 10px;border:1px solid rgba(34,211,238,.4);border-radius:999px;background:var(--cyan-soft);color:var(--cyan);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;font-weight:800}
+.mem-ref.null,.mem-ref.pending{border-style:dashed;border-color:var(--border-strong);background:transparent;color:var(--subtle)}
+.mem-arrow{color:var(--cyan);font-size:24px;opacity:0;transition:opacity 200ms ease}
+.mem-arrow.on{opacity:1}
+.mem-object{min-width:190px;border:1px solid var(--border-strong);border-radius:12px;background:var(--surface-2);overflow:hidden}
+.mem-object.born{animation:mem-born 480ms ease-out}
+.mem-object-head{display:flex;justify-content:space-between;gap:16px;padding:8px 12px;background:var(--cyan-soft);color:var(--cyan);font-size:12px;font-weight:800}
+.mem-object-address{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px}
+.mem-object-field{display:flex;justify-content:space-between;gap:16px;padding:7px 12px;border-top:1px solid var(--border);color:var(--muted);font-size:12px}
+.mem-object-field strong{color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.mem-object-field.changed{background:var(--amber-soft);animation:node-pulse 520ms ease}
+.mem-empty{padding:18px 22px;border:1px dashed var(--border-strong);border-radius:12px;color:var(--subtle);font-size:11px;text-align:center}
+.mem-error{padding:9px 16px;border:1px solid rgba(251,113,133,.5);border-radius:11px;background:rgba(251,113,133,.1);color:var(--rose);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;font-weight:800;animation:mem-shake 420ms ease}
+.mem-row{display:flex;align-items:flex-start;min-width:max-content;margin:0 auto}
+.mem-node-line{display:flex;align-items:flex-start}
+.mem-node-box{display:flex;flex-direction:column;align-items:center;gap:6px}
+.mem-chips{display:flex;gap:4px;min-height:24px;align-items:flex-end}
+.mem-chip{padding:3px 8px;border:1px solid rgba(34,211,238,.4);border-radius:999px;background:var(--cyan-soft);color:var(--cyan);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;font-weight:800}
+.mem-chip.cursor{border-color:rgba(139,92,246,.45);background:var(--violet-soft);color:var(--violet)}
+.mem-node{display:flex;align-items:stretch;padding:0;border:1px solid var(--border-strong);border-radius:12px;background:var(--surface-2);color:var(--text);overflow:hidden;cursor:pointer;transition:160ms ease}
+.mem-node:hover{border-color:var(--cyan);transform:translateY(-2px)}
+.mem-node-value{display:grid;place-items:center;width:50px;height:50px;font-size:clamp(16px,2vw,22px);font-weight:800;font-variant-numeric:tabular-nums}
+.mem-node-next{display:grid;place-items:center;width:50px;height:50px;border-left:1px solid var(--border-strong);color:var(--subtle);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px}
+.mem-node-next.linked{color:var(--cyan);font-size:18px;background:var(--cyan-soft)}
+.mem-node-caption{display:grid;grid-template-columns:50px 50px;color:var(--subtle);font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;text-align:center}
+.mem-node.processed{background:rgba(100,116,139,.12);color:var(--muted)}
+.mem-node.changed{box-shadow:inset 0 0 0 1px var(--amber);animation:node-pulse 520ms ease}
+.mem-node.active{background:var(--cyan-soft);box-shadow:inset 0 0 0 2px var(--cyan),0 0 26px rgba(34,211,238,.10);color:var(--cyan)}
+.mem-node.found{background:var(--green-soft);box-shadow:inset 0 0 0 2px var(--green);color:var(--green)}
+.mem-node.inspected{outline:1px dashed var(--violet);outline-offset:4px}
+.mem-node.born{animation:mem-born 480ms ease-out}
+.mem-node.lost{border-style:dashed;border-color:var(--rose);color:var(--muted);opacity:.7}
+.mem-node.freed{border-style:dashed;border-color:var(--rose);animation:mem-vanish 900ms ease forwards}
+.mem-node-tag{color:var(--rose);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.mem-link{flex:0 0 auto;display:grid;place-items:center;width:30px;height:50px;margin-top:30px;color:var(--cyan);font-size:24px;opacity:0}
+.mem-link.on{opacity:1}
+.mem-link.on.just-linked{animation:node-link-arrow-right 480ms ease-out}
+.mem-null{display:grid;place-items:center;height:50px;padding:0 14px;border:1px dashed var(--border-strong);border-radius:999px;color:var(--subtle);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+.random-row.single{grid-template-columns:1fr}
+@keyframes mem-born{0%{opacity:0;transform:scale(.8)}100%{opacity:1;transform:scale(1)}}
+@keyframes mem-shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes mem-vanish{0%{opacity:.7;transform:scale(1)}100%{opacity:0;transform:scale(.8)}}
+@media(max-width:720px){.mem-stage{padding-inline:14px}.mem-board{gap:14px}.mem-zone{min-width:140px}}
