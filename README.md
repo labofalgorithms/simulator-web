@@ -202,6 +202,10 @@ O pseudocódigo segue o da aula (`enquanto j > 0 e vetor[j - 1] > vetor[j]`). Os
 
 Os módulos possuem execução automática, avanço e retorno manuais, controle de velocidade, pseudocódigo destacado, variáveis, console, entrada manual, geração aleatória e tema claro/escuro.
 
+## Página inicial
+
+O catálogo tem duas abas, Estruturas de Dados e Algoritmos, e uma busca entre os módulos (atalho `/`). A aba aberta fica salva no navegador, e os links `#estruturas` e `#algoritmos` abrem a aba correspondente. O código está em `src/js/pages/home-catalog.js`.
+
 ## Contagem de acessos
 
 O site conta acessos de forma anônima com o [GoatCounter](https://www.goatcounter.com): sem cookies e sem guardar o IP. O painel fica em `https://labofalgorithms.goatcounter.com`. A contagem não roda em `localhost`, e as trocas de simulador no menu lateral aparecem como eventos (`modulo/simulador`). O código está em `src/js/core/analytics.js`.

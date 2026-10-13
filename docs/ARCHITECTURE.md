@@ -89,7 +89,8 @@ modules/
 
 ### `src/js/pages`
 
-- `home.js`: página inicial (o catálogo é dividido em duas seções, `#estruturas` e `#algoritmos`);
+- `home.js`: página inicial (tema, contagem de acessos e catálogo);
+- `home-catalog.js`: abas (`#estruturas` e `#algoritmos`) e busca do catálogo da home;
 - `vector-simulator.js`: conecta `SimulatorApp` ao `vectorModule`;
 - `matrix-simulator.js`: conecta `SimulatorApp` ao `matrixModule`;
 - `stack-simulator.js`: conecta `SimulatorApp` ao `stackModule`;
@@ -107,6 +108,16 @@ modules/
 - `selection-sort-simulator.js`: conecta `SimulatorApp` ao `selectionSortModule`;
 - `bubble-sort-simulator.js`: conecta `SimulatorApp` ao `bubbleSortModule`;
 - `insertion-sort-simulator.js`: conecta `SimulatorApp` ao `insertionSortModule`.
+
+## Catálogo da home
+
+`index.html` organiza os módulos em duas abas, `#estruturas` e `#algoritmos`, e cada aba em grupos (`ED1`, `ED2` e `ALG1`). `pages/home-catalog.js` liga as abas e a busca:
+
+- o HTML já traz a aba Estruturas de Dados aberta e o script só troca o estado. A aba escolhida fica no `localStorage` (`loa-home-tab`), e um hash `#estruturas` ou `#algoritmos` na URL tem prioridade, então o breadcrumb dos simuladores continua levando à aba certa;
+- os números das abas e dos grupos são contados a partir dos cards `.module-card.available`, sem precisar atualizar à mão;
+- a busca ignora acentos e maiúsculas, exige que todas as palavras apareçam e procura no título, na descrição e no `data-keywords` do card. Enquanto há texto na busca, os resultados das duas abas aparecem juntos; `/` foca a busca e `Esc` limpa.
+
+Para incluir um módulo, copie um card `.module-card.available` para o grupo certo e ajuste o número (`ED2 · 05`), o título (`h4`), a descrição, a contagem de simuladores, o link e o `data-keywords` (sinônimos e termos em inglês que o aluno pode digitar). Os cards `.module-card` sem `available` são os "Em breve".
 
 ## Contagem de acessos
 
