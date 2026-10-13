@@ -375,3 +375,49 @@ button.sort-cell:hover{border-color:var(--cyan);transform:translateY(-2px)}
 @media(max-width:1220px){.workspace-grid:has(.circ-board){grid-template-columns:1fr}.workspace-grid:has(.circ-board) .workspace-side{position:static;grid-template-columns:minmax(0,1.3fr) minmax(240px,.7fr)}}
 @media(max-width:720px){.workspace-grid:has(.circ-board) .workspace-side{grid-template-columns:1fr}}
 @media(min-width:1221px) and (max-width:1500px){.workspace-grid:has(.circ-board){grid-template-columns:minmax(0,1fr) 420px}}
+
+/* Árvore binária de busca: a cena reaproveita o quadro, as fichas, as setas e a barra de variáveis das listas */
+.tree-slot{position:absolute;z-index:1;width:42px;height:42px}
+.tree-slot.glide{animation:circ-glide 360ms ease}
+.tree-slot.born{animation:mem-born 420ms ease-out}
+.tree-node{display:grid;place-items:center;width:42px;height:42px;padding:0;border:1px solid var(--border-strong);border-radius:50%;background:var(--surface-2);color:var(--text);font-size:14px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em;cursor:pointer;transition:160ms ease}
+.tree-node:hover{border-color:var(--cyan);transform:translateY(-2px)}
+.tree-node.visited,.tree-node.processed{background:rgba(100,116,139,.14);color:var(--muted)}
+.tree-node.zone-left{background:rgba(96,165,250,.16);box-shadow:inset 0 0 0 1px #60a5fa;color:var(--text)}
+.tree-node.zone-right{background:var(--violet-soft);box-shadow:inset 0 0 0 1px var(--violet);color:var(--text)}
+.tree-node.changed{background:var(--amber-soft);box-shadow:inset 0 0 0 2px var(--amber);color:var(--amber);animation:node-pulse 520ms ease}
+.tree-node.active{background:var(--cyan-soft);box-shadow:inset 0 0 0 2px var(--cyan),0 0 26px rgba(34,211,238,.10);color:var(--cyan)}
+.tree-node.found{background:var(--green-soft);box-shadow:inset 0 0 0 2px var(--green);color:var(--green)}
+.tree-node.error{background:rgba(251,113,133,.16);box-shadow:inset 0 0 0 2px var(--rose);color:var(--rose)}
+.tree-node.detached{border-style:dashed;border-color:rgba(139,92,246,.6);background:var(--violet-soft)}
+.tree-node.lost{border-style:dashed;border-color:var(--rose);color:var(--muted);opacity:.7}
+.tree-node.dim{opacity:.32}
+.tree-node.inspected{outline:1px dashed var(--violet);outline-offset:4px}
+.tree-tag{position:absolute;left:50%;top:100%;margin-top:4px;transform:translateX(-50%);white-space:nowrap;color:var(--violet);font-size:9px;font-style:normal;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.tree-null{position:absolute;z-index:1;display:grid;place-items:center;width:38px;height:18px;border:1px dashed var(--border-strong);border-radius:999px;color:var(--subtle);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:9px}
+.tree-null.glide{animation:circ-glide 360ms ease}
+.tree-null.born{animation:mem-born 420ms ease-out}
+.tree-board .circ-pos{width:54px}
+.tree-edge{color:var(--subtle)}
+.tree-edge.hot,.tree-edge.fresh{color:var(--amber)}
+.tree-edge.fresh .circ-wire{stroke-dasharray:1;animation:circ-draw 420ms ease-out}
+.tree-edge.fresh .circ-head{animation:circ-fade 420ms ease-out both}
+.tree-edge.dim{opacity:.25}
+.tree-edge.null{color:var(--border-strong)}
+.tree-edge.null .circ-wire{stroke-width:1.5;stroke-dasharray:3 3}
+.tree-edge.null .circ-head,.tree-edge.null .circ-dot{display:none}
+.circ-chip.atual{border-color:rgba(251,191,36,.6);background:var(--surface);color:var(--amber)}
+.circ-chip.filho{border-color:rgba(52,211,153,.5);border-style:dashed;background:var(--surface);color:var(--green)}
+.circ-var.atual{border-color:rgba(251,191,36,.6)}.circ-var.atual b{color:var(--amber)}
+.circ-var.filho{border-color:rgba(52,211,153,.5)}.circ-var.filho b{color:var(--green)}
+.legend-dot.detached{background:transparent;box-shadow:inset 0 0 0 1px var(--violet)}
+.legend-dot.left{background:#60a5fa}
+.legend-dot.right{background:var(--violet)}
+.legend-dot.error{background:var(--rose)}
+.preset-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:14px 22px 0}
+.preset-row>span{color:var(--muted);font-size:10px;font-weight:700;margin-right:2px}
+.button.compact{min-height:32px;padding:0 11px}
+.button.secondary[aria-pressed=true]{border-color:var(--cyan);background:var(--cyan-soft);color:var(--cyan)}
+.button:disabled{opacity:.45}
+.config-note{margin:12px 22px 0;color:var(--muted);font-size:11px;line-height:1.6}
+.config-note strong{color:var(--text)}

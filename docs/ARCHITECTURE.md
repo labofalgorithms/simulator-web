@@ -57,6 +57,9 @@ modules/
 ├── hash-tables/
 │   ├── algorithms.js
 │   └── hash-table-module.js
+├── binary-search-trees/
+│   ├── algorithms.js
+│   └── binary-search-tree-module.js
 ├── shotgun-sort/
 │   ├── algorithms.js
 │   └── shotgun-sort-module.js
@@ -65,12 +68,15 @@ modules/
 │   └── selection-sort-module.js
 └── shared/
     ├── sort-view.js
-    └── node-scene.js
+    ├── node-scene.js
+    └── tree-scene.js
 ```
 
 `shared/sort-view.js` reúne o que os módulos de ordenação têm em comum: o vetor com marcadores sobre as células, o cartão de comparação, os contadores, a legenda e o editor de números (`renderArray`, `renderCompare`, `renderStats`, `legend`, `renderVectorEditor`, `parseVector`, `randomVector`).
 
 `shared/node-scene.js` reúne o que os módulos de lista circular e de lista duplamente encadeada têm em comum: a execução do algoritmo "como num depurador" (`trace`), o layout, as fichas das variáveis, as setas e as animações (`renderScene`, `afterRenderScene`). Veja "Cena de nós com ponteiros" abaixo.
+
+`shared/tree-scene.js` é o equivalente para árvores: a estrutura (`buildTree`, `inorder`, `heightOf`, `layoutOf`...), a execução "como num depurador" (`treeTrace`) e o desenho (`renderTree`, `afterRenderTree`). Veja "Módulo de Árvore Binária de Busca" abaixo.
 
 `algorithms.js` contém metadados, pseudocódigos e a geração dos estados da simulação. O arquivo `*-module.js` define entrada de dados, parâmetros, renderização e eventos específicos da estrutura.
 
@@ -89,6 +95,7 @@ modules/
 - `circular-list-simulator.js`: conecta `SimulatorApp` ao `circularListModule`;
 - `doubly-linked-list-simulator.js`: conecta `SimulatorApp` ao `doublyLinkedListModule`;
 - `hash-table-simulator.js`: conecta `SimulatorApp` ao `hashTableModule`;
+- `binary-search-tree-simulator.js`: conecta `SimulatorApp` ao `binarySearchTreeModule`;
 - `shotgun-sort-simulator.js`: conecta `SimulatorApp` ao `shotgunSortModule`;
 - `selection-sort-simulator.js`: conecta `SimulatorApp` ao `selectionSortModule`.
 
@@ -247,6 +254,36 @@ Um único módulo cobre as duas estratégias da aula, separadas em grupos no men
 Os dados são `{ capacity, entries }`, com `entries` uma lista de `{ chave, valor, removida? }` na ordem de inserção. Cada algoritmo monta a tabela inicial inserindo as entradas na estratégia correspondente (`buildOpenTable` ou `buildChains`) e então simula a operação sobre uma cópia. `removida: true` representa uma entrada inserida e depois removida: no endereçamento aberto a posição fica `DELETADO` (permitindo ver a busca atravessá-lo e a inserção reaproveitá-lo, como nos slides); no encadeamento separado ela simplesmente não existe. O editor limita as entradas a `capacidade − 1`, o que garante ao menos uma posição `null` e, portanto, que as sondagens sempre terminam (o pseudocódigo da aula não trata tabela cheia).
 
 Cada passo carrega uma `scene` com um dos formatos `open` (vetor horizontal; `markers` `indice` e `original` e o contador `i`), `chain` (uma linha por posição, com a lista encadeada à direita) ou `entry` (uma `EntradaChaveValor`). Os realces vêm de `activeCells`/`collisionCells`/`changedCells`/`foundCells`/`processedCells` (índices de posição) e, no encadeamento, de `activeBuckets`/`activeEntries`/`foundEntries`/`changedEntries` (com ids `"posição:ordem"`). Como as condições do pseudocódigo ocupam várias linhas (por exemplo o `ENQUANTO ... E ... E`), `step.line` pode ser um número ou uma lista de linhas, e o motor destaca todas elas. Clicar em uma entrada preenche a chave dos parâmetros.
+
+## Módulo de Árvore Binária de Busca
+
+Aula 11 de Estrutura de Dados 2 (os slides teóricos e os slides de debug em pseudocódigo). São sete simuladores, em quatro grupos: **Fundamentos** (`node`, `anatomy`, `rule`), **Inserção** (`insert`, `build`), **Busca** (`search`) e **Remoção** (`remove`).
+
+Os dados são `{ values }`: os valores **na ordem de inserção** (inteiros de 0 a 999, até 12, repetidos permitidos). A árvore é montada inserindo cada valor, com os iguais à direita, como no pseudocódigo da aula; por isso a ordem muda o formato. O id de um nó é a posição do valor na lista, e o nó novo de `insert` recebe o id `n`. A configuração tem `insertValue`, `searchValue` e `removeValue` (um por operação, para não se perderem ao trocar de simulador), `focus` (o nó da anatomia) e `rule` (`valid`, a árvore dos dados, ou `error`, a árvore fixa do slide "Encontre o erro nesta ABB"). Clicar em um nó usa o valor dele como parâmetro de `insert`/`search`/`remove`, escolhe o nó de `anatomy` ou o inspeciona nos demais. Os botões "Uma folha / Um filho / Dois filhos" de `remove` escolhem um nó de cada caso (a raiz, se servir).
+
+Os pseudocódigos de `INSERIR`, `BUSCAR` e `REMOVER` são os dos slides, palavra por palavra (`FIM_SE`, `atual.esquerda` em INSERIR/BUSCAR e `atual.esq` em REMOVER), e cada passo é uma linha executada, na mesma ordem dos slides de debug: `INSERIR(45)` na árvore da aula tem 20 passos, `BUSCAR(30)` 12, `REMOVER(10)` e `REMOVER(50)` (com o 45 na árvore) 29 cada e `REMOVER(40)` 27. Os slides de debug passam pela linha `SENÃO` em `REMOVER`, mas não em `INSERIR` e `BUSCAR`, e o código segue cada um. A remoção divide o algoritmo nas três etapas dos slides (localizar o alvo e o pai; copiar o sucessor em ordem quando há dois filhos; religar o pai ou a raiz), o mesmo bloco serve aos três casos, e o nó desligado fica tracejado ("fora da árvore") até o último passo.
+
+`treeTrace({ tree, layout, params, locals, allNulls })` (em `shared/tree-scene.js`) guarda o estado e `step(line, title, description, tone, marks)` registra um passo. As demais funções mudam o estado antes do passo seguinte: `create` (nó novo, solto), `set` e `follow` (atribuir uma variável; `follow` lê `pai.esquerda`/`pai.direita` e lembra de onde veio um valor nulo), `setChild` (atribuir `esquerda`/`direita`, o que faz o nó solto entrar na árvore), `setValue`, `drop`, `clear` e `setParams`. O painel de variáveis lista sempre os parâmetros e as variáveis do código (`—` até serem atribuídas) e mostra `[nó 40]` quando o nó tem o valor trocado pela cópia do sucessor.
+
+A `scene` de cada passo tem:
+
+- `nodes`: `{ id, value, origin, left, right }`, com `left`/`right` iguais ao id do filho, `null` ou `undefined` (campo ainda não atribuído, só no construtor de `node`);
+- `root`, `float` (o nó recém-criado, que fica isolado à direita até um ponteiro apontar para ele), `refs` (`raiz`, `atual`, `pai`, `suc`, `paiSuc`, `filho`, `novo`; `null` é nulo e uma chave ausente é "não atribuída") e `nullAt` (de qual ponteiro nulo veio cada variável nula, para o selo `nulo` na vaga do filho que não existe);
+- `reached`, `lost` e `depth`: nós alcançáveis a partir da raiz, nós que deixaram de ser alcançados (removidos) e a profundidade de cada nó (a última conhecida, no caso dos removidos);
+- `visited` e `fresh`: o caminho de `atual`/`suc` (nós cinza e setas âmbar) e os nós cuja ligação com o pai foi atribuída naquele passo (a seta é desenhada);
+- `vars`, `ranks`, `slots`, `levels`, `rootStack` e `floatCol`: a barra de variáveis e a geometria fixa da execução.
+
+A posição horizontal de um nó é a sua ordem em `ranks`, calculada **uma vez por execução** sobre a árvore em que aparecem todos os nós (a árvore final, em `insert` e `build`, e a inicial, nas demais). Inserir ou remover um nó não empurra os outros, como nos slides. A vertical é a profundidade atual, então um nó promovido sobe um nível, deslizando. As fichas das variáveis ficam acima do nó para o qual apontam, do lado de fora (longe da seta que chega do pai), ou abaixo do selo `nulo` e do nó solto. Além de `activeIndices`, `changedIndices`, `foundIndices` e `processedIndices`, os passos usam `leftIndices`, `rightIndices` e `errorIndices` (a regra da ABB), `dimIndices` (a subárvore escolhida) e `hotEdges` (ids dos nós cuja seta de entrada é destacada: as arestas e os caminhos da anatomia).
+
+Cada simulador:
+
+- `node`: executa a classe `No` e o construtor (`esta.valor`, `esta.esquerda ← NULO`, `esta.direita ← NULO`), cria três nós com os três primeiros valores dos dados e os liga com `raiz.esquerda` e `raiz.direita`. Termina dizendo se a árvore binária montada é ou não uma ABB. Desenha todos os ponteiros nulos (`allNulls`);
+- `anatomy`: raiz, pai e filhos, folhas, arestas, subárvore, profundidade e altura do nó escolhido (raiz no nível 0, folha com altura 0). O pseudocódigo é o vocabulário do slide;
+- `rule`: confere cada nó em pré-ordem (menores à esquerda, maiores ou iguais à direita, em toda a subárvore). Na árvore com erro o 45 satisfaz a regra do pai (20), mas viola a de 40, e o passo de 20 avisa disso;
+- `insert`: `INSERIR(valor)`, com os passos da criação do nó isolado, do teste da árvore vazia, do laço e da ligação;
+- `build`: `INSERIR` para cada valor da lista, em passos condensados (a criação, uma comparação por nível e a ligação), todos na linha `INSERIR(valor)`. Termina com raiz, folhas e altura (a árvore de valores ordenados vira uma cadeia);
+- `search`: `BUSCAR(valor)`, sem alterar a estrutura;
+- `remove`: `REMOVER(raiz, valor)`, com os casos folha, um filho e dois filhos, e valor inexistente (retorna a raiz sem alterar).
 
 ## Módulo de Filas
 
