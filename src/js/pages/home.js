@@ -1,6 +1,7 @@
 import { initAnalytics } from '../core/analytics.js';
 import { icons } from '../core/icons.js';
 import { storage } from '../core/storage.js';
+import { initCatalog } from './home-catalog.js';
 
 const themeButton = document.querySelector('#theme-button');
 let lightTheme = storage.get('loa-theme', 'dark') === 'light';
@@ -18,4 +19,5 @@ themeButton.addEventListener('click', () => {
 
 document.querySelector('#current-year').textContent = new Date().getFullYear();
 renderTheme();
+initCatalog();
 initAnalytics();

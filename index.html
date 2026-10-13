@@ -41,177 +41,202 @@
           <div class="visual-code"><span></span><span></span><span></span><span></span></div>
         </div>
       </section>
-      <section id="estruturas">
-        <div class="section-heading">
-          <div><span>Estruturas de Dados</span><h2>Escolha uma estrutura</h2></div>
-          <p>Todos os módulos compartilham o mesmo motor de execução, os mesmos controles e a mesma identidade visual.</p>
+      <section id="catalogo" class="catalog" aria-label="Catálogo de simuladores">
+        <div class="catalog-bar">
+          <div class="catalog-tabs" role="tablist" aria-label="Categorias do catálogo">
+            <button id="tab-estruturas" class="catalog-tab" type="button" role="tab" aria-selected="true" aria-controls="estruturas">Estruturas de Dados <span class="tab-count"></span></button>
+            <button id="tab-algoritmos" class="catalog-tab" type="button" role="tab" aria-selected="false" aria-controls="algoritmos" tabindex="-1">Algoritmos <span class="tab-count"></span></button>
+          </div>
+          <div class="catalog-search">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input id="catalog-search" type="search" placeholder="Buscar: push, bubble, remover folha" autocomplete="off" spellcheck="false" aria-label="Buscar simulador" />
+            <kbd aria-hidden="true">/</kbd>
+          </div>
         </div>
-        <div class="module-grid">
-          <article class="module-card available">
-            <div class="module-number"><span>ED1 · 01</span><span class="module-state">Disponível</span></div>
-            <div class="module-icon">[ ]</div>
-            <h3>Vetores</h3>
-            <p>Índices, acesso, percurso, somatório, média, maior, menor, busca sequencial e ordenação simples.</p>
-            <div class="module-footer"><span>9 simuladores</span><strong>Abrir →</strong></div>
-            <a class="module-link" href="./simuladores/vetores/">Abrir simuladores de vetores</a>
-          </article>
-          <article class="module-card available">
-            <div class="module-number"><span>ED1 · 02</span><span class="module-state">Disponível</span></div>
-            <div class="module-icon">▦</div>
-            <h3>Matrizes</h3>
-            <p>Índices 2D, acesso, alteração, percursos, soma, média, maior, somas por linha/coluna, identidade, transposta, simetria e jagged arrays.</p>
-            <div class="module-footer"><span>14 simuladores</span><strong>Abrir →</strong></div>
-            <a class="module-link" href="./simuladores/matrizes/">Abrir simuladores de matrizes</a>
-          </article>
-          <article class="module-card available">
-            <div class="module-number"><span>ED1 · 03</span><span class="module-state">Disponível</span></div>
-            <div class="module-icon">↥</div>
-            <h3>Pilhas Estáticas</h3>
-            <p>Criação, isFull, isEmpty, push, pop, peek, size e show em uma pilha estática.</p>
-            <div class="module-footer"><span>8 simuladores</span><strong>Abrir →</strong></div>
-            <a class="module-link" href="./simuladores/pilhas/">Abrir simuladores de pilhas</a>
-          </article>
-          <article class="module-card available">
-            <div class="module-number"><span>ED1 · 04</span><span class="module-state">Disponível</span></div>
-            <div class="module-icon">⇥</div>
-            <h3>Filas Estáticas</h3>
-            <p>Criação, isFull, isEmpty, enqueue, dequeue, peek e show em uma fila estática.</p>
-            <div class="module-footer"><span>7 simuladores</span><strong>Abrir →</strong></div>
-            <a class="module-link" href="./simuladores/filas/">Abrir simuladores de filas</a>
-          </article>
-          <article class="module-card available">
-            <div class="module-number"><span>ED1 · 05</span><span class="module-state">Disponível</span></div>
-            <div class="module-icon">○→○</div>
-            <h3>Listas Estáticas</h3>
-            <p>Criação, isFull, isEmpty, add, remove, set, get, show e size em uma lista estática.</p>
-            <div class="module-footer"><span>9 simuladores</span><strong>Abrir →</strong></div>
-            <a class="module-link" href="./simuladores/listas/">Abrir simuladores de listas</a>
-          </article>
-          <article class="module-card available">
-            <div class="module-number"><span>ED1 · 06</span><span class="module-state">Disponível</span></div>
-            <div class="module-icon">▤</div>
-            <h3>Alocação Dinâmica</h3>
-            <p>Variáveis e referências, null, a classe No, criação e conexão de nós, percurso e perda de referência com Garbage Collector.</p>
-            <div class="module-footer"><span>6 simuladores</span><strong>Abrir →</strong></div>
-            <a class="module-link" href="./simuladores/alocacao-dinamica/">Abrir simuladores de alocação dinâmica</a>
-          </article>
-          <article class="module-card available">
-            <div class="module-number"><span>ED1 · 07</span><span class="module-state">Disponível</span></div>
-            <div class="module-icon">⛓</div>
-            <h3>Pilhas Dinâmicas</h3>
-            <p>Criação, isEmpty, push, pop, peek, size e display em uma pilha encadeada, sem tamanho máximo.</p>
-            <div class="module-footer"><span>7 simuladores</span><strong>Abrir →</strong></div>
-            <a class="module-link" href="./simuladores/pilhas-dinamicas/">Abrir simuladores de pilhas dinâmicas</a>
-          </article>
-          <article class="module-card available">
-            <div class="module-number"><span>ED1 · 08</span><span class="module-state">Disponível</span></div>
-            <div class="module-icon">⛓</div>
-            <h3>Filas Dinâmicas</h3>
-            <p>Criação, isEmpty, enqueue, dequeue, peek, size e show em uma fila encadeada, sem tamanho máximo.</p>
-            <div class="module-footer"><span>7 simuladores</span><strong>Abrir →</strong></div>
-            <a class="module-link" href="./simuladores/filas-dinamicas/">Abrir simuladores de filas dinâmicas</a>
-          </article>
-          <article class="module-card available">
-            <div class="module-number"><span>ED1 · 09</span><span class="module-state">Disponível</span></div>
-            <div class="module-icon">⛓</div>
-            <h3>Listas Dinâmicas</h3>
-            <p>Criação, isEmpty, insertAtFront, insertAtBack, insertAtPosition, removeAtFront, removeAtBack, remove, find e show em uma lista encadeada.</p>
-            <div class="module-footer"><span>10 simuladores</span><strong>Abrir →</strong></div>
-            <a class="module-link" href="./simuladores/listas-dinamicas/">Abrir simuladores de listas dinâmicas</a>
-          </article>
-          <article class="module-card available">
-            <div class="module-number"><span>ED2 · 01</span><span class="module-state">Disponível</span></div>
-            <div class="module-icon">↺</div>
-            <h3>Listas Circulares</h3>
-            <p>Criação, inserirNoInicio, inserirNoFim, deletarNo e mostrar em uma lista encadeada circular, sem ponteiro fim.</p>
-            <div class="module-footer"><span>5 simuladores</span><strong>Abrir →</strong></div>
-            <a class="module-link" href="./simuladores/listas-circulares/">Abrir simuladores de listas circulares</a>
-          </article>
-          <article class="module-card available">
-            <div class="module-number"><span>ED2 · 02</span><span class="module-state">Disponível</span></div>
-            <div class="module-icon">⇄</div>
-            <h3>Listas Duplamente Encadeadas</h3>
-            <p>Criação, inserirNoInicio, inserirNoFim, removerNo e mostrar em uma lista com ponteiros próximo e anterior.</p>
-            <div class="module-footer"><span>5 simuladores</span><strong>Abrir →</strong></div>
-            <a class="module-link" href="./simuladores/listas-duplamente-encadeadas/">Abrir simuladores de listas duplamente encadeadas</a>
-          </article>
-          <article class="module-card available">
-            <div class="module-number"><span>ED2 · 03</span><span class="module-state">Disponível</span></div>
-            <div class="module-icon">#</div>
-            <h3>Tabelas Hash</h3>
-            <p>Função hash, endereçamento aberto com sondagem linear e encadeamento separado: criar, adicionar, buscar, remover e exibir.</p>
-            <div class="module-footer"><span>12 simuladores</span><strong>Abrir →</strong></div>
-            <a class="module-link" href="./simuladores/tabelas-hash/">Abrir simuladores de tabelas hash</a>
-          </article>
-          <article class="module-card available">
-            <div class="module-number"><span>ED2 · 04</span><span class="module-state">Disponível</span></div>
-            <div class="module-icon">⋔</div>
-            <h3>Árvore Binária de Busca</h3>
-            <p>Nó, anatomia e regra da ABB; inserir, construir a árvore, buscar e remover (folha, um filho e dois filhos, com o sucessor em ordem).</p>
-            <div class="module-footer"><span>7 simuladores</span><strong>Abrir →</strong></div>
-            <a class="module-link" href="./simuladores/arvore-binaria-busca/">Abrir simuladores de árvore binária de busca</a>
-          </article>
-          <article class="module-card">
-            <div class="module-number"><span>ED2 · 05</span><span class="module-state">Em breve</span></div>
-            <div class="module-icon">⌘</div>
-            <h3>Percursos e árvores balanceadas</h3>
-            <p>Percursos pré-ordem, em ordem, pós-ordem e em largura, árvores AVL e árvores B.</p>
-            <div class="module-footer"><span>Expansão futura</span><span>Planejado</span></div>
-          </article>
-          <article class="module-card">
-            <div class="module-number"><span>ED2 · 06</span><span class="module-state">Em breve</span></div>
-            <div class="module-icon">◎</div>
-            <h3>Grafos</h3>
-            <p>Representações, BFS, DFS e visualização de caminhos.</p>
-            <div class="module-footer"><span>Expansão futura</span><span>Planejado</span></div>
-          </article>
+        <p id="catalog-status" class="visually-hidden" role="status" aria-live="polite"></p>
+        <div id="estruturas" class="catalog-panel" role="tabpanel" aria-labelledby="tab-estruturas">
+          <h2 class="panel-title">Estruturas de Dados <span class="panel-count"></span></h2>
+          <p class="panel-intro">Todos os módulos compartilham o mesmo motor de execução, os mesmos controles e a mesma identidade visual.</p>
+          <div class="module-group">
+            <div class="group-heading"><h3>ED1 · Estruturas estáticas e dinâmicas</h3><span class="group-count"></span></div>
+            <div class="module-grid">
+              <article class="module-card available" data-keywords="array arrays arranjo vetor busca linear">
+                <div class="module-number"><span>ED1 · 01</span></div>
+                <div class="module-icon" aria-hidden="true">[ ]</div>
+                <h4>Vetores</h4>
+                <p>Índices, acesso, percurso, somatório, média, maior, menor, busca sequencial e ordenação simples.</p>
+                <div class="module-footer"><span>9 simuladores</span><strong>Abrir →</strong></div>
+                <a class="module-link" href="./simuladores/vetores/">Abrir simuladores de vetores</a>
+              </article>
+              <article class="module-card available" data-keywords="matrix 2d bidimensional array linha coluna">
+                <div class="module-number"><span>ED1 · 02</span></div>
+                <div class="module-icon" aria-hidden="true">▦</div>
+                <h4>Matrizes</h4>
+                <p>Índices 2D, acesso, alteração, percursos, soma, média, maior, somas por linha/coluna, identidade, transposta, simetria e jagged arrays.</p>
+                <div class="module-footer"><span>14 simuladores</span><strong>Abrir →</strong></div>
+                <a class="module-link" href="./simuladores/matrizes/">Abrir simuladores de matrizes</a>
+              </article>
+              <article class="module-card available" data-keywords="stack lifo empilhar desempilhar array">
+                <div class="module-number"><span>ED1 · 03</span></div>
+                <div class="module-icon" aria-hidden="true">↥</div>
+                <h4>Pilhas Estáticas</h4>
+                <p>Criação, isFull, isEmpty, push, pop, peek, size e show em uma pilha estática.</p>
+                <div class="module-footer"><span>8 simuladores</span><strong>Abrir →</strong></div>
+                <a class="module-link" href="./simuladores/pilhas/">Abrir simuladores de pilhas</a>
+              </article>
+              <article class="module-card available" data-keywords="queue fifo enfileirar desenfileirar array">
+                <div class="module-number"><span>ED1 · 04</span></div>
+                <div class="module-icon" aria-hidden="true">⇥</div>
+                <h4>Filas Estáticas</h4>
+                <p>Criação, isFull, isEmpty, enqueue, dequeue, peek e show em uma fila estática.</p>
+                <div class="module-footer"><span>7 simuladores</span><strong>Abrir →</strong></div>
+                <a class="module-link" href="./simuladores/filas/">Abrir simuladores de filas</a>
+              </article>
+              <article class="module-card available" data-keywords="list array sequencial">
+                <div class="module-number"><span>ED1 · 05</span></div>
+                <div class="module-icon" aria-hidden="true">○→○</div>
+                <h4>Listas Estáticas</h4>
+                <p>Criação, isFull, isEmpty, add, remove, set, get, show e size em uma lista estática.</p>
+                <div class="module-footer"><span>9 simuladores</span><strong>Abrir →</strong></div>
+                <a class="module-link" href="./simuladores/listas/">Abrir simuladores de listas</a>
+              </article>
+              <article class="module-card available" data-keywords="no node ponteiro referencia heap memoria garbage collector gc new">
+                <div class="module-number"><span>ED1 · 06</span></div>
+                <div class="module-icon" aria-hidden="true">▤</div>
+                <h4>Alocação Dinâmica</h4>
+                <p>Variáveis e referências, null, a classe No, criação e conexão de nós, percurso e perda de referência com Garbage Collector.</p>
+                <div class="module-footer"><span>6 simuladores</span><strong>Abrir →</strong></div>
+                <a class="module-link" href="./simuladores/alocacao-dinamica/">Abrir simuladores de alocação dinâmica</a>
+              </article>
+              <article class="module-card available" data-keywords="stack lifo empilhar desempilhar encadeada no node">
+                <div class="module-number"><span>ED1 · 07</span></div>
+                <div class="module-icon" aria-hidden="true">⛓</div>
+                <h4>Pilhas Dinâmicas</h4>
+                <p>Criação, isEmpty, push, pop, peek, size e display em uma pilha encadeada, sem tamanho máximo.</p>
+                <div class="module-footer"><span>7 simuladores</span><strong>Abrir →</strong></div>
+                <a class="module-link" href="./simuladores/pilhas-dinamicas/">Abrir simuladores de pilhas dinâmicas</a>
+              </article>
+              <article class="module-card available" data-keywords="queue fifo enfileirar desenfileirar encadeada no node">
+                <div class="module-number"><span>ED1 · 08</span></div>
+                <div class="module-icon" aria-hidden="true">⛓</div>
+                <h4>Filas Dinâmicas</h4>
+                <p>Criação, isEmpty, enqueue, dequeue, peek, size e show em uma fila encadeada, sem tamanho máximo.</p>
+                <div class="module-footer"><span>7 simuladores</span><strong>Abrir →</strong></div>
+                <a class="module-link" href="./simuladores/filas-dinamicas/">Abrir simuladores de filas dinâmicas</a>
+              </article>
+              <article class="module-card available" data-keywords="linked list lista ligada encadeada no node">
+                <div class="module-number"><span>ED1 · 09</span></div>
+                <div class="module-icon" aria-hidden="true">⛓</div>
+                <h4>Listas Dinâmicas</h4>
+                <p>Criação, isEmpty, insertAtFront, insertAtBack, insertAtPosition, removeAtFront, removeAtBack, remove, find e show em uma lista encadeada.</p>
+                <div class="module-footer"><span>10 simuladores</span><strong>Abrir →</strong></div>
+                <a class="module-link" href="./simuladores/listas-dinamicas/">Abrir simuladores de listas dinâmicas</a>
+              </article>
+            </div>
+          </div>
+          <div class="module-group">
+            <div class="group-heading"><h3>ED2 · Listas especiais, hash, árvores e grafos</h3><span class="group-count"></span></div>
+            <div class="module-grid">
+              <article class="module-card available" data-keywords="circular linked list lista ligada encadeada no node">
+                <div class="module-number"><span>ED2 · 01</span></div>
+                <div class="module-icon" aria-hidden="true">↺</div>
+                <h4>Listas Circulares</h4>
+                <p>Criação, inserirNoInicio, inserirNoFim, deletarNo e mostrar em uma lista encadeada circular, sem ponteiro fim.</p>
+                <div class="module-footer"><span>5 simuladores</span><strong>Abrir →</strong></div>
+                <a class="module-link" href="./simuladores/listas-circulares/">Abrir simuladores de listas circulares</a>
+              </article>
+              <article class="module-card available" data-keywords="doubly linked list lista ligada anterior proximo prev next no node">
+                <div class="module-number"><span>ED2 · 02</span></div>
+                <div class="module-icon" aria-hidden="true">⇄</div>
+                <h4>Listas Duplamente Encadeadas</h4>
+                <p>Criação, inserirNoInicio, inserirNoFim, removerNo e mostrar em uma lista com ponteiros próximo e anterior.</p>
+                <div class="module-footer"><span>5 simuladores</span><strong>Abrir →</strong></div>
+                <a class="module-link" href="./simuladores/listas-duplamente-encadeadas/">Abrir simuladores de listas duplamente encadeadas</a>
+              </article>
+              <article class="module-card available" data-keywords="hash map dicionario colisao dispersao chave">
+                <div class="module-number"><span>ED2 · 03</span></div>
+                <div class="module-icon" aria-hidden="true">#</div>
+                <h4>Tabelas Hash</h4>
+                <p>Função hash, endereçamento aberto com sondagem linear e encadeamento separado: criar, adicionar, buscar, remover e exibir.</p>
+                <div class="module-footer"><span>12 simuladores</span><strong>Abrir →</strong></div>
+                <a class="module-link" href="./simuladores/tabelas-hash/">Abrir simuladores de tabelas hash</a>
+              </article>
+              <article class="module-card available" data-keywords="bst binary search tree arvore folha raiz sucessor">
+                <div class="module-number"><span>ED2 · 04</span></div>
+                <div class="module-icon" aria-hidden="true">⋔</div>
+                <h4>Árvore Binária de Busca</h4>
+                <p>Nó, anatomia e regra da ABB; inserir, construir a árvore, buscar e remover (folha, um filho e dois filhos, com o sucessor em ordem).</p>
+                <div class="module-footer"><span>7 simuladores</span><strong>Abrir →</strong></div>
+                <a class="module-link" href="./simuladores/arvore-binaria-busca/">Abrir simuladores de árvore binária de busca</a>
+              </article>
+              <article class="module-card" data-keywords="preorder inorder postorder pre ordem pos ordem bfs largura avl btree">
+                <div class="module-number"><span>ED2 · 05</span><span class="module-state">Em breve</span></div>
+                <div class="module-icon" aria-hidden="true">⌘</div>
+                <h4>Percursos e árvores balanceadas</h4>
+                <p>Percursos pré-ordem, em ordem, pós-ordem e em largura, árvores AVL e árvores B.</p>
+                <div class="module-footer"><span>Expansão futura</span></div>
+              </article>
+              <article class="module-card" data-keywords="graph bfs dfs largura profundidade vertice aresta">
+                <div class="module-number"><span>ED2 · 06</span><span class="module-state">Em breve</span></div>
+                <div class="module-icon" aria-hidden="true">◎</div>
+                <h4>Grafos</h4>
+                <p>Representações, BFS, DFS e visualização de caminhos.</p>
+                <div class="module-footer"><span>Expansão futura</span></div>
+              </article>
+            </div>
+          </div>
         </div>
-      </section>
-      <section id="algoritmos" class="catalog-section">
-        <div class="section-heading">
-          <div><span>Algoritmos</span><h2>Escolha um algoritmo</h2></div>
-          <p>Veja o algoritmo executar passo a passo, acompanhe o custo de cada operação e descubra como ele se comporta com diferentes entradas.</p>
+        <div id="algoritmos" class="catalog-panel" role="tabpanel" aria-labelledby="tab-algoritmos" hidden>
+          <h2 class="panel-title">Algoritmos <span class="panel-count"></span></h2>
+          <p class="panel-intro">Veja o algoritmo executar passo a passo, acompanhe o custo de cada operação e descubra como ele se comporta com diferentes entradas.</p>
+          <div class="module-group">
+            <div class="group-heading"><h3>ALG1 · Métodos de ordenação</h3><span class="group-count"></span></div>
+            <div class="module-grid">
+              <article class="module-card available" data-keywords="bogosort bogo aleatorio embaralhar ordenar ordenacao fatorial">
+                <div class="module-number"><span>ALG1 · 01</span></div>
+                <div class="module-icon" aria-hidden="true">⚄</div>
+                <h4>Shotgun Sort</h4>
+                <p>A verificação isOrdenado, o embaralhamento até acertar e a análise do custo: por que n! faz dele o pior algoritmo de ordenação.</p>
+                <div class="module-footer"><span>3 simuladores</span><strong>Abrir →</strong></div>
+                <a class="module-link" href="./simuladores/shotgun-sort/">Abrir simuladores de Shotgun Sort</a>
+              </article>
+              <article class="module-card available" data-keywords="selecao ordenar ordenacao">
+                <div class="module-number"><span>ALG1 · 02</span></div>
+                <div class="module-icon" aria-hidden="true">⇅</div>
+                <h4>Selection Sort</h4>
+                <p>Busca do menor valor, troca com a primeira posição do sub-vetor, complexidade de tempo e espaço, adaptabilidade e estabilidade.</p>
+                <div class="module-footer"><span>5 simuladores</span><strong>Abrir →</strong></div>
+                <a class="module-link" href="./simuladores/selection-sort/">Abrir simuladores de Selection Sort</a>
+              </article>
+              <article class="module-card available" data-keywords="bolha ordenar ordenacao">
+                <div class="module-number"><span>ALG1 · 03</span></div>
+                <div class="module-icon" aria-hidden="true">◌</div>
+                <h4>Bubble Sort</h4>
+                <p>A varredura que empurra o maior valor para o fim, o algoritmo da aula e sua versão otimizada, complexidade de tempo e espaço, adaptabilidade e estabilidade.</p>
+                <div class="module-footer"><span>6 simuladores</span><strong>Abrir →</strong></div>
+                <a class="module-link" href="./simuladores/bubble-sort/">Abrir simuladores de Bubble Sort</a>
+              </article>
+              <article class="module-card available" data-keywords="insercao ordenar ordenacao">
+                <div class="module-number"><span>ALG1 · 04</span></div>
+                <div class="module-icon" aria-hidden="true">⤵</div>
+                <h4>Insertion Sort</h4>
+                <p>Inserir um elemento no sub-vetor ordenado, o algoritmo completo, complexidade de tempo (melhor e pior caso) e espaço, adaptabilidade e estabilidade.</p>
+                <div class="module-footer"><span>5 simuladores</span><strong>Abrir →</strong></div>
+                <a class="module-link" href="./simuladores/insertion-sort/">Abrir simuladores de Insertion Sort</a>
+              </article>
+              <article class="module-card" data-keywords="merge quick heap mergesort quicksort heapsort ordenar ordenacao linear">
+                <div class="module-number"><span>ALG1 · 05</span><span class="module-state">Em breve</span></div>
+                <div class="module-icon" aria-hidden="true">≋</div>
+                <h4>Outros métodos de ordenação</h4>
+                <p>Merge Sort, Quick Sort, Heap Sort e ordenações lineares, comparados em custo, adaptabilidade e estabilidade.</p>
+                <div class="module-footer"><span>Expansão futura</span></div>
+              </article>
+            </div>
+          </div>
         </div>
-        <div class="module-grid">
-          <article class="module-card available">
-            <div class="module-number"><span>ALG1 · 01</span><span class="module-state">Disponível</span></div>
-            <div class="module-icon">⚄</div>
-            <h3>Shotgun Sort</h3>
-            <p>A verificação isOrdenado, o embaralhamento até acertar e a análise do custo: por que n! faz dele o pior algoritmo de ordenação.</p>
-            <div class="module-footer"><span>3 simuladores</span><strong>Abrir →</strong></div>
-            <a class="module-link" href="./simuladores/shotgun-sort/">Abrir simuladores de Shotgun Sort</a>
-          </article>
-          <article class="module-card available">
-            <div class="module-number"><span>ALG1 · 02</span><span class="module-state">Disponível</span></div>
-            <div class="module-icon">⇅</div>
-            <h3>Selection Sort</h3>
-            <p>Busca do menor valor, troca com a primeira posição do sub-vetor, complexidade de tempo e espaço, adaptabilidade e estabilidade.</p>
-            <div class="module-footer"><span>5 simuladores</span><strong>Abrir →</strong></div>
-            <a class="module-link" href="./simuladores/selection-sort/">Abrir simuladores de Selection Sort</a>
-          </article>
-          <article class="module-card available">
-            <div class="module-number"><span>ALG1 · 03</span><span class="module-state">Disponível</span></div>
-            <div class="module-icon">◌</div>
-            <h3>Bubble Sort</h3>
-            <p>A varredura que empurra o maior valor para o fim, o algoritmo da aula e sua versão otimizada, complexidade de tempo e espaço, adaptabilidade e estabilidade.</p>
-            <div class="module-footer"><span>6 simuladores</span><strong>Abrir →</strong></div>
-            <a class="module-link" href="./simuladores/bubble-sort/">Abrir simuladores de Bubble Sort</a>
-          </article>
-          <article class="module-card available">
-            <div class="module-number"><span>ALG1 · 04</span><span class="module-state">Disponível</span></div>
-            <div class="module-icon">⤵</div>
-            <h3>Insertion Sort</h3>
-            <p>Inserir um elemento no sub-vetor ordenado, o algoritmo completo, complexidade de tempo (melhor e pior caso) e espaço, adaptabilidade e estabilidade.</p>
-            <div class="module-footer"><span>5 simuladores</span><strong>Abrir →</strong></div>
-            <a class="module-link" href="./simuladores/insertion-sort/">Abrir simuladores de Insertion Sort</a>
-          </article>
-          <article class="module-card">
-            <div class="module-number"><span>ALG1 · 05</span><span class="module-state">Em breve</span></div>
-            <div class="module-icon">≋</div>
-            <h3>Outros métodos de ordenação</h3>
-            <p>Merge Sort, Quick Sort, Heap Sort e ordenações lineares, comparados em custo, adaptabilidade e estabilidade.</p>
-            <div class="module-footer"><span>Expansão futura</span><span>Planejado</span></div>
-          </article>
+        <div class="catalog-empty" hidden>
+          <strong>Nenhum módulo encontrado</strong>
+          <p></p>
         </div>
       </section>
       <section id="arquitetura" class="architecture">
