@@ -177,6 +177,27 @@ O pseudocódigo segue o da aula, em base 0 (o laço de `isOrdenado` termina em `
 
 O pseudocódigo segue o da aula (`para i ← 0 até tamanho - 1`, com a troca executada em todas as passadas). Os dados são de 2 a 10 números; há geração aleatória e, na estabilidade, um gerador de vetores com repetidos em que a inversão realmente acontece.
 
+### Bubble Sort
+
+- Uma varredura: compara pares vizinhos e leva o maior valor do trecho para o fim, com a última posição ajustável (clique em uma célula para escolher)
+- Bubble Sort: execução completa, com os marcadores `i`, `j−1` e `j`, o resultado de cada comparação e os contadores de comparações e trocas
+- Versão otimizada: a varredura encolhe a cada passada (n(n−1)/2 comparações)
+- Complexidade de tempo: comparações e trocas por passada e o total `n(n−1)`
+- Adaptabilidade: o mesmo algoritmo em três vetores, com as mesmas comparações e trocas diferentes
+- Estabilidade: valores repetidos marcados com letras, mostrando o encontro de dois iguais, que não trocam
+
+O pseudocódigo segue o da aula (`para i ← 0 até n - 1`, `para j ← 1 até n - 1`). Na versão otimizada o laço de `j` vai até `n - 1 - i` (o slide escreve `n - i`, que em base 0 sairia do vetor). Os dados são de 2 a 10 números.
+
+### Insertion Sort
+
+- Inserir um elemento: o laço interno sozinho, com a posição `i` ajustável (clique em uma célula para escolher) e o sub-vetor à esquerda já ordenado
+- Insertion Sort: execução completa, com os marcadores `i`, `j−1` e `j`, o resultado de cada comparação e os contadores
+- Complexidade de tempo: comparações e trocas por passada, do melhor caso (`n − 1`) ao pior (`n(n−1)/2`)
+- Adaptabilidade: o mesmo algoritmo em três vetores, com contadores bem diferentes
+- Estabilidade: valores repetidos marcados com letras, mostrando onde cada elemento para ao encontrar um igual
+
+O pseudocódigo segue o da aula (`enquanto j > 0 e vetor[j - 1] > vetor[j]`). Os dados são de 2 a 10 números.
+
 ## Recursos comuns
 
 Os módulos possuem execução automática, avanço e retorno manuais, controle de velocidade, pseudocódigo destacado, variáveis, console, entrada manual, geração aleatória e tema claro/escuro.
@@ -219,7 +240,11 @@ simulator-web/
 │   │   └── index.html
 │   ├── shotgun-sort/
 │   │   └── index.html
-│   └── selection-sort/
+│   ├── selection-sort/
+│   │   └── index.html
+│   ├── bubble-sort/
+│   │   └── index.html
+│   └── insertion-sort/
 │       └── index.html
 ├── src/
 │   ├── css/
@@ -244,6 +269,8 @@ simulator-web/
 │       │   ├── binary-search-trees/
 │       │   ├── shotgun-sort/
 │       │   ├── selection-sort/
+│       │   ├── bubble-sort/
+│       │   ├── insertion-sort/
 │       │   └── shared/
 │       └── pages/
 ├── docs/ARCHITECTURE.md
@@ -354,6 +381,18 @@ Selection Sort:
 
 ```text
 http://localhost:8000/simuladores/selection-sort/
+```
+
+Bubble Sort:
+
+```text
+http://localhost:8000/simuladores/bubble-sort/
+```
+
+Insertion Sort:
+
+```text
+http://localhost:8000/simuladores/insertion-sort/
 ```
 
 Não use `npm run dev`: o projeto não depende de Node, Vite ou processo de build.

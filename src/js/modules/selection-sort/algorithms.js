@@ -1,3 +1,7 @@
+import {
+  NONE, ascending, clone, fmt, isStable, label, range, step, tagDuplicates, tagsOf, toItems, valuesOf,
+} from '../shared/sort-steps.js';
+
 const SORT_CODE = [
   'FUNÇÃO selectionSort(vetor)',
   '  PARA i de 0 até vetor.length - 1 FAÇA',
@@ -16,9 +20,6 @@ const SORT_CODE = [
 
 // Linhas do SORT_CODE (base 0). Cada passo da simulação destaca uma única linha.
 const LINE = { loopI: 1, minInit: 2, loopJ: 3, test: 4, minUpdate: 5, temp: 8, copy: 9, put: 10, end: 12 };
-
-/** Valor mostrado para uma variável que ainda não foi atribuída. */
-const NONE = '—';
 
 export const algorithms = [
   {
@@ -68,11 +69,6 @@ export const algorithms = [
   },
 ];
 
-const clone = (values) => [...values];
-const fmt = (value) => (Number.isInteger(value) ? String(value) : value.toLocaleString('pt-BR', { maximumFractionDigits: 2 }));
-const range = (end, start = 0) => Array.from({ length: Math.max(0, end - start) }, (_, index) => start + index);
-const pad = (number) => String(number).padStart(2, '0');
-const step = (values, line, title, description, tone = 'neutral', extra = {}) => ({ values: clone(values), line, title, description, tone, variables: {}, output: [], ...extra });
 const compareOf = (values, j, min, result) => ({
   left: { label: 'vetor[j]', value: fmt(values[j]) },
   op: '<',
@@ -84,21 +80,6 @@ const compareOf = (values, j, min, result) => ({
 // Execução por passadas: base das simulações de análise (contagem,
 // adaptabilidade e estabilidade). Cada item é { v: valor, tag: letra }.
 // ---------------------------------------------------------------------------
-
-const TAGS = 'abcdefghij';
-const toItems = (values) => values.map((v) => ({ v, tag: '' }));
-
-function tagDuplicates(values) {
-  const totals = new Map();
-  values.forEach((value) => totals.set(value, (totals.get(value) ?? 0) + 1));
-  const seen = new Map();
-  return values.map((v) => {
-    if (totals.get(v) < 2) return { v, tag: '' };
-    const occurrence = seen.get(v) ?? 0;
-    seen.set(v, occurrence + 1);
-    return { v, tag: TAGS[occurrence] };
-  });
-}
 
 function runPasses(items) {
   const current = items.map((item) => ({ ...item }));
@@ -115,20 +96,6 @@ function runPasses(items) {
   }
   return passes;
 }
-
-const isStable = (items) => {
-  const last = new Map();
-  return items.every((item) => {
-    if (!item.tag) return true;
-    const previous = last.get(item.v);
-    last.set(item.v, item.tag);
-    return previous === undefined || previous < item.tag;
-  });
-};
-
-const label = (item) => (item.tag ? `${fmt(item.v)}(${item.tag})` : fmt(item.v));
-const valuesOf = (items) => items.map((item) => item.v);
-const tagsOf = (items) => items.map((item) => item.tag);
 
 /** Vetor com repetidos em que o Selection Sort inverte a ordem de dois iguais. */
 export function stabilityExample(count) {
@@ -290,10 +257,20 @@ function countingSteps(values) {
   const passes = runPasses(toItems(values));
   const expected = (n * (n - 1)) / 2;
   const series = passes.map((pass) => pass.comparisons);
-  const bars = passes.map(() => ({ value: null, swapped: false, current: false }));
+  const bars = passes.map((_, index) => ({ label: `i = ${index}`, value: null, mark: '', current: false }));
   let comparisons = 0;
   let swaps = 0;
-  const chart = (final = false) => ({ bars: bars.map((bar) => ({ ...bar })), comparisons, swaps, expected, n, final });
+  const chart = (final = false) => ({
+    title: 'Comparações em cada passada (valor de i)',
+    hint: '⇄ = uma troca',
+    max: n - 1,
+    bars: bars.map((bar) => ({ ...bar })),
+    totals: [
+      { label: 'Comparações', value: comparisons, note: final ? `n(n−1)/2 = ${n}·${n - 1}/2 = ${expected}` : `esperado ao final: ${expected}` },
+      { label: 'Trocas', value: swaps, note: final ? `n = ${n}` : `esperado ao final: ${n}` },
+    ],
+    final,
+  });
   const common = (extra) => ({ chart: chart(extra.final), ...extra });
 
   const steps = [
@@ -321,7 +298,7 @@ function countingSteps(values) {
       sortedCount: i, comparedIndices: pair, changedIndices: [i], pointers: { i, min }, phase: swapPhase, variables: { i, minimo: min, temp: pass.before[i].v },
     })));
     swaps += 1;
-    bars[index].swapped = true;
+    bars[index].mark = '⇄';
     steps.push(step(valuesOf(pass.after), LINE.put, `i = ${i}: completando a troca`, `vetor[${min}] recebe ${fmt(pass.before[i].v)}. Mais uma troca contada.`, 'success', common({
       sortedCount: i + 1, comparedIndices: pair, changedIndices: pair, pointers: { i, min }, phase: swapPhase, variables: { i, minimo: min, trocas: swaps, 'comparações acumuladas': comparisons },
     })));
@@ -344,10 +321,10 @@ function countingSteps(values) {
 
 function adaptabilitySteps(values) {
   const n = values.length;
-  const ascending = [...values].sort((x, y) => x - y);
+  const inOrder = ascending(values);
   const scenarios = [
-    { label: 'Já ordenado', values: ascending },
-    { label: 'Ordem inversa', values: [...ascending].reverse() },
+    { label: 'Já ordenado', values: inOrder },
+    { label: 'Ordem inversa', values: [...inOrder].reverse() },
     { label: 'Seu vetor', values: clone(values) },
   ].map((scenario) => ({ ...scenario, passes: runPasses(toItems(scenario.values)), comparisons: 0, swaps: 0 }));
   const expected = (n * (n - 1)) / 2;
@@ -367,11 +344,11 @@ function adaptabilitySteps(values) {
     steps.push(step(values, scanLine(scenarios[0].passes[index]), `${phase}: varredura`, remaining
       ? `A linha SE vetor[j] < vetor[minimo] executa ${remaining} vezes em cada vetor, mesmo no que já está ordenado. Total acumulado: ${joined('comparisons')}.`
       : 'Não há posições depois de i: o laço PARA j não executa em nenhum dos vetores.', 'comparison', {
-      rows: rows((scenario) => ({ values: valuesOf(scenario.passes[index].before), sortedCount: index, minIndex: scenario.passes[index].min })),
+      rows: rows((scenario) => ({ values: valuesOf(scenario.passes[index].before), sortedCount: index, markIndex: scenario.passes[index].min })),
       variables: { i: index, 'comparações': joined('comparisons') },
     }));
     steps.push(step(values, LINE.temp, `${phase}: guardando em temp`, 'Cada vetor guarda vetor[i] em temp.', 'update', {
-      rows: rows((scenario) => ({ values: valuesOf(scenario.passes[index].before), sortedCount: index, minIndex: scenario.passes[index].min })),
+      rows: rows((scenario) => ({ values: valuesOf(scenario.passes[index].before), sortedCount: index, markIndex: scenario.passes[index].min })),
       variables: { i: index },
     }));
     steps.push(step(values, LINE.copy, `${phase}: copiando o menor`, 'Cada vetor copia o menor valor do sub-vetor para vetor[i].', 'update', {

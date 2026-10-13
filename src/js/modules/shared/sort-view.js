@@ -1,11 +1,12 @@
 // Peças visuais e de entrada de dados compartilhadas pelos módulos de ordenação
-// (Selection Sort, Shotgun Sort): vetor com marcadores, cartão de comparação,
-// contadores, legenda e editor de números.
+// (Selection Sort, Bubble Sort, Insertion Sort e Shotgun Sort): vetor com marcadores,
+// cartão de comparação, contadores, legenda, gráfico de barras, vetores em paralelo
+// e editor de números.
 
 import { icons } from '../../core/icons.js';
 import { hasIndex } from '../../core/utils.js';
 
-const CHIP_LABELS = { i: 'i', j: 'j', min: 'min', next: 'i+1' };
+const CHIP_LABELS = { i: 'i', j: 'j', min: 'min', next: 'i+1', prev: 'j−1' };
 
 export function parseVector(text, { min, max, hint }) {
   const tokens = text.split(/[;,\s]+/).map((token) => token.trim()).filter(Boolean);
@@ -53,15 +54,21 @@ export const legend = (items) => `
     ${items.map(([kind, text]) => `<span><i class="legend-dot ${kind}"></i> ${text}</span>`).join('')}
   </div>`;
 
+/**
+ * Posições já ordenadas: as `sortedCount` primeiras (Selection e Insertion Sort) e as que vêm a partir
+ * de `sortedFrom` (Bubble Sort, que leva o maior valor para o fim).
+ */
+const isSorted = (step, index) => index < (step.sortedCount ?? 0) || index >= (step.sortedFrom ?? step.values.length);
+
 function cellClasses(step, state, index, showTags) {
   const pointers = step.pointers || {};
   const classes = ['sort-cell'];
-  if (index < (step.sortedCount ?? 0)) classes.push('sorted');
+  if (isSorted(step, index)) classes.push('sorted');
   if (hasIndex(step.outsideIndices, index)) classes.push('outside');
   if (showTags && step.tags?.[index]) classes.push('dup');
   if (hasIndex(step.comparedIndices, index)) classes.push('compared');
   if (hasIndex(step.warnIndices, index)) classes.push('warn');
-  if (pointers.min === index) classes.push('min');
+  if (pointers.min === index || hasIndex(step.foundIndices, index)) classes.push('min');
   if (pointers.j === index || hasIndex(step.activeIndices, index)) classes.push('active');
   if (hasIndex(step.changedIndices, index)) classes.push('changed');
   if (state.inspectedItem === index) classes.push('inspected');
@@ -70,13 +77,12 @@ function cellClasses(step, state, index, showTags) {
 
 export function renderArray(step, state, escapeText, { showTags = false } = {}) {
   const pointers = step.pointers || {};
-  const sortedCount = step.sortedCount ?? 0;
   const slots = step.values.map((value, index) => {
     const chips = Object.keys(CHIP_LABELS)
       .filter((name) => pointers[name] === index)
       .map((name) => `<span class="sort-chip ${name}">${CHIP_LABELS[name]}</span>`).join('');
     const tag = showTags && step.tags?.[index] ? `<span class="sort-cell-tag">${escapeText(step.tags[index])}</span>` : '';
-    const rail = index < sortedCount ? 'sorted' : hasIndex(step.outsideIndices, index) ? 'outside' : 'open';
+    const rail = isSorted(step, index) ? 'sorted' : hasIndex(step.outsideIndices, index) ? 'outside' : 'open';
     return `
       <div class="sort-slot">
         <div class="sort-chips"><span>${chips}</span></div>
@@ -115,4 +121,62 @@ export const renderStats = (step) => (step.stats
 export function renderInspection(step, state, escapeText) {
   if (state.inspectedItem === null || state.inspectedItem >= step.values.length) return '';
   return `<div class="inspection-card">${icons.info}<span>Posição selecionada</span><strong>vetor[${state.inspectedItem}] = ${escapeText(step.values[state.inspectedItem])}</strong></div>`;
+}
+
+/**
+ * Gráfico de barras com o custo de cada passada. `step.chart` tem `title` e `hint` (cabeçalho),
+ * `max` (valor da barra cheia), `bars` (`{ label, value, current, mark }`: `value` nulo é uma
+ * passada ainda não contada e `mark` é o texto da última coluna, como "⇄ 3") e `totals`
+ * (`{ label, value, note }`, com `final` quando a soma está completa).
+ */
+export function renderChart(step) {
+  const { title, hint, max, bars, totals, final } = step.chart;
+  const longest = Math.max(1, max);
+  const rows = bars.map((bar) => `
+    <div class="sort-bar-row${bar.current ? ' current' : ''}">
+      <span>${bar.label}</span>
+      <span class="sort-bar-track"><i style="width:${bar.value === null ? 0 : (bar.value / longest) * 100}%"></i></span>
+      <b class="sort-bar-value">${bar.value === null ? '·' : bar.value}</b>
+      <span class="sort-bar-swap" title="troca">${bar.mark || ''}</span>
+    </div>`).join('');
+  const boxes = totals.map((total) => `
+        <div class="sort-total${final ? ' final' : ''}"><small>${total.label}</small><strong>${total.value}</strong><span>${total.note}</span></div>`).join('');
+  return `
+    <div class="sort-chart">
+      <div class="sort-chart-title"><span>${title}</span><span>${hint}</span></div>
+      <div class="sort-bars">${rows}</div>
+      <div class="sort-totals">${boxes}
+      </div>
+    </div>`;
+}
+
+/**
+ * Os mesmos valores em ordens diferentes, ordenados em paralelo. Cada linha de `step.rows` tem
+ * `label`, `values`, os contadores `comparisons` e `swaps`, `sortedCount` ou `sortedFrom` (posições
+ * ordenadas), `markIndex` (a posição destacada) e `changedIndices`.
+ */
+export function renderLockstep(step, escapeText, legendItems) {
+  const scenarios = step.rows.map((row) => {
+    const cells = row.values.map((value, index) => {
+      const classes = ['sort-cell', 'mini'];
+      const done = isSorted(row, index);
+      if (done) classes.push('sorted');
+      if (row.markIndex === index) classes.push('min');
+      if (hasIndex(row.changedIndices, index)) classes.push('changed');
+      return `<div class="sort-slot"><span class="${classes.join(' ')}">${escapeText(value)}</span><span class="sort-rail ${done ? 'sorted' : 'open'}"></span></div>`;
+    }).join('');
+    return `
+      <div class="sort-scenario">
+        <div class="sort-scenario-head">
+          <span class="sort-scenario-label">${escapeText(row.label)}</span>
+          <span class="sort-counters">comparações <strong>${row.comparisons}</strong> · trocas <strong>${row.swaps}</strong></span>
+        </div>
+        <div class="sort-scroll"><div class="sort-row">${cells}</div></div>
+      </div>`;
+  }).join('');
+  return `
+    <div class="sort-stage">
+      <div class="sort-lockstep" role="group" aria-label="Três vetores sendo ordenados em paralelo">${scenarios}</div>
+      ${legend(legendItems)}
+    </div>`;
 }
