@@ -1,8 +1,7 @@
 import { algorithms, buildSteps, stabilityExample } from './algorithms.js';
 import { icons } from '../../core/icons.js';
-import { hasIndex } from '../../core/utils.js';
 import {
-  legend, parseVector, randomVector, renderArray, renderCompare, renderInspection, renderPhase, renderStats, renderVectorEditor,
+  legend, parseVector, randomVector, renderArray, renderChart, renderCompare, renderInspection, renderLockstep, renderPhase, renderStats, renderVectorEditor,
 } from '../shared/sort-view.js';
 
 const DEFAULT_VECTOR = [93, 87, 65, 99, 42, 31, 74];
@@ -24,53 +23,6 @@ const LEGENDS = {
   adaptability: [LEGEND_MIN, LEGEND_SWAP, LEGEND_SORTED],
   stability: [LEGEND_I, LEGEND_MIN, LEGEND_SORTED, ['dup', 'repetido (letra = ordem original)'], ['warn', 'ordem invertida']],
 };
-
-function renderChart(step) {
-  const { bars, comparisons, swaps, expected, n, final } = step.chart;
-  const longest = Math.max(1, n - 1);
-  const rows = bars.map((bar, index) => `
-    <div class="sort-bar-row${bar.current ? ' current' : ''}">
-      <span>i = ${index}</span>
-      <span class="sort-bar-track"><i style="width:${bar.value === null ? 0 : (bar.value / longest) * 100}%"></i></span>
-      <b class="sort-bar-value">${bar.value === null ? '·' : bar.value}</b>
-      <span class="sort-bar-swap" title="troca">${bar.swapped ? '⇄' : ''}</span>
-    </div>`).join('');
-  return `
-    <div class="sort-chart">
-      <div class="sort-chart-title"><span>Comparações em cada passada (valor de i)</span><span>⇄ = uma troca</span></div>
-      <div class="sort-bars">${rows}</div>
-      <div class="sort-totals">
-        <div class="sort-total${final ? ' final' : ''}"><small>Comparações</small><strong>${comparisons}</strong><span>${final ? `n(n−1)/2 = ${n}·${n - 1}/2 = ${expected}` : `esperado ao final: ${expected}`}</span></div>
-        <div class="sort-total${final ? ' final' : ''}"><small>Trocas</small><strong>${swaps}</strong><span>${final ? `n = ${n}` : `esperado ao final: ${n}`}</span></div>
-      </div>
-    </div>`;
-}
-
-function renderLockstep(step, escapeText) {
-  const scenarios = step.rows.map((row) => {
-    const cells = row.values.map((value, index) => {
-      const classes = ['sort-cell', 'mini'];
-      if (index < row.sortedCount) classes.push('sorted');
-      if (row.minIndex === index) classes.push('min');
-      if (hasIndex(row.changedIndices, index)) classes.push('changed');
-      const rail = index < row.sortedCount ? 'sorted' : 'open';
-      return `<div class="sort-slot"><span class="${classes.join(' ')}">${escapeText(value)}</span><span class="sort-rail ${rail}"></span></div>`;
-    }).join('');
-    return `
-      <div class="sort-scenario">
-        <div class="sort-scenario-head">
-          <span class="sort-scenario-label">${escapeText(row.label)}</span>
-          <span class="sort-counters">comparações <strong>${row.comparisons}</strong> · trocas <strong>${row.swaps}</strong></span>
-        </div>
-        <div class="sort-scroll"><div class="sort-row">${cells}</div></div>
-      </div>`;
-  }).join('');
-  return `
-    <div class="sort-stage">
-      <div class="sort-lockstep" role="group" aria-label="Três vetores sendo ordenados em paralelo">${scenarios}</div>
-      ${legend(LEGENDS.adaptability)}
-    </div>`;
-}
 
 export const selectionSortModule = {
   id: 'selection-sort',
@@ -132,7 +84,7 @@ export const selectionSortModule = {
 
   renderVisualization({ state, step, escapeText }) {
     const { algorithmId } = state;
-    if (algorithmId === 'adaptability') return renderLockstep(step, escapeText);
+    if (algorithmId === 'adaptability') return renderLockstep(step, escapeText, LEGENDS.adaptability);
 
     const showTags = algorithmId === 'stability';
     return `

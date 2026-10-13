@@ -66,13 +66,20 @@ modules/
 ├── selection-sort/
 │   ├── algorithms.js
 │   └── selection-sort-module.js
+├── bubble-sort/
+│   ├── algorithms.js
+│   └── bubble-sort-module.js
+├── insertion-sort/
+│   ├── algorithms.js
+│   └── insertion-sort-module.js
 └── shared/
+    ├── sort-steps.js
     ├── sort-view.js
     ├── node-scene.js
     └── tree-scene.js
 ```
 
-`shared/sort-view.js` reúne o que os módulos de ordenação têm em comum: o vetor com marcadores sobre as células, o cartão de comparação, os contadores, a legenda e o editor de números (`renderArray`, `renderCompare`, `renderStats`, `legend`, `renderVectorEditor`, `parseVector`, `randomVector`).
+`shared/sort-view.js` reúne o que os módulos de ordenação têm em comum: o vetor com marcadores sobre as células, o cartão de comparação, os contadores, a legenda, o gráfico de barras por passada, os vetores ordenados em paralelo e o editor de números (`renderArray`, `renderCompare`, `renderStats`, `legend`, `renderChart`, `renderLockstep`, `renderVectorEditor`, `parseVector`, `randomVector`). `shared/sort-steps.js` tem a parte de execução: o formato de um passo (`step`), a formatação (`fmt`, `range`, `NONE`) e os itens com letra que marcam a ordem dos repetidos (`tagDuplicates`, `isStable`, `label`, `repeatedExample`). Selection Sort, Bubble Sort e Insertion Sort usam os dois.
 
 `shared/node-scene.js` reúne o que os módulos de lista circular e de lista duplamente encadeada têm em comum: a execução do algoritmo "como num depurador" (`trace`), o layout, as fichas das variáveis, as setas e as animações (`renderScene`, `afterRenderScene`). Veja "Cena de nós com ponteiros" abaixo.
 
@@ -97,7 +104,9 @@ modules/
 - `hash-table-simulator.js`: conecta `SimulatorApp` ao `hashTableModule`;
 - `binary-search-tree-simulator.js`: conecta `SimulatorApp` ao `binarySearchTreeModule`;
 - `shotgun-sort-simulator.js`: conecta `SimulatorApp` ao `shotgunSortModule`;
-- `selection-sort-simulator.js`: conecta `SimulatorApp` ao `selectionSortModule`.
+- `selection-sort-simulator.js`: conecta `SimulatorApp` ao `selectionSortModule`;
+- `bubble-sort-simulator.js`: conecta `SimulatorApp` ao `bubbleSortModule`;
+- `insertion-sort-simulator.js`: conecta `SimulatorApp` ao `insertionSortModule`.
 
 ## Contagem de acessos
 
@@ -231,13 +240,27 @@ Módulo da categoria **Algoritmos** (ALG1 · 02, depois do Shotgun Sort na aula)
 Cada passo pode fornecer:
 
 - `pointers: { i, j, min }`, que o renderer mostra como marcadores sobre as células e usa para destacar `j` (ativo) e `min`;
-- `sortedCount` (as primeiras posições já definitivas) e `outsideIndices` (fora do sub-vetor, em `find-min`);
-- `comparedIndices`, `changedIndices`, `activeIndices` e `warnIndices` (ordem invertida);
+- `sortedCount` (as primeiras posições já definitivas), `sortedFrom` (as posições a partir dali já estão no lugar, no Bubble Sort) e `outsideIndices` (fora do sub-vetor, em `find-min`);
+- `comparedIndices`, `changedIndices`, `activeIndices`, `foundIndices` (anel verde, sem marcador) e `warnIndices` (ordem invertida);
 - `compare` (`left`, `op`, `right`, `result`), exibido no cartão `vetor[j] < vetor[minimo]? Sim/Não`;
 - `phase` (`i = 0 · Busca o menor`; `code: true` desliga a caixa alta do selo) e `stats` (comparações e trocas acumuladas);
-- `tags` (letras dos valores repetidos), `chart` (barras de comparações por passada, em `counting`) e `rows` (os três vetores lado a lado, em `adaptability`).
+- `tags` (letras dos valores repetidos), `chart` (barras de comparações por passada, em `counting`) e `rows` (os três vetores lado a lado, em `adaptability`). `chart` é `{ title, hint, max, bars: [{ label, value, mark, current }], totals: [{ label, value, note }], final }` e cada linha de `rows` é `{ label, values, comparisons, swaps, sortedCount | sortedFrom, markIndex, changedIndices }`, desenhados por `renderChart` e `renderLockstep`. `pointers` também aceita `prev` (marcador `j−1`).
 
 Nos módulos de ordenação cada passo destaca uma única linha do pseudocódigo, na ordem em que ela executa (`step.line` é sempre um número). `step.stats` é um objeto `{ rótulo: valor }`. Os simuladores de análise (`counting`, `adaptability`, `stability`) resumem a varredura em um passo, na linha do `SE`, e dividem a troca em três passos, um por atribuição. Na estabilidade, o botão "Gerar exemplo" e a geração aleatória daquele simulador usam `stabilityExample`, que sorteia vetores até encontrar um em que o algoritmo inverte a ordem de dois iguais.
+
+## Módulo de Bubble Sort
+
+Módulo da categoria **Algoritmos** (ALG1 · 03, aula 09). Segue o formato do Selection Sort, com seis simuladores: `sweep` (uma varredura, com `config.fim`, a última posição do trecho, que também se escolhe clicando em uma célula), `bubble-sort` (execução completa, a da aula), `optimized` (o laço de `j` encolhe a cada passada), `counting`, `adaptability` e `stability`. Os dados são de 2 a 10 números.
+
+O pseudocódigo da aula (slide 37) faz `i` de 0 a `n − 1` e `j` de 1 a `n − 1`, então são n passadas e n(n−1) comparações, inclusive nas posições que já estão no lugar. Na versão otimizada, a aula escreve `j ← 1 até n − i`, que em base 0 sairia do vetor; o código usa `n - 1 - i`, que é o que a análise do slide 107 conta, e `i` termina em `n - 2`. A aula também escreve (n−1) + (n−2) + … + 1 = n² − n para as trocas; o correto é n(n−1)/2, que é o que o simulador mostra (uma troca por par fora de ordem).
+
+`bubble-sort` e `optimized` executam como num depurador (um passo por linha, `PARA j (j = n): fim` como passo próprio, `inverter` como uma linha só, como na aula). Como o maior valor vai para o fim, as posições já definitivas são as últimas: o passo traz `sortedFrom` (e não `sortedCount`). A passada que não troca nada é dita no passo, e o resumo final lembra que a versão da aula continua varrendo com o vetor já ordenado. Na adaptabilidade as comparações são iguais nos três vetores e só as trocas mudam. Na estabilidade cada encontro de dois iguais é um passo (`vetor[j−1] > vetor[j]` é falso e eles não trocam), a partir de `ties` de `runPasses`.
+
+## Módulo de Insertion Sort
+
+Módulo da categoria **Algoritmos** (ALG1 · 04, aula 09), com cinco simuladores: `insert-one` (o laço interno sozinho, com `config.i`, a posição do elemento, que também se escolhe clicando em uma célula), `insertion-sort` (execução completa), `counting`, `adaptability` e `stability`. O pseudocódigo é o do slide 26, com `ENQUANTO j > 0 E vetor[j - 1] > vetor[j]`: o teste é um passo só por volta e, com `j = 0`, o passo diz que o `E` não avalia o lado direito.
+
+As primeiras `i` posições estão ordenadas entre si, mas ainda não são as posições finais; por isso o `sortedCount` do Insertion Sort usa a legenda "sub-vetor ordenado". Em `insert-one` o vetor é mostrado com as `i` primeiras posições já ordenadas, como estariam depois das passadas anteriores. `runPasses` devolve, por passada, onde o elemento parou (`to`), as comparações, as trocas e o igual que o fez parar (`stoppedBy`), usado na estabilidade. Diferente do Bubble e do Selection, o custo depende da ordem: o vetor ordenado faz n − 1 comparações e nenhuma troca, e o invertido, n(n−1)/2 de cada, o que a adaptabilidade mostra nos três vetores.
 
 ## Módulo de Shotgun Sort
 
