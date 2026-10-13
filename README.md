@@ -145,6 +145,18 @@ Cada nó guarda uma referência para o próximo nó e outra para o anterior, per
 
 Todos os algoritmos são mostrados em pseudocódigo. Os dados são pares chave:valor (uma entrada pode ser marcada com `~` como já removida) e a capacidade da tabela é ajustável; clicar em uma entrada usa a chave dela como parâmetro.
 
+### Árvore Binária de Busca
+
+- Nó da árvore: a classe `No`, `CRIAR_NÓ` e a ligação como evento separado
+- Anatomia: raiz, pai e filhos, folhas, arestas, subárvore, profundidade e altura
+- Regra da ABB: a regra global e a árvore com erro da aula
+- Inserir (`INSERIR`)
+- Construir a árvore: inserções em sequência (exercício 1 da aula)
+- Buscar (`BUSCAR`)
+- Remover (`REMOVER`): folha, um filho e dois filhos (sucessor em ordem)
+
+O pseudocódigo e os passos seguem os slides de teoria e de debug da aula: `INSERIR(45)` tem 20 passos, `BUSCAR(30)` 12, `REMOVER(10)` 29, `REMOVER(50)` 29 e `REMOVER(40)` 27. Os dados são os valores na ordem de inserção (inteiros de 0 a 999, até 12; iguais vão para a direita), e há atalhos para os exemplos da aula. Clicar em um nó usa o valor dele como parâmetro, e na remoção há botões para escolher uma folha, um nó com um filho ou com dois filhos.
+
 ## Algoritmos
 
 ### Shotgun Sort
@@ -203,6 +215,8 @@ simulator-web/
 │   │   └── index.html
 │   ├── tabelas-hash/
 │   │   └── index.html
+│   ├── arvore-binaria-busca/
+│   │   └── index.html
 │   ├── shotgun-sort/
 │   │   └── index.html
 │   └── selection-sort/
@@ -227,6 +241,7 @@ simulator-web/
 │       │   ├── circular-lists/
 │       │   ├── doubly-linked-lists/
 │       │   ├── hash-tables/
+│       │   ├── binary-search-trees/
 │       │   ├── shotgun-sort/
 │       │   ├── selection-sort/
 │       │   └── shared/
@@ -321,6 +336,12 @@ Tabelas Hash:
 
 ```text
 http://localhost:8000/simuladores/tabelas-hash/
+```
+
+Árvore Binária de Busca:
+
+```text
+http://localhost:8000/simuladores/arvore-binaria-busca/
 ```
 
 Shotgun Sort:
