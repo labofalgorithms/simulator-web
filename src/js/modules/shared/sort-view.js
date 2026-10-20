@@ -1,12 +1,15 @@
 // Peças visuais e de entrada de dados compartilhadas pelos módulos de ordenação
-// (Selection Sort, Bubble Sort, Insertion Sort e Shotgun Sort): vetor com marcadores,
-// cartão de comparação, contadores, legenda, gráfico de barras, vetores em paralelo
+// (Selection Sort, Bubble Sort, Insertion Sort, Shotgun Sort, Merge Sort e Quick Sort): vetor com
+// marcadores, cartão de comparação, contadores, legenda, gráfico de barras, vetores em paralelo
 // e editor de números.
 
 import { icons } from '../../core/icons.js';
 import { hasIndex } from '../../core/utils.js';
 
-const CHIP_LABELS = { i: 'i', j: 'j', min: 'min', next: 'i+1', prev: 'j−1' };
+// Os quatro últimos marcam o trecho do Merge Sort e do Quick Sort (início, meio, fim e o índice k).
+const CHIP_LABELS = {
+  i: 'i', j: 'j', min: 'min', next: 'i+1', prev: 'j−1', inicio: 'início', meio: 'meio', fim: 'fim', k: 'k',
+};
 
 export function parseVector(text, { min, max, hint }) {
   const tokens = text.split(/[;,\s]+/).map((token) => token.trim()).filter(Boolean);
@@ -55,10 +58,11 @@ export const legend = (items) => `
   </div>`;
 
 /**
- * Posições já ordenadas: as `sortedCount` primeiras (Selection e Insertion Sort) e as que vêm a partir
- * de `sortedFrom` (Bubble Sort, que leva o maior valor para o fim).
+ * Posições já ordenadas: as `sortedCount` primeiras (Selection e Insertion Sort), as que vêm a partir
+ * de `sortedFrom` (Bubble Sort, que leva o maior valor para o fim) e as listadas em `sortedIndices`
+ * (trechos prontos do Merge Sort e posições finais dos pivôs do Quick Sort).
  */
-const isSorted = (step, index) => index < (step.sortedCount ?? 0) || index >= (step.sortedFrom ?? step.values.length);
+const isSorted = (step, index) => index < (step.sortedCount ?? 0) || index >= (step.sortedFrom ?? step.values.length) || hasIndex(step.sortedIndices, index);
 
 function cellClasses(step, state, index, showTags) {
   const pointers = step.pointers || {};
@@ -70,12 +74,17 @@ function cellClasses(step, state, index, showTags) {
   if (hasIndex(step.warnIndices, index)) classes.push('warn');
   if (pointers.min === index || hasIndex(step.foundIndices, index)) classes.push('min');
   if (pointers.j === index || hasIndex(step.activeIndices, index)) classes.push('active');
+  if (step.pivotIndex === index) classes.push('pivot');
   if (hasIndex(step.changedIndices, index)) classes.push('changed');
   if (state.inspectedItem === index) classes.push('inspected');
   return classes.join(' ');
 }
 
-export function renderArray(step, state, escapeText, { showTags = false } = {}) {
+/** A célula logo depois de `step.splitAfter` ganha a barra que separa as duas metades (Merge Sort). */
+export const slotClass = (step, index) => (step.splitAfter !== undefined && index === step.splitAfter + 1 ? 'sort-slot split' : 'sort-slot');
+
+/** `stacked` empilha os marcadores de uma mesma célula (início, meio, fim, i, j...) em vez de pô-los lado a lado. */
+export function renderArray(step, state, escapeText, { showTags = false, stacked = false } = {}) {
   const pointers = step.pointers || {};
   const slots = step.values.map((value, index) => {
     const chips = Object.keys(CHIP_LABELS)
@@ -84,14 +93,14 @@ export function renderArray(step, state, escapeText, { showTags = false } = {}) 
     const tag = showTags && step.tags?.[index] ? `<span class="sort-cell-tag">${escapeText(step.tags[index])}</span>` : '';
     const rail = isSorted(step, index) ? 'sorted' : hasIndex(step.outsideIndices, index) ? 'outside' : 'open';
     return `
-      <div class="sort-slot">
-        <div class="sort-chips"><span>${chips}</span></div>
+      <div class="${slotClass(step, index)}">
+        <div class="sort-chips${stacked ? ' stacked' : ''}"><span>${chips}</span></div>
         <button type="button" class="${cellClasses(step, state, index, showTags)}" data-module-action="inspect-item" data-index="${index}" aria-label="Posição ${index}, valor ${escapeText(value)}">${escapeText(value)}${tag}</button>
         <span class="sort-index">${index}</span>
         <span class="sort-rail ${rail}"></span>
       </div>`;
   }).join('');
-  return `<div class="sort-scroll" role="group" aria-label="Representação visual do vetor"><div class="sort-row">${slots}</div></div>`;
+  return `<div class="sort-scroll${stacked ? ' roomy' : ''}" role="group" aria-label="Representação visual do vetor"><div class="sort-row">${slots}</div></div>`;
 }
 
 export const renderPhase = (step, escapeText) => `<div class="sort-phase">${step.phase
@@ -169,7 +178,7 @@ export function renderLockstep(step, escapeText, legendItems) {
       <div class="sort-scenario">
         <div class="sort-scenario-head">
           <span class="sort-scenario-label">${escapeText(row.label)}</span>
-          <span class="sort-counters">comparações <strong>${row.comparisons}</strong> · trocas <strong>${row.swaps}</strong></span>
+          <span class="sort-counters">comparações <strong>${row.comparisons}</strong> · ${row.moveLabel ?? 'trocas'} <strong>${row.swaps}</strong></span>
         </div>
         <div class="sort-scroll"><div class="sort-row">${cells}</div></div>
       </div>`;
