@@ -20,7 +20,8 @@ import { hasIndex } from '../../core/utils.js';
  * - `visited` e `fresh`: nós pelos quais `atual`/`suc` já passaram (o caminho) e nós cuja ligação com o
  *   pai foi atribuída neste passo (a seta é animada);
  * - `vars`: `{ name, target, text, status, changed }` de cada parâmetro e variável do código, para a
- *   barra de variáveis, que fica sempre visível.
+ *   barra de variáveis, que fica sempre visível;
+ * - `badges`: `{ id: texto }`, o selo abaixo de cada nó (a ordem de visita nos percursos).
  *
  * A posição horizontal de um nó é a sua ordem entre todos os nós que passam pela execução (`ranks`,
  * calculada uma vez por execução): inserir ou remover um nó não empurra os demais. A vertical é a
@@ -85,6 +86,33 @@ export function preorder(tree, start = tree.root) {
   return out;
 }
 
+/** Nós de `start` em pós-ordem (esquerda, direita, nó). */
+export function postorder(tree, start = tree.root) {
+  const out = [];
+  const walk = (id) => {
+    if (typeof id !== 'number') return;
+    walk(tree.nodes[id].left);
+    walk(tree.nodes[id].right);
+    out.push(id);
+  };
+  walk(start);
+  return out;
+}
+
+/** Nós de `start` em largura: nível por nível, da esquerda para a direita. */
+export function levelorder(tree, start = tree.root) {
+  const out = [];
+  const queue = typeof start === 'number' ? [start] : [];
+  while (queue.length) {
+    const id = queue.shift();
+    out.push(id);
+    ['left', 'right'].forEach((side) => {
+      if (typeof tree.nodes[id][side] === 'number') queue.push(tree.nodes[id][side]);
+    });
+  }
+  return out;
+}
+
 /** Altura em arestas: uma folha tem altura 0 e o nó nulo, −1. */
 export function heightOf(tree, id = tree.root) {
   if (typeof id !== 'number') return -1;
@@ -127,8 +155,10 @@ export function layoutOf(tree) {
 // Execução como num depurador
 // ---------------------------------------------------------------------------------------------
 
-const CHIP_ORDER = ['raiz', 'atual', 'pai', 'suc', 'paiSuc', 'filho', 'novo'];
-const CHIP_KIND = { raiz: 'inicio', atual: 'atual', pai: 'cursor', suc: 'alvo', paiSuc: 'cursor', filho: 'filho', novo: 'novo' };
+const CHIP_ORDER = ['raiz', 'atual', 'No', 'pai', 'suc', 'paiSuc', 'filho', 'novo'];
+// Fichas que aparecem sobre o selo `nulo` quando a árvore está vazia.
+const EMPTY_CHIPS = ['raiz', 'atual', 'No', 'pai'];
+const CHIP_KIND = { raiz: 'inicio', atual: 'atual', No: 'atual', pai: 'cursor', suc: 'alvo', paiSuc: 'cursor', filho: 'filho', novo: 'novo' };
 
 let runs = 0;
 
@@ -163,6 +193,7 @@ export function treeTrace({ tree, layout, params = {}, locals, allNulls = false 
     fresh: [],
     gone: new Set(),
     lastDepth: new Map(),
+    badges: new Map(),
     params: { ...params },
   };
   const steps = [];
@@ -207,6 +238,7 @@ export function treeTrace({ tree, layout, params = {}, locals, allNulls = false 
       visited: [...st.visited],
       fresh: [...st.fresh],
       vars,
+      badges: Object.fromEntries(st.badges),
       ranks: layout.ranks,
       slots: layout.slots,
       levels: layout.levels,
@@ -272,6 +304,14 @@ export function treeTrace({ tree, layout, params = {}, locals, allNulls = false 
     st.gone.add(id);
   };
 
+  /** Selo abaixo do nó (por exemplo, `3º`, a ordem de visita); sem `text`, tira o selo. */
+  const badge = (id, text = null) => {
+    if (text === null) st.badges.delete(id);
+    else st.badges.set(id, text);
+  };
+
+  const clearBadges = () => st.badges.clear();
+
   /** Variáveis locais de uma nova chamada: voltam a "não atribuídas" e o caminho percorrido recomeça. */
   const clear = (names) => {
     names.forEach((name) => {
@@ -284,7 +324,10 @@ export function treeTrace({ tree, layout, params = {}, locals, allNulls = false 
   const finish = () => {
     runs += 1;
     const floatCol = steps.some((item) => item.scene.float !== null);
-    const rootStack = Math.max(1, ...steps.map(({ scene }) => CHIP_ORDER.filter((name) => scene.refs[name] === scene.root && scene.root !== null).length));
+    // Fichas empilhadas sobre a raiz (ou sobre o selo `nulo`, com a árvore vazia): reservam altura no topo.
+    const rootStack = Math.max(1, ...steps.map(({ scene }) => (scene.root === null
+      ? EMPTY_CHIPS.filter((name) => scene.refs[name] === null && !scene.nullAt[name]).length
+      : CHIP_ORDER.filter((name) => scene.refs[name] === scene.root).length)));
     return steps.map((item) => ({
       ...item, run: runs, scene: { ...item.scene, floatCol, rootStack },
     }));
@@ -296,7 +339,7 @@ export function treeTrace({ tree, layout, params = {}, locals, allNulls = false 
   };
 
   return {
-    st, node, step, create, set, follow, setChild, setValue, drop, clear, setParams, finish,
+    st, node, step, create, set, follow, setChild, setValue, drop, badge, clearBadges, clear, setParams, finish,
   };
 }
 
@@ -361,7 +404,7 @@ let scrollLeft = 0;
 function focusOf(step) {
   const { scene } = step;
   const id = step.changedIndices?.[0] ?? step.foundIndices?.[0] ?? step.activeIndices?.[0]
-    ?? scene.refs.atual ?? scene.float ?? scene.root;
+    ?? scene.refs.atual ?? scene.refs.No ?? scene.float ?? scene.root;
   return typeof id === 'number' ? id : null;
 }
 
@@ -397,9 +440,12 @@ function heightIn(scene, id) {
   return node ? 1 + Math.max(heightIn(scene, node.left), heightIn(scene, node.right)) : -1;
 }
 
-/** Desenha a cena do passo. `legend` é uma lista de `[classe, rótulo]`. */
+/**
+ * Desenha a cena do passo. `legend` é uma lista de `[classe, rótulo]` e `extra` é um HTML opcional
+ * (a pilha de chamadas ou a fila dos percursos) colocado entre a árvore e a legenda.
+ */
 export function renderTree({
-  state, step, icons, escapeText, legend = DEFAULT_LEGEND,
+  state, step, icons, escapeText, legend = DEFAULT_LEGEND, extra = '',
 }) {
   const { scene } = step;
   scrollLeft = lastRender.run === step.run ? document.querySelector('.node-scroll')?.scrollLeft ?? 0 : 0;
@@ -441,7 +487,7 @@ export function renderTree({
     if (at) {
       const stub = addStub(at.parent, at.side);
       if (stub) stub.names.push(name);
-    } else if (scene.root === null && (name === 'raiz' || name === 'atual' || name === 'pai')) {
+    } else if (scene.root === null && EMPTY_CHIPS.includes(name)) {
       emptyNames.push(name);
     }
   });
@@ -569,11 +615,12 @@ export function renderTree({
     if (dimmed.has(node.id)) classes.push('dim');
     if (state.inspectedItem === node.id) classes.push('inspected');
     const { cls, vars } = motion(`n${node.id}`, p);
-    const links = `esquerda: ${target(node.left ?? null)}, direita: ${target(node.right ?? null)}`;
+    const badge = scene.badges?.[node.id];
+    const links = `esquerda: ${target(node.left ?? null)}, direita: ${target(node.right ?? null)}${badge ? `, visita ${escapeText(badge)}` : ''}`;
     return `<div class="tree-slot${cls}" style="left:${p.x - R}px;top:${p.y - R}px${vars}">`
       + `<button type="button" class="${classes.join(' ')}" data-module-action="pick-node" data-index="${node.id}" data-value="${escapeText(node.value)}" aria-label="Nó com valor ${escapeText(fmt(node.value))}, ${links}">`
       + `<span>${escapeText(fmt(node.value))}</span></button>`
-      + `${p.float ? '<em class="tree-tag">isolado</em>' : ''}</div>`;
+      + `${p.float ? '<em class="tree-tag">isolado</em>' : ''}${badge ? `<em class="tree-badge" aria-hidden="true">${escapeText(badge)}</em>` : ''}</div>`;
   }).join('');
 
   const chipHtml = chips.map((chip) => {
@@ -617,6 +664,7 @@ export function renderTree({
           ${chipHtml}
         </div>
       </div>
+      ${extra ? `<div class="tree-extra">${extra}</div>` : ''}
       <div class="node-legend" aria-label="Legenda">${legendHtml}</div>
     </div>${inspection}`;
 }

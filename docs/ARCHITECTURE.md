@@ -60,6 +60,10 @@ modules/
 ├── binary-search-trees/
 │   ├── algorithms.js
 │   └── binary-search-tree-module.js
+├── tree-traversals/
+│   ├── algorithms.js
+│   ├── tree-traversal-module.js
+│   └── views.js
 ├── shotgun-sort/
 │   ├── algorithms.js
 │   └── shotgun-sort-module.js
@@ -92,7 +96,7 @@ modules/
 
 `shared/node-scene.js` reúne o que os módulos de lista circular e de lista duplamente encadeada têm em comum: a execução do algoritmo "como num depurador" (`trace`), o layout, as fichas das variáveis, as setas e as animações (`renderScene`, `afterRenderScene`). Veja "Cena de nós com ponteiros" abaixo.
 
-`shared/tree-scene.js` é o equivalente para árvores: a estrutura (`buildTree`, `inorder`, `heightOf`, `layoutOf`...), a execução "como num depurador" (`treeTrace`) e o desenho (`renderTree`, `afterRenderTree`). Veja "Módulo de Árvore Binária de Busca" abaixo.
+`shared/tree-scene.js` é o equivalente para árvores: a estrutura (`buildTree`, `preorder`, `inorder`, `postorder`, `levelorder`, `heightOf`, `layoutOf`...), a execução "como num depurador" (`treeTrace`) e o desenho (`renderTree`, `afterRenderTree`). É usado pelos módulos de Árvore Binária de Busca e de Percursos em Árvores Binárias. Veja "Módulo de Árvore Binária de Busca" e "Módulo de Percursos em Árvores Binárias" abaixo.
 
 `algorithms.js` contém metadados, pseudocódigos e a geração dos estados da simulação. O arquivo `*-module.js` define entrada de dados, parâmetros, renderização e eventos específicos da estrutura.
 
@@ -113,6 +117,7 @@ modules/
 - `doubly-linked-list-simulator.js`: conecta `SimulatorApp` ao `doublyLinkedListModule`;
 - `hash-table-simulator.js`: conecta `SimulatorApp` ao `hashTableModule`;
 - `binary-search-tree-simulator.js`: conecta `SimulatorApp` ao `binarySearchTreeModule`;
+- `tree-traversal-simulator.js`: conecta `SimulatorApp` ao `treeTraversalModule`;
 - `shotgun-sort-simulator.js`: conecta `SimulatorApp` ao `shotgunSortModule`;
 - `selection-sort-simulator.js`: conecta `SimulatorApp` ao `selectionSortModule`;
 - `bubble-sort-simulator.js`: conecta `SimulatorApp` ao `bubbleSortModule`;
@@ -351,6 +356,27 @@ Cada simulador:
 - `build`: `INSERIR` para cada valor da lista, em passos condensados (a criação, uma comparação por nível e a ligação), todos na linha `INSERIR(valor)`. Termina com raiz, folhas e altura (a árvore de valores ordenados vira uma cadeia);
 - `search`: `BUSCAR(valor)`, sem alterar a estrutura;
 - `remove`: `REMOVER(raiz, valor)`, com os casos folha, um filho e dois filhos, e valor inexistente (retorna a raiz sem alterar).
+
+## Módulo de Percursos em Árvores Binárias
+
+Aula 12 de Estrutura de Dados 2 (os slides teóricos e os slides de debug). São seis simuladores, em quatro grupos: **Recursão** (`factorial`), **Em profundidade (DFS)** (`preorder`, `inorder`, `postorder`), **Em largura (BFS)** (`bfs`) e **Comparação** (`compare`).
+
+Os dados são os mesmos do módulo da ABB: `{ values }`, os valores na ordem de inserção (inteiros de 0 a 999, repetidos à direita), agora até 15 nós, para caber o exercício 1 da aula (14 nós). Todas as árvores dos slides são ABBs, então inseri-las por níveis monta exatamente cada uma delas, e os botões de exemplo carregam a árvore de cada percurso (a de pré-ordem é a árvore inicial; ao abrir a página `start()` pede `random-data` sem botão e o módulo responde com ela, em vez de uma árvore sorteada). A configuração é só `n` (0 a 8), o número do `factorial`; a entrada de `n` aparece no lugar do editor de árvore nesse simulador.
+
+Os pseudocódigos são os dos slides em PT-BR (`FUNÇÃO`, `NULO`, `FIM_SE`, `No.esquerdo`/`No.direito`, `IMPRIMIR`). O de `bfs` separa "Crie uma fila" de "Insira a raiz na fila", como os slides de debug. Os slides de debug mostram um quadro por chegada a um nó (não uma linha por quadro), e os passos do simulador são um refinamento: cada passo é uma linha executada, e todos os quadros dos slides aparecem entre eles, na mesma ordem e com o mesmo nó `No`, console e última linha visível (pré-ordem 19 de 19, em ordem 10 de 10, pós-ordem 13 de 13; no BFS, os 15 quadros). O fatorial tem 3n + 3 passos e `fatorial(3)` tem os 7 quadros do slide entre os seus 12. Há duas diferenças conhecidas: o slide mostra a caixa `No` vazia quando o laço do BFS recomeça, e o código mantém `No` no último nó até `fila.remover()`; e a pilha dos slides do fatorial não inclui a primeira chamada, a do simulador sim.
+
+Cada percurso em profundidade tem 7n + 3 passos (n nós) e o `bfs`, 6n + 5 (3 passos com a árvore vazia). Convenção das chamadas, como num depurador: o passo da linha da chamada (`preorder(No.esquerdo)`) ainda mostra a chamada de fora; o passo seguinte, na linha `SE No é NULO`, já mostra o frame novo na pilha e `No` no filho. Um passo de retorno (`RETORNE` ou `FIM_FUNÇÃO`) ainda mostra a chamada na pilha, e só depois ela sai e `No` volta para o chamador. O último passo é o `FIM_FUNÇÃO` da primeira chamada. As linhas `FIM_SE` e `FIM_ENQUANTO` não são passos (os slides também as pulam).
+
+`treeTrace` ganhou o necessário para isso: a ficha `No` (variável da chamada atual; sobre o selo `nulo` quando recebe NULO, e acima dele, junto de `raiz`, com a árvore vazia), `badge`/`clearBadges` (o selo da ordem de visita, `1º`, `2º`..., abaixo do nó, em `scene.badges`) e o parâmetro `extra` de `renderTree` (HTML entre a árvore e a legenda). Os passos dos percursos usam as marcas de sempre: `activeIndices` (o nó de `No`), `leftIndices` (os nós que aguardam na pilha, em azul, ou, no BFS, `rightIndices`, os nós na fila, em violeta), `changedIndices` e `hotEdges` (o argumento da chamada ou o filho que entra na fila), `foundIndices` (visitado agora) e `processedIndices` (já visitado). Além delas, cada passo traz `stack` (a pilha de chamadas, desenhada por `renderStack` de `shared/recursion-view.js`) e `output` (o console, uma linha com os valores visitados até ali, como no slide), e o BFS traz `queue` (desenhada por `renderQueue`, em `views.js`).
+
+O `factorial` não usa a cena de árvore: cada passo tem `frames` (`{ n, expr, top }`, da primeira chamada até a do topo), `returned` (o valor que acabou de voltar) e `capacity` (n + 1, a altura reservada para a pilha cheia), desenhados por `renderFactorial` com o topo em cima, como nos slides.
+
+Cada simulador:
+
+- `factorial`: `fatorial(n)` com o caso base (`n = 0`), o caso recursivo `n × fatorial(n − 1)` e a volta multiplicando (`1 × 1 = 1`, `2 × 1 = 2`, `3 × 2 = 6`);
+- `preorder`, `inorder`, `postorder`: a mesma função com o `IMPRIMIR` antes, entre ou depois das duas chamadas. O último passo mostra a sequência e a aplicação do slide (cópia da árvore e notação prefixa; ordem crescente numa ABB; liberar a árvore de baixo para cima e notação pós-fixa);
+- `bfs`: `bfs(raiz)` com a fila (`CRIE uma fila`, `INSIRA a raiz na fila`, `ENQUANTO a fila não está vazia`, `fila.remover()`, os dois testes de filho e `fila.inserir`);
+- `compare`: seis passos (a árvore, as quatro sequências com o selo de ordem de cada uma, e "quando usar cada um", com a pilha máxima do DFS, altura + 2, e a fila máxima do BFS desta árvore).
 
 ## Módulo de Filas
 

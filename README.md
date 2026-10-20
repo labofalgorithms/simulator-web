@@ -157,6 +157,17 @@ Todos os algoritmos são mostrados em pseudocódigo. Os dados são pares chave:v
 
 O pseudocódigo e os passos seguem os slides de teoria e de debug da aula: `INSERIR(45)` tem 20 passos, `BUSCAR(30)` 12, `REMOVER(10)` 29, `REMOVER(50)` 29 e `REMOVER(40)` 27. Os dados são os valores na ordem de inserção (inteiros de 0 a 999, até 12; iguais vão para a direita), e há atalhos para os exemplos da aula. Clicar em um nó usa o valor dele como parâmetro, e na remoção há botões para escolher uma folha, um nó com um filho ou com dois filhos.
 
+### Percursos em Árvores Binárias
+
+- Recursão: o fatorial de `n` (caso base, caso recursivo e a pilha de chamadas)
+- Pré-ordem (`preorder`): raiz, esquerda, direita
+- Em ordem (`inorder`): esquerda, raiz, direita (numa ABB, os valores saem em ordem crescente)
+- Pós-ordem (`postorder`): esquerda, direita, raiz
+- Em largura (`bfs`): nível por nível, com uma fila
+- Comparação DFS × BFS: as quatro sequências na mesma árvore (exercício 1 da aula) e o custo de memória de cada uma
+
+O pseudocódigo é o dos slides da aula (em PT-BR, com `NULO` no lugar de `NULL`) e cada passo é uma linha executada, com a pilha de chamadas dos percursos em profundidade, a fila do percurso em largura, o ponteiro `No`, o console com a saída e o selo de ordem de visita (1º, 2º...) sob cada nó. Os slides de debug mostram um quadro por chegada a um nó, então os passos do simulador (80 na árvore de 11 nós dos slides de pré-ordem) são um refinamento deles: todos os quadros dos slides aparecem, na mesma ordem, entre os passos. Os dados são os valores na ordem de inserção (inteiros de 0 a 999, até 15; iguais vão para a direita), e há atalhos para a árvore de cada percurso dos slides e para o exercício 1.
+
 ## Algoritmos
 
 ### Shotgun Sort
@@ -263,6 +274,8 @@ simulator-web/
 │   │   └── index.html
 │   ├── arvore-binaria-busca/
 │   │   └── index.html
+│   ├── percursos-arvores-binarias/
+│   │   └── index.html
 │   ├── shotgun-sort/
 │   │   └── index.html
 │   ├── selection-sort/
@@ -296,6 +309,7 @@ simulator-web/
 │       │   ├── doubly-linked-lists/
 │       │   ├── hash-tables/
 │       │   ├── binary-search-trees/
+│       │   ├── tree-traversals/
 │       │   ├── shotgun-sort/
 │       │   ├── selection-sort/
 │       │   ├── bubble-sort/
@@ -400,6 +414,12 @@ http://localhost:8000/simuladores/tabelas-hash/
 
 ```text
 http://localhost:8000/simuladores/arvore-binaria-busca/
+```
+
+Percursos em Árvores Binárias:
+
+```text
+http://localhost:8000/simuladores/percursos-arvores-binarias/
 ```
 
 Shotgun Sort:

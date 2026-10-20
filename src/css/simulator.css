@@ -473,3 +473,17 @@ button.sort-cell:hover{border-color:var(--cyan);transform:translateY(-2px)}
 @media(max-width:720px){.sort-level{grid-template-columns:44px minmax(0,1fr);}.sort-level-note{grid-column:2;text-align:left}.sort-stack{flex-direction:column;gap:6px}}
 .sort-slot.split{position:relative;margin-left:14px}
 .sort-slot.split:before{content:"";position:absolute;left:-11px;top:2px;bottom:2px;width:4px;border-radius:2px;background:var(--border-strong)}
+.tree-badge{position:absolute;left:50%;top:100%;min-width:18px;height:15px;margin-top:3px;padding:0 5px;transform:translateX(-50%);border:1px solid rgba(52,211,153,.55);border-radius:999px;background:var(--surface);color:var(--green);font-size:9px;font-style:normal;font-weight:800;font-variant-numeric:tabular-nums;line-height:13px;text-align:center;white-space:nowrap;pointer-events:none}
+.tree-extra{align-self:stretch}
+.tree-extra .sort-stack{width:100%}
+.rec-stack{width:min(100%,380px);display:flex;flex-direction:column;gap:8px}
+.rec-stack-title{display:flex;align-items:baseline;gap:8px;color:var(--text);font-size:12px;font-weight:800}
+.rec-stack-title small{color:var(--subtle);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em}
+.rec-frames{display:flex;flex-direction:column;justify-content:flex-end;gap:6px;padding:10px;border:1px solid var(--border);border-radius:12px;background:var(--surface-2)}
+.rec-frame{display:grid;grid-template-columns:auto auto minmax(0,1fr);align-items:baseline;gap:12px;padding:5px 10px;border:1px solid var(--border-strong);border-radius:8px;background:var(--surface);color:var(--muted);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px}
+.rec-frame b{font-weight:800}
+.rec-frame em{color:var(--amber);font-style:normal;font-weight:700;text-align:right}
+.rec-frame.top{border-color:rgba(34,211,238,.5);background:var(--cyan-soft);color:var(--cyan)}
+.rec-empty{color:var(--subtle);font-size:11px;text-align:center}
+.rec-returned{min-width:200px;padding:6px 14px;border:1px dashed transparent;border-radius:10px;color:transparent;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;font-weight:800;text-align:center}
+.rec-returned.show{border-color:rgba(52,211,153,.5);background:var(--green-soft);color:var(--green)}
