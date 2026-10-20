@@ -17,3 +17,10 @@ export const speedLabel = (speed) => {
   if (speed <= 850) return '1×';
   return '0,5×';
 };
+
+/**
+ * O controle de velocidade vai do mais lento (esquerda) ao mais rápido (direita), mas o controlador
+ * guarda o intervalo entre os passos em ms, que é menor quanto mais rápido. A mesma conta converte
+ * nos dois sentidos, usando os limites do próprio `<input type="range">`.
+ */
+export const mirrorSpeed = (input, value) => Number(input.min) + Number(input.max) - Number(value);

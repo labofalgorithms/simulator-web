@@ -2,7 +2,9 @@ import { initAnalytics, trackEvent } from './analytics.js';
 import { icons } from './icons.js';
 import { SimulationController } from './simulation-controller.js';
 import { storage } from './storage.js';
-import { $, escapeText, speedLabel } from './utils.js';
+import {
+  $, escapeText, mirrorSpeed, speedLabel,
+} from './utils.js';
 
 const DEFAULT_CATEGORY = { name: 'Estruturas de Dados', anchor: 'estruturas' };
 
@@ -147,7 +149,7 @@ export class SimulatorApp {
     $('#previous').disabled = this.controller.index === 0;
     $('#next').disabled = this.controller.index >= total - 1;
     $('#play-toggle').innerHTML = `${this.controller.playing ? icons.pause : icons.play}<span>${this.controller.playing ? 'Pausar' : 'Executar'}</span>`;
-    $('#speed').value = this.controller.speed;
+    $('#speed').value = mirrorSpeed($('#speed'), this.controller.speed);
     $('#speed-output').textContent = speedLabel(this.controller.speed);
   }
 
@@ -238,7 +240,7 @@ export class SimulatorApp {
     $('#app').addEventListener('input', (event) => {
       const input = event.target;
       if (input.id === 'speed') {
-        this.controller.setSpeed(input.value);
+        this.controller.setSpeed(mirrorSpeed(input, input.value));
         $('#speed-output').textContent = speedLabel(this.controller.speed);
         return;
       }
