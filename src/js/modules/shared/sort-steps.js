@@ -58,3 +58,23 @@ export function repeatedExample(count) {
   if (new Set(values).size === values.length) values[values.length - 1] = values[0];
   return values;
 }
+
+/**
+ * Vetor com valores repetidos mas sem exagero: `distinct` valores diferentes (3 ou 60% do tamanho,
+ * o que for maior, e sempre ao menos um repetido), embaralhados. Base dos exemplos de estabilidade.
+ */
+export function withRepeats(count) {
+  const distinct = Math.min(count - 1, Math.max(3, Math.ceil(count * 0.6)));
+  const pool = Array.from({ length: 90 }, (_, index) => index + 10);
+  for (let index = pool.length - 1; index > 0; index -= 1) {
+    const other = Math.floor(Math.random() * (index + 1));
+    [pool[index], pool[other]] = [pool[other], pool[index]];
+  }
+  const base = pool.slice(0, distinct);
+  const values = [...base, ...Array.from({ length: count - distinct }, () => base[Math.floor(Math.random() * distinct)])];
+  for (let index = values.length - 1; index > 0; index -= 1) {
+    const other = Math.floor(Math.random() * (index + 1));
+    [values[index], values[other]] = [values[other], values[index]];
+  }
+  return values;
+}

@@ -198,6 +198,27 @@ O pseudocódigo segue o da aula (`para i ← 0 até n - 1`, `para j ← 1 até n
 
 O pseudocódigo segue o da aula (`enquanto j > 0 e vetor[j - 1] > vetor[j]`). Os dados são de 2 a 10 números.
 
+### Merge Sort
+
+- Dividir o vetor: os trechos de cada nível da recursão, de cima para baixo, até sobrarem trechos de um elemento
+- Intercalar duas metades: o `intercala` sozinho, com a posição `meio` ajustável (clique em uma célula para escolher), o vetor auxiliar `B` (a 1ª metade copiada em ordem e a 2ª invertida) e os índices `i`, `j` e `k`
+- Merge Sort: execução completa, com a pilha de chamadas, as variáveis de cada chamada, o vetor auxiliar e os contadores de comparações e cópias
+- Complexidade de tempo: as comparações de cada nível da recursão e o total, até `n · ⌈log₂ n⌉`
+- Adaptabilidade: o mesmo algoritmo em três vetores, com comparações e cópias idênticas
+- Estabilidade: valores repetidos marcados com letras, mostrando cada encontro de iguais no teste `B[i] ≤ B[j]` e o caso em que a cópia invertida da 2ª metade inverte dois iguais
+
+O pseudocódigo é o dos slides 40 e 41 (`mergeSort` e `intercala`) e o passo a passo segue o debug da aula (slides 42 a 109, com o vetor `97, 81, 56, 64, 43, 39, 72`, que é o vetor inicial): os 65 passos dos slides aparecem, na mesma ordem e na chamada certa, entre os 201 do simulador, que também percorre o que o deck omite (como `intercala(2, 2, 3)`) e vai até o fim. Nos slides 106 a 108 o teste `B[i] ≤ B[j]` aparece como falso com `i = j` (97 ≤ 97); como no slide 71, o teste é verdadeiro, e o simulador segue o código. O `intercala` da aula não é estável em todos os vetores: quando a 1ª metade acaba antes, `i` passa a apontar o último valor da 2ª metade (copiada invertida) e, se ele for igual aos que restam ali, sai antes deles; o botão "Ver o caso que inverte" gera um vetor assim. Os dados são de 2 a 10 números.
+
+### Quick Sort
+
+- Particionar: a função `particionar` sozinha, com o início e o fim do trecho ajustáveis (clique em uma célula para escolher o pivô), os marcadores `i` e `j` e a variável `aux`
+- Quicksort: execução completa, com a pilha de chamadas, `inicio`, `fim`, `meio`, `i` e `j`, o resultado de cada comparação com o pivô e os contadores
+- Complexidade de tempo: comparações e trocas de cada particionamento, com o pior caso (vetor ordenado) e o melhor (pivôs na mediana) calculados para os mesmos valores
+- Adaptabilidade: o mesmo algoritmo em quatro vetores (pivôs na mediana, já ordenado, ordem inversa e o seu), com custos bem diferentes
+- Estabilidade: valores repetidos marcados com letras, mostrando qual particionamento inverte dois iguais
+
+O pseudocódigo é o dos slides 52 e 53 (o pivô é `vetor[inicio]`) e o vetor inicial é o do debug da aula (slides 55 a 200, `12, 1, 100, 10, 97, 53, 46, 82`): 121 dos 123 passos de linhas executadas dos slides aparecem na mesma ordem (`FIM SE`, `SENÃO` e `FIM ENQUANTO` não são passos, como nos outros módulos), e o simulador segue até o fim da recursão, que o deck não percorre. Os dados são de 2 a 10 números.
+
 ## Recursos comuns
 
 Os módulos possuem execução automática, avanço e retorno manuais, controle de velocidade, pseudocódigo destacado, variáveis, console, entrada manual, geração aleatória e tema claro/escuro.
@@ -248,7 +269,11 @@ simulator-web/
 │   │   └── index.html
 │   ├── bubble-sort/
 │   │   └── index.html
-│   └── insertion-sort/
+│   ├── insertion-sort/
+│   │   └── index.html
+│   ├── merge-sort/
+│   │   └── index.html
+│   └── quick-sort/
 │       └── index.html
 ├── src/
 │   ├── css/
@@ -275,6 +300,8 @@ simulator-web/
 │       │   ├── selection-sort/
 │       │   ├── bubble-sort/
 │       │   ├── insertion-sort/
+│       │   ├── merge-sort/
+│       │   ├── quick-sort/
 │       │   └── shared/
 │       └── pages/
 ├── docs/ARCHITECTURE.md
@@ -397,6 +424,18 @@ Insertion Sort:
 
 ```text
 http://localhost:8000/simuladores/insertion-sort/
+```
+
+Merge Sort:
+
+```text
+http://localhost:8000/simuladores/merge-sort/
+```
+
+Quick Sort:
+
+```text
+http://localhost:8000/simuladores/quick-sort/
 ```
 
 Não use `npm run dev`: o projeto não depende de Node, Vite ou processo de build.

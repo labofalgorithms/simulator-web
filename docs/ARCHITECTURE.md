@@ -72,14 +72,23 @@ modules/
 ├── insertion-sort/
 │   ├── algorithms.js
 │   └── insertion-sort-module.js
+├── merge-sort/
+│   ├── algorithms.js
+│   └── merge-sort-module.js
+├── quick-sort/
+│   ├── algorithms.js
+│   └── quick-sort-module.js
 └── shared/
     ├── sort-steps.js
     ├── sort-view.js
+    ├── recursion-view.js
     ├── node-scene.js
     └── tree-scene.js
 ```
 
-`shared/sort-view.js` reúne o que os módulos de ordenação têm em comum: o vetor com marcadores sobre as células, o cartão de comparação, os contadores, a legenda, o gráfico de barras por passada, os vetores ordenados em paralelo e o editor de números (`renderArray`, `renderCompare`, `renderStats`, `legend`, `renderChart`, `renderLockstep`, `renderVectorEditor`, `parseVector`, `randomVector`). `shared/sort-steps.js` tem a parte de execução: o formato de um passo (`step`), a formatação (`fmt`, `range`, `NONE`) e os itens com letra que marcam a ordem dos repetidos (`tagDuplicates`, `isStable`, `label`, `repeatedExample`). Selection Sort, Bubble Sort e Insertion Sort usam os dois.
+`shared/sort-view.js` reúne o que os módulos de ordenação têm em comum: o vetor com marcadores sobre as células, o cartão de comparação, os contadores, a legenda, o gráfico de barras por passada, os vetores ordenados em paralelo e o editor de números (`renderArray`, `renderCompare`, `renderStats`, `legend`, `renderChart`, `renderLockstep`, `renderVectorEditor`, `parseVector`, `randomVector`). `shared/sort-steps.js` tem a parte de execução: o formato de um passo (`step`), a formatação (`fmt`, `range`, `NONE`) e os itens com letra que marcam a ordem dos repetidos (`tagDuplicates`, `isStable`, `label`, `repeatedExample`). `withRepeats` monta os vetores com repetidos dos exemplos de estabilidade. Selection Sort, Bubble Sort, Insertion Sort, Merge Sort e Quick Sort usam os dois.
+
+`shared/recursion-view.js` tem as peças dos módulos recursivos (Merge Sort e Quick Sort): o vetor auxiliar B alinhado com as colunas (`renderAux`), a pilha de chamadas (`renderStack`), os trechos por nível da recursão (`renderLevels`) e as caixas de total (`renderTotals`). O vetor com marcadores continua sendo `renderArray`, que aceita `{ stacked: true }` (marcadores `inicio`, `meio`, `fim` e `k` empilhados sobre a célula), `step.sortedIndices` (posições prontas), `step.pivotIndex` (o pivô, com a classe `pivot`) e `step.splitAfter` (a barra entre as duas metades). Veja "Módulo de Merge Sort" e "Módulo de Quick Sort" abaixo.
 
 `shared/node-scene.js` reúne o que os módulos de lista circular e de lista duplamente encadeada têm em comum: a execução do algoritmo "como num depurador" (`trace`), o layout, as fichas das variáveis, as setas e as animações (`renderScene`, `afterRenderScene`). Veja "Cena de nós com ponteiros" abaixo.
 
@@ -107,7 +116,9 @@ modules/
 - `shotgun-sort-simulator.js`: conecta `SimulatorApp` ao `shotgunSortModule`;
 - `selection-sort-simulator.js`: conecta `SimulatorApp` ao `selectionSortModule`;
 - `bubble-sort-simulator.js`: conecta `SimulatorApp` ao `bubbleSortModule`;
-- `insertion-sort-simulator.js`: conecta `SimulatorApp` ao `insertionSortModule`.
+- `insertion-sort-simulator.js`: conecta `SimulatorApp` ao `insertionSortModule`;
+- `merge-sort-simulator.js`: conecta `SimulatorApp` ao `mergeSortModule`;
+- `quick-sort-simulator.js`: conecta `SimulatorApp` ao `quickSortModule`.
 
 ## Catálogo da home
 
@@ -272,6 +283,28 @@ O pseudocódigo da aula (slide 37) faz `i` de 0 a `n − 1` e `j` de 1 a `n − 
 Módulo da categoria **Algoritmos** (ALG1 · 04, aula 09), com cinco simuladores: `insert-one` (o laço interno sozinho, com `config.i`, a posição do elemento, que também se escolhe clicando em uma célula), `insertion-sort` (execução completa), `counting`, `adaptability` e `stability`. O pseudocódigo é o do slide 26, com `ENQUANTO j > 0 E vetor[j - 1] > vetor[j]`: o teste é um passo só por volta e, com `j = 0`, o passo diz que o `E` não avalia o lado direito.
 
 As primeiras `i` posições estão ordenadas entre si, mas ainda não são as posições finais; por isso o `sortedCount` do Insertion Sort usa a legenda "sub-vetor ordenado". Em `insert-one` o vetor é mostrado com as `i` primeiras posições já ordenadas, como estariam depois das passadas anteriores. `runPasses` devolve, por passada, onde o elemento parou (`to`), as comparações, as trocas e o igual que o fez parar (`stoppedBy`), usado na estabilidade. Diferente do Bubble e do Selection, o custo depende da ordem: o vetor ordenado faz n − 1 comparações e nenhuma troca, e o invertido, n(n−1)/2 de cada, o que a adaptabilidade mostra nos três vetores.
+
+## Módulo de Merge Sort
+
+Módulo da categoria **Algoritmos** (ALG1 · 05, aula 10), com seis simuladores: `divide` (os trechos de cada nível da recursão), `intercala` (a função sozinha, com `config.meio`, que também se escolhe clicando em uma célula), `merge-sort` (execução completa), `counting`, `adaptability` e `stability`. Os dados são de 2 a 10 números e o vetor inicial é o dos slides (`97, 81, 56, 64, 43, 39, 72`).
+
+`merge-sort` e `intercala` executam como num depurador, agora com chamadas recursivas: `createTracer` mantém uma pilha de quadros (`frames`), cada um com as suas variáveis (`inicio`, `fim` e `meio` no `mergeSort`; `inicio`, `meio`, `fim`, `i`, `j` e `k` no `intercala`), e cada passo traz a pilha (`step.stack`), as variáveis do quadro de cima e o vetor auxiliar (`step.aux`). Como nos slides, `mergeSort` tem um passo no cabeçalho e outro em cada linha de chamada; o `intercala` não tem passo de cabeçalho (a linha da chamada já o anuncia) e cada laço `PARA` tem um passo por volta e outro na linha `FIM PARA` quando termina. O pseudocódigo exibido tem as duas funções, com uma linha em branco entre elas (`OFFSET` é a linha onde o `intercala` começa, 0 quando ele roda sozinho).
+
+Campos de passo novos: `pointers` aceita `inicio`, `meio`, `fim` e `k`; `sortedIndices` (os trechos já intercalados); `splitAfter` (a barra entre as duas metades); `aux` (`{ label, values, tags, range, pointers: { i, j }, activeIndices, changedIndices }`); `stack` (lista de textos); `tree` (`{ levels: [{ label, segments, pending, current, note }] }`) e `summary` (`{ totals, final }`). Nos passos do teste, `meta.tie` leva o empate de `B[i] ≤ B[j]` e, no fim de cada intercalação, `meta.mergeEnd` leva o trecho antes e depois; a simulação de estabilidade é um filtro dessa execução completa. As cópias a `B` e de volta ao vetor contam como "cópias" (2 por elemento intercalado).
+
+`runMerges` repete o algoritmo sem passos e serve à contagem, à adaptabilidade e aos exemplos de estabilidade. Como o `intercala` sempre faz uma comparação por elemento do trecho, as comparações e as cópias só dependem de `n`, e os três vetores da adaptabilidade (que usa `moveLabel: 'cópias'` no lugar de "trocas") têm contadores idênticos. A cópia invertida da 2ª metade deixa o algoritmo instável em alguns vetores (cerca de 18% dos vetores aleatórios de 2 a 10 números com repetidos, numa medição por força bruta): quando a 1ª metade acaba, `i` passa a apontar o último valor da 2ª metade, e se ele for igual aos que restam ali sai antes deles. `stableExample` e `invertedExample` geram os dois casos.
+
+Os slides de debug (42 a 109) cobrem só o início da execução. Os 65 passos deles aparecem no simulador na mesma ordem e na chamada certa; o deck omite alguns passos (como `intercala(2, 2, 3)`) e, nos slides 106 a 108, marca `B[i] ≤ B[j]` como falso com `i = j`, o que contradiz o slide 71 e o código.
+
+## Módulo de Quick Sort
+
+Módulo da categoria **Algoritmos** (ALG1 · 06, aula 10), com cinco simuladores: `partition` (`particionar` sozinho, com `config.inicio` e `config.fim`; clicar em uma célula escolhe o pivô), `quick-sort` (execução completa), `counting`, `adaptability` e `stability`. Os dados são de 2 a 10 números e o vetor inicial é o do debug da aula (`12, 1, 100, 10, 97, 53, 46, 82`).
+
+Mesma estrutura do Merge Sort: `createTracer` mantém a pilha de quadros (`quickSort` com `inicio`, `fim` e `meio`; `particionar` com `inicio`, `fim`, `i`, `j` e `aux`) e cada passo é uma linha executada (`FIM SE`, `SENÃO` e `FIM ENQUANTO` não são passos). O pivô, `vetor[inicio]`, ganha a classe `pivot` (`step.pivotIndex`), `aux` aparece junto dos contadores e os pivôs que chegam à posição final, assim como os trechos de um elemento, entram em `sortedIndices`. O pseudocódigo exibido tem as duas funções, com `OFFSET` marcando onde `particionar` começa.
+
+`runPartitions` repete o algoritmo sem passos e serve à contagem, à adaptabilidade e à estabilidade: cada particionamento devolve o trecho, a posição do pivô, as comparações com o pivô, as trocas e o vetor antes e depois. Com o pivô no primeiro valor, o vetor ordenado faz n(n−1) comparações (o pior caso) e o invertido, um pouco menos, também quadrático. `bestCase` monta o vetor em que todo pivô cai na mediana: o `particionar` leva o último valor da parte esquerda para o início dela, então a esquerda é guardada girada para voltar certa. A estabilidade compara, a cada particionamento, a ordem dos iguais antes e depois (`flippedPairs`), e `stabilityExample` sorteia vetores até achar um em que a ordem realmente se inverte.
+
+Os slides de debug (55 a 200) percorrem o exemplo até o fim do 5º particionamento: 121 dos 123 passos de linhas executadas deles aparecem no simulador, na mesma ordem. Os dois que faltam são destaques de "retorno" que o deck repete (slides 120 e 126), e o simulador ainda percorre os trechos que o deck não mostra.
 
 ## Módulo de Shotgun Sort
 
