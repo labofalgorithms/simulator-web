@@ -487,3 +487,35 @@ button.sort-cell:hover{border-color:var(--cyan);transform:translateY(-2px)}
 .rec-empty{color:var(--subtle);font-size:11px;text-align:center}
 .rec-returned{min-width:200px;padding:6px 14px;border:1px dashed transparent;border-radius:10px;color:transparent;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;font-weight:800;text-align:center}
 .rec-returned.show{border-color:rgba(52,211,153,.5);background:var(--green-soft);color:var(--green)}
+/* Módulo de Heap Sort (o heap como árvore, marcadores pai, raiz, filho e trocar, lista de código que rola) */
+.sort-chip.pai,.sort-chip.raiz{border-color:rgba(139,92,246,.45);background:var(--violet-soft);color:var(--violet)}
+.sort-chip.filho{border-color:rgba(251,191,36,.5);background:var(--amber-soft);color:var(--amber)}
+.sort-chip.trocar{border-color:rgba(52,211,153,.45);background:var(--green-soft);color:var(--green)}
+.heap-scroll{overflow-x:auto;padding:0 6px;scrollbar-width:thin}
+.heap-svg{display:block;width:100%;height:auto;margin:0 auto}
+.heap-svg text{stroke:none}
+.heap-edge{stroke:var(--border-strong);stroke-width:1.5}
+.heap-edge.hot{stroke:var(--cyan);stroke-width:2;opacity:.8}
+.heap-edge.out{stroke-dasharray:3 4;opacity:.3}
+.heap-node circle{fill:var(--surface-2);stroke:var(--border-strong);stroke-width:1.5;transition:fill 160ms ease,stroke 160ms ease}
+.heap-value{fill:var(--text);font-size:15px;font-weight:800;text-anchor:middle;dominant-baseline:central;font-variant-numeric:tabular-nums}
+.heap-index{fill:var(--subtle);font-size:10px;font-weight:700;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;text-anchor:end}
+.heap-role{fill:var(--muted);font-size:10.5px;font-weight:800;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;text-anchor:middle}
+.heap-role.kin{fill:var(--violet)}
+.heap-node.out circle{fill:var(--green-soft);stroke:rgba(52,211,153,.35)}
+.heap-node.out .heap-value{fill:var(--green);opacity:.7}
+.heap-node.pivot circle{fill:var(--violet-soft);stroke:var(--violet);stroke-width:2.5}
+.heap-node.pivot .heap-value,.heap-node.pivot .heap-role{fill:var(--violet)}
+.heap-node.compared circle{fill:var(--amber-soft);stroke:var(--amber);stroke-width:2}
+.heap-node.compared .heap-value,.heap-node.compared .heap-role{fill:var(--amber)}
+.heap-node.found circle{fill:var(--green-soft);stroke:var(--green);stroke-width:2.5}
+.heap-node.found .heap-value,.heap-node.found .heap-role{fill:var(--green)}
+.heap-node.warn circle{fill:rgba(251,113,133,.12);stroke:var(--rose);stroke-width:2.5}
+.heap-node.warn .heap-value,.heap-node.warn .heap-role{fill:var(--rose)}
+.heap-node.changed circle{animation:heap-pulse 520ms ease}
+.heap-node.inspected circle{stroke:var(--violet);stroke-width:2;stroke-dasharray:4 3}
+.heap-node.kin circle{stroke:var(--violet);stroke-dasharray:2 3}
+@keyframes heap-pulse{0%,100%{stroke-width:2}50%{stroke-width:5}}
+.heap-inspection{flex-wrap:wrap}
+.heap-inspection strong{margin-left:0;font-size:10px;font-weight:700;line-height:1.6}
+.code-lines.scrolls{position:relative;max-height:min(62vh,560px);overflow-y:auto}

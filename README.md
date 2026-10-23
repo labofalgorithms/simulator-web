@@ -230,6 +230,18 @@ O pseudocódigo é o dos slides 40 e 41 (`mergeSort` e `intercala`) e o passo a 
 
 O pseudocódigo é o dos slides 52 e 53 (o pivô é `vetor[inicio]`) e o vetor inicial é o do debug da aula (slides 55 a 200, `12, 1, 100, 10, 97, 53, 46, 82`): 121 dos 123 passos de linhas executadas dos slides aparecem na mesma ordem (`FIM SE`, `SENÃO` e `FIM ENQUANTO` não são passos, como nos outros módulos), e o simulador segue até o fim da recursão, que o deck não percorre. Os dados são de 2 a 10 números.
 
+### Heap Sort
+
+- O heap binário: o vetor visto como árvore binária completa (pai em `(i − 1) / 2`, filhos em `2i + 1` e `2i + 2`), com a conferência da regra do max-heap nó por nó; clicar em uma célula mostra o pai e os filhos dela
+- ArrumaHeap: a função sozinha, com o início e o fim do trecho ajustáveis (clique em uma célula para escolher o nó), os marcadores `raiz`, `filho` e `trocar` e o heap na árvore
+- CriaHeap: o heap criado do último pai até a raiz
+- Heapsort: execução completa, com a pilha de chamadas, as variáveis de cada chamada, o heap na árvore (o que já foi ordenado sai da árvore) e os contadores de comparações e trocas
+- Complexidade de tempo: as voltas do laço de cada `ArrumaHeap` (no máximo `⌊log₂ n⌋`) e o total, da ordem de `n · log₂ n`
+- Adaptabilidade: o mesmo algoritmo em quatro vetores (já ordenado, quase ordenado, ordem inversa e o seu), com custos parecidos
+- Estabilidade: valores repetidos marcados com letras, mostrando a troca da raiz com o último elemento e os `ArrumaHeap` que invertem dois iguais
+
+O pseudocódigo é o dos slides 87 a 90 (`heapsort`, `CriaHeap`, `ArrumaHeap` e `swap`) e o vetor inicial é o do debug da aula (slides 92 a 199, `6, 5, 3, 1, 8, 7, 2, 4`): 99 dos 103 pontos de parada dos slides aparecem na mesma ordem e com os mesmos marcadores, entre os 272 passos do simulador, que também percorre o que o deck abrevia (a partir do slide 167 o deck pula o interior de `ArrumaHeap`). Os outros 4 (slides 111, 126, 140 e 160, `inicio ← inicio - 1`) mostram a seta `inicio` ainda no valor antigo; o simulador mostra o valor já atualizado, como em todos os outros passos. Os slides 104, 167 e 168 destacam `Fim` onde o código executa `swap` e `ArrumaHeap`. Os dados são de 3 a 15 números (um heap de até quatro níveis); há também os vetores dos slides 19 a 84 (`9, 8, 6, 12, 4, 3, 7`) e do slide 9 (o max-heap `100, 19, 36, 17, 3, 25, 1, 2, 7`) nos botões de exemplo.
+
 ## Recursos comuns
 
 Os módulos possuem execução automática, avanço e retorno manuais, controle de velocidade, pseudocódigo destacado, variáveis, console, entrada manual, geração aleatória e tema claro/escuro.
@@ -286,7 +298,9 @@ simulator-web/
 │   │   └── index.html
 │   ├── merge-sort/
 │   │   └── index.html
-│   └── quick-sort/
+│   ├── quick-sort/
+│   │   └── index.html
+│   └── heap-sort/
 │       └── index.html
 ├── src/
 │   ├── css/
@@ -316,6 +330,7 @@ simulator-web/
 │       │   ├── insertion-sort/
 │       │   ├── merge-sort/
 │       │   ├── quick-sort/
+│       │   ├── heap-sort/
 │       │   └── shared/
 │       └── pages/
 ├── docs/ARCHITECTURE.md
@@ -456,6 +471,12 @@ Quick Sort:
 
 ```text
 http://localhost:8000/simuladores/quick-sort/
+```
+
+Heap Sort:
+
+```text
+http://localhost:8000/simuladores/heap-sort/
 ```
 
 Não use `npm run dev`: o projeto não depende de Node, Vite ou processo de build.

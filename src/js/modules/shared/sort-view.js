@@ -1,14 +1,15 @@
 // Peças visuais e de entrada de dados compartilhadas pelos módulos de ordenação
-// (Selection Sort, Bubble Sort, Insertion Sort, Shotgun Sort, Merge Sort e Quick Sort): vetor com
-// marcadores, cartão de comparação, contadores, legenda, gráfico de barras, vetores em paralelo
-// e editor de números.
+// (Selection Sort, Bubble Sort, Insertion Sort, Shotgun Sort, Merge Sort, Quick Sort e Heap Sort):
+// vetor com marcadores, cartão de comparação, contadores, legenda, gráfico de barras, vetores em
+// paralelo e editor de números.
 
 import { icons } from '../../core/icons.js';
 import { hasIndex } from '../../core/utils.js';
 
-// Os quatro últimos marcam o trecho do Merge Sort e do Quick Sort (início, meio, fim e o índice k).
+// Os quatro seguintes marcam o trecho do Merge Sort e do Quick Sort (início, meio, fim e o índice k)
+// e os três últimos, o pai e a raiz, o filho e o candidato a trocar do Heap Sort.
 const CHIP_LABELS = {
-  i: 'i', j: 'j', min: 'min', next: 'i+1', prev: 'j−1', inicio: 'início', meio: 'meio', fim: 'fim', k: 'k',
+  i: 'i', j: 'j', min: 'min', next: 'i+1', prev: 'j−1', inicio: 'início', meio: 'meio', fim: 'fim', k: 'k', pai: 'pai', raiz: 'raiz', filho: 'filho', trocar: 'trocar',
 };
 
 export function parseVector(text, { min, max, hint }) {

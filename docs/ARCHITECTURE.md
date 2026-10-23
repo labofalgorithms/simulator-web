@@ -9,7 +9,7 @@ O projeto utiliza JavaScript modular, sem framework e sem etapa de compilação.
 Código compartilhado por todos os simuladores:
 
 - `simulation-controller.js`: controla passos, execução automática, pausa, retorno e velocidade;
-- `simulator-app.js`: conecta um módulo à interface comum;
+- `simulator-app.js`: conecta um módulo à interface comum (um módulo com `codeScroll: true` ganha a lista de pseudocódigo com rolagem própria, que mantém a linha ativa no meio; serve aos pseudocódigos de várias funções, como o do Heap Sort);
 - `storage.js`: acesso seguro ao `localStorage`;
 - `analytics.js`: contagem anônima de acessos com o GoatCounter (ver abaixo);
 - `icons.js`: ícones compartilhados;
@@ -82,6 +82,10 @@ modules/
 ├── quick-sort/
 │   ├── algorithms.js
 │   └── quick-sort-module.js
+├── heap-sort/
+│   ├── algorithms.js
+│   ├── heap-sort-module.js
+│   └── views.js
 └── shared/
     ├── sort-steps.js
     ├── sort-view.js
@@ -90,9 +94,9 @@ modules/
     └── tree-scene.js
 ```
 
-`shared/sort-view.js` reúne o que os módulos de ordenação têm em comum: o vetor com marcadores sobre as células, o cartão de comparação, os contadores, a legenda, o gráfico de barras por passada, os vetores ordenados em paralelo e o editor de números (`renderArray`, `renderCompare`, `renderStats`, `legend`, `renderChart`, `renderLockstep`, `renderVectorEditor`, `parseVector`, `randomVector`). `shared/sort-steps.js` tem a parte de execução: o formato de um passo (`step`), a formatação (`fmt`, `range`, `NONE`) e os itens com letra que marcam a ordem dos repetidos (`tagDuplicates`, `isStable`, `label`, `repeatedExample`). `withRepeats` monta os vetores com repetidos dos exemplos de estabilidade. Selection Sort, Bubble Sort, Insertion Sort, Merge Sort e Quick Sort usam os dois.
+`shared/sort-view.js` reúne o que os módulos de ordenação têm em comum: o vetor com marcadores sobre as células, o cartão de comparação, os contadores, a legenda, o gráfico de barras por passada, os vetores ordenados em paralelo e o editor de números (`renderArray`, `renderCompare`, `renderStats`, `legend`, `renderChart`, `renderLockstep`, `renderVectorEditor`, `parseVector`, `randomVector`). `shared/sort-steps.js` tem a parte de execução: o formato de um passo (`step`), a formatação (`fmt`, `range`, `NONE`) e os itens com letra que marcam a ordem dos repetidos (`tagDuplicates`, `isStable`, `label`, `repeatedExample`). `withRepeats` monta os vetores com repetidos dos exemplos de estabilidade. Selection Sort, Bubble Sort, Insertion Sort, Merge Sort, Quick Sort e Heap Sort usam os dois.
 
-`shared/recursion-view.js` tem as peças dos módulos recursivos (Merge Sort e Quick Sort): o vetor auxiliar B alinhado com as colunas (`renderAux`), a pilha de chamadas (`renderStack`), os trechos por nível da recursão (`renderLevels`) e as caixas de total (`renderTotals`). O vetor com marcadores continua sendo `renderArray`, que aceita `{ stacked: true }` (marcadores `inicio`, `meio`, `fim` e `k` empilhados sobre a célula), `step.sortedIndices` (posições prontas), `step.pivotIndex` (o pivô, com a classe `pivot`) e `step.splitAfter` (a barra entre as duas metades). Veja "Módulo de Merge Sort" e "Módulo de Quick Sort" abaixo.
+`shared/recursion-view.js` tem as peças dos módulos recursivos (Merge Sort e Quick Sort): o vetor auxiliar B alinhado com as colunas (`renderAux`), a pilha de chamadas (`renderStack`), os trechos por nível da recursão (`renderLevels`) e as caixas de total (`renderTotals`). O vetor com marcadores continua sendo `renderArray`, que aceita `{ stacked: true }` (marcadores `inicio`, `meio`, `fim`, `k`, `pai`, `raiz`, `filho` e `trocar` empilhados sobre a célula), `step.sortedIndices` (posições prontas), `step.pivotIndex` (o pivô, com a classe `pivot`) e `step.splitAfter` (a barra entre as duas metades). Veja "Módulo de Merge Sort" e "Módulo de Quick Sort" abaixo.
 
 `shared/node-scene.js` reúne o que os módulos de lista circular e de lista duplamente encadeada têm em comum: a execução do algoritmo "como num depurador" (`trace`), o layout, as fichas das variáveis, as setas e as animações (`renderScene`, `afterRenderScene`). Veja "Cena de nós com ponteiros" abaixo.
 
@@ -123,7 +127,8 @@ modules/
 - `bubble-sort-simulator.js`: conecta `SimulatorApp` ao `bubbleSortModule`;
 - `insertion-sort-simulator.js`: conecta `SimulatorApp` ao `insertionSortModule`;
 - `merge-sort-simulator.js`: conecta `SimulatorApp` ao `mergeSortModule`;
-- `quick-sort-simulator.js`: conecta `SimulatorApp` ao `quickSortModule`.
+- `quick-sort-simulator.js`: conecta `SimulatorApp` ao `quickSortModule`;
+- `heap-sort-simulator.js`: conecta `SimulatorApp` ao `heapSortModule`.
 
 ## Catálogo da home
 
@@ -310,6 +315,18 @@ Mesma estrutura do Merge Sort: `createTracer` mantém a pilha de quadros (`quick
 `runPartitions` repete o algoritmo sem passos e serve à contagem, à adaptabilidade e à estabilidade: cada particionamento devolve o trecho, a posição do pivô, as comparações com o pivô, as trocas e o vetor antes e depois. Com o pivô no primeiro valor, o vetor ordenado faz n(n−1) comparações (o pior caso) e o invertido, um pouco menos, também quadrático. `bestCase` monta o vetor em que todo pivô cai na mediana: o `particionar` leva o último valor da parte esquerda para o início dela, então a esquerda é guardada girada para voltar certa. A estabilidade compara, a cada particionamento, a ordem dos iguais antes e depois (`flippedPairs`), e `stabilityExample` sorteia vetores até achar um em que a ordem realmente se inverte.
 
 Os slides de debug (55 a 200) percorrem o exemplo até o fim do 5º particionamento: 121 dos 123 passos de linhas executadas deles aparecem no simulador, na mesma ordem. Os dois que faltam são destaques de "retorno" que o deck repete (slides 120 e 126), e o simulador ainda percorre os trechos que o deck não mostra.
+
+## Módulo de Heap Sort
+
+Módulo da categoria **Algoritmos** (ALG1 · 07, aula 11), com sete simuladores: `heap` (o heap como árvore e a conferência `ehMaxHeap`; clicar em uma célula mostra o pai e os filhos dela), `sift` (`ArrumaHeap` sozinho, com `config.inicio` e `config.fim`; clicar em uma célula escolhe o nó), `build` (`CriaHeap`), `heap-sort` (execução completa), `counting`, `adaptability` e `stability`. Os dados são de 3 a 15 números (um heap de até quatro níveis) e o vetor inicial é o do debug da aula (`6, 5, 3, 1, 8, 7, 2, 4`); três botões carregam também os vetores dos slides 19 a 84 e do slide 9.
+
+Mesma estrutura dos módulos recursivos, mas sem recursão: `createTracer` mantém a pilha de quadros (`heapsort` com `tamanho` e `fim`; `CriaHeap` com `tamanho` e `inicio`; `ArrumaHeap` com `inicio`, `fim`, `raiz`, `filho` e `trocar`; `swap` com `i`, `j` e `temp`) e cada passo é uma linha executada (`FIM SE`, `SENÃO` e `FIM ENQUANTO` não são passos; o `FIM` de uma função é um passo, como nos slides, exceto o de `swap`). `heapsort` não tem passo de cabeçalho: a linha da chamada já anuncia a função. O pseudocódigo exibido junta as funções na ordem heapsort, CriaHeap, ArrumaHeap e swap, e `offsets` diz onde cada uma começa; cada simulador mostra só as que usa (`SIFT_ONLY_CODE`, `BUILD_ONLY_CODE`, `FULL_CODE` e o `CHECK_CODE` do `heap`, que não está nos slides). A condição `filho + 1 ≤ fim E vetor[trocar] < vetor[filho + 1]` é um passo só, e a segunda parte só é testada (e contada) quando a primeira é verdadeira.
+
+`views.js` desenha o heap em SVG como árvore binária completa: o nó `i` fica no nível `⌊log₂(i + 1)⌋`, e o vetor e a árvore recebem os mesmos marcadores do passo (`pointers`, `pivotIndex` para a raiz, `comparedIndices`, `foundIndices`, `changedIndices`, `warnIndices`). Os nós a partir de `step.sortedFrom` já saíram do heap e ficam apagados, sem as arestas; no vetor, as mesmas posições aparecem em verde. `sort-view.js` ganhou os marcadores `pai`, `raiz`, `filho` e `trocar` (`CHIP_LABELS`).
+
+`runCalls` repete o algoritmo sem passos e serve à contagem, à adaptabilidade e à estabilidade: cada chamada de `ArrumaHeap` (as de CriaHeap e as de cada extração) devolve o intervalo, as voltas do laço, as comparações, as trocas, onde o valor da raiz parou e o vetor antes e depois (`before`, `swapped`, `after`; `swapped` é o vetor logo depois da troca da raiz com o último elemento, que só as extrações têm). Cada chamada dá no máximo `⌊log₂ n⌋` voltas, e o vetor ordenado, o invertido e o quase ordenado custam quase o mesmo: o Heapsort não é adaptável. A estabilidade compara a ordem dos iguais antes e depois de cada troca da raiz e de cada `ArrumaHeap` (`flippedPairs`), e `stabilityExample` sorteia vetores até achar um em que a ordem realmente se inverte.
+
+Os slides de debug (92 a 199) foram conferidos com um script descartável (as linhas destacadas e as setas de cada slide contra os passos do simulador): 99 dos 103 pontos de parada aparecem na mesma ordem e com os mesmos marcadores (os slides 167-168, 172-173, 177-178, 182-183, 187-188 e 192-193 mostram o mesmo `ArrumaHeap` antes e depois, e contam como um), e o vetor dos 54 slides em que o texto do PDF o traz inteiro é igual ao do passo correspondente. Os 4 que sobram são `inicio ← inicio - 1` (slides 111, 126, 140 e 160), em que o slide ainda desenha a seta `inicio` no valor antigo. O deck também marca `Fim` onde o código executa `swap` (slide 104) e `ArrumaHeap` (167 e 168), e abrevia o laço principal a partir do slide 167 ("Agora, vamos acelerar o processo"), sem o interior de `ArrumaHeap`; o simulador percorre tudo. Os slides 42 a 84 (o exemplo desenhado, `9, 8, 6, 12, 4, 3, 7`) refazem o heap a partir do último pai depois de cada extração, e o código dos slides 87 a 90 só desce a raiz, com o mesmo resultado; o simulador segue o código. Também no exemplo desenhado, o slide 21 chama o nó 3 de "último pai" para `n = 7`, mas ele é uma folha: `inicio ← (tamanho - 1) / 2` começa em uma folha quando `tamanho` é ímpar, e o primeiro `ArrumaHeap` termina sem mudar nada.
 
 ## Módulo de Shotgun Sort
 

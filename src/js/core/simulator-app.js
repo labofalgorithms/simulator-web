@@ -172,8 +172,13 @@ export class SimulatorApp {
   renderPseudocode() {
     const activeLine = this.currentStep?.line;
     const isActive = (index) => (Array.isArray(activeLine) ? activeLine.includes(index) : index === activeLine);
-    $('#code-lines').innerHTML = this.algorithm.pseudocode.map((line, index) => `
+    const list = $('#code-lines');
+    list.innerHTML = this.algorithm.pseudocode.map((line, index) => `
       <li class="${isActive(index) ? 'active' : ''}"><span class="line-number">${String(index + 1).padStart(2, '0')}</span><code>${escapeText(line || ' ')}</code></li>`).join('');
+    // Módulos com várias funções no mesmo painel (`codeScroll`): a lista rola e a linha ativa fica no meio.
+    list.classList.toggle('scrolls', Boolean(this.module.codeScroll));
+    const active = this.module.codeScroll && list.querySelector('li.active');
+    if (active) list.scrollTop = Math.max(0, active.offsetTop - (list.clientHeight - active.offsetHeight) / 2);
   }
 
   renderSimulation() {
