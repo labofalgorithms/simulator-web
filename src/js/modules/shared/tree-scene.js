@@ -5,9 +5,10 @@ import { hasIndex } from '../../core/utils.js';
  * passo carrega uma `scene` com os ponteiros de verdade, e o renderer desenha o que o código fez até
  * aquela linha e nada além disso:
  *
- * - `nodes`: `{ id, value, origin, left, right }`. `left` e `right` são o id do filho, `null` (nulo)
+ * - `nodes`: `{ id, value, origin, left, right, h }`. `left` e `right` são o id do filho, `null` (nulo)
  *   ou `undefined` (campo ainda não atribuído, só no construtor). `origin` é o valor que o nó teve ao
- *   nascer: depois de `atual.valor ← suc.valor` o valor muda, mas o nó é o mesmo;
+ *   nascer: depois de `atual.valor ← suc.valor` o valor muda, mas o nó é o mesmo. `h` é a altura
+ *   guardada no nó (só nas árvores AVL; fica desatualizada até o código executar `nó.altura ← ...`);
  * - `root`: id da raiz (`null` com a árvore vazia);
  * - `float`: id do nó recém-criado, que ainda não pertence à árvore. Fica isolado à direita, até um
  *   ponteiro (`raiz`, `pai.esquerda`, `pai.direita`) passar a apontar para ele;
@@ -21,11 +22,14 @@ import { hasIndex } from '../../core/utils.js';
  *   pai foi atribuída neste passo (a seta é animada);
  * - `vars`: `{ name, target, text, status, changed }` de cada parâmetro e variável do código, para a
  *   barra de variáveis, que fica sempre visível;
- * - `badges`: `{ id: texto }`, o selo abaixo de cada nó (a ordem de visita nos percursos).
+ * - `badges`: `{ id: texto }`, o selo abaixo de cada nó (a ordem de visita nos percursos);
+ * - `fb`: `{ id: fator }`, o fator de balanceamento já calculado de alguns nós (selo azul, ou vermelho
+ *   quando |FB| > 1) ao lado da altura guardada.
  *
  * A posição horizontal de um nó é a sua ordem entre todos os nós que passam pela execução (`ranks`,
- * calculada uma vez por execução): inserir ou remover um nó não empurra os demais. A vertical é a
- * profundidade atual, então um nó promovido sobe um nível.
+ * calculada uma vez por execução): inserir ou remover um nó não empurra os demais, e uma rotação
+ * (que preserva a ordem em ordem) só muda a altura do nó. A vertical é a profundidade atual, então um
+ * nó promovido sobe um nível. Sem `levels` no layout, o número de níveis é o da execução inteira.
  */
 
 const NONE = '—';
@@ -155,10 +159,12 @@ export function layoutOf(tree) {
 // Execução como num depurador
 // ---------------------------------------------------------------------------------------------
 
-const CHIP_ORDER = ['raiz', 'atual', 'No', 'pai', 'suc', 'paiSuc', 'filho', 'novo'];
+const CHIP_ORDER = ['raiz', 'atual', 'No', 'nó', 'pai', 'suc', 'paiSuc', 'filho', 'novo', 'temp', 'y', 'x', 'T2'];
 // Fichas que aparecem sobre o selo `nulo` quando a árvore está vazia.
-const EMPTY_CHIPS = ['raiz', 'atual', 'No', 'pai'];
-const CHIP_KIND = { raiz: 'inicio', atual: 'atual', No: 'atual', pai: 'cursor', suc: 'alvo', paiSuc: 'cursor', filho: 'filho', novo: 'novo' };
+const EMPTY_CHIPS = ['raiz', 'atual', 'No', 'nó', 'pai'];
+const CHIP_KIND = {
+  raiz: 'inicio', atual: 'atual', No: 'atual', nó: 'atual', pai: 'cursor', suc: 'alvo', paiSuc: 'cursor', filho: 'filho', novo: 'novo', temp: 'alvo', y: 'cursor', x: 'novo', T2: 'filho',
+};
 
 let runs = 0;
 
@@ -194,6 +200,10 @@ export function treeTrace({ tree, layout, params = {}, locals, allNulls = false 
     gone: new Set(),
     lastDepth: new Map(),
     badges: new Map(),
+    fb: new Map(),
+    // Durante uma rotação, o ponteiro do pai ainda aponta para `from` (o nó que vai descer), mas a
+    // cena já desenha `to` (o nó que sobe) no lugar dele, como nos slides, até o chamador ligar o retorno.
+    alias: null,
     params: { ...params },
   };
   const steps = [];
@@ -210,10 +220,15 @@ export function treeTrace({ tree, layout, params = {}, locals, allNulls = false 
 
   const step = (line, title, description, tone = 'neutral', extra = {}) => {
     const { variables = {}, ...marks } = extra;
-    const root = st.refs.raiz ?? null;
-    const depth = reachFrom(st.nodes, root);
+    // Com um alias ativo, os ponteiros de fora da subárvore girada que apontam para `from` valem `to`.
+    const { alias } = st;
+    const inside = alias ? new Set(reachFrom(st.nodes, alias.to).keys()) : null;
+    const link = (owner, pointer) => (alias && pointer === alias.from && !inside.has(owner) ? alias.to : pointer);
+    const view = alias ? st.nodes.map((node) => ({ ...node, left: link(node.id, node.left), right: link(node.id, node.right) })) : st.nodes;
+    const root = alias ? link(null, st.refs.raiz ?? null) : st.refs.raiz ?? null;
+    const depth = reachFrom(view, root);
     depth.forEach((d, id) => st.lastDepth.set(id, d));
-    const alive = st.nodes.filter((node) => !st.gone.has(node.id));
+    const alive = view.filter((node) => !st.gone.has(node.id));
     const lost = alive.filter((node) => !depth.has(node.id) && node.id !== st.float).map((node) => node.id);
     const vars = [
       ...Object.entries(st.params).map(([name, text]) => ({ name, text, status: 'param' })),
@@ -227,7 +242,7 @@ export function treeTrace({ tree, layout, params = {}, locals, allNulls = false 
       if (st.refs[name] === null) nullAt[name] = at;
     });
     const scene = {
-      nodes: alive.map(({ id, value, origin, left, right }) => ({ id, value, origin, left, right })),
+      nodes: alive.map(({ id, value, origin, left, right, h }) => ({ id, value, origin, left, right, h })),
       root,
       float: st.float,
       refs: { ...st.refs },
@@ -239,6 +254,7 @@ export function treeTrace({ tree, layout, params = {}, locals, allNulls = false 
       fresh: [...st.fresh],
       vars,
       badges: Object.fromEntries(st.badges),
+      fb: Object.fromEntries(st.fb),
       ranks: layout.ranks,
       slots: layout.slots,
       levels: layout.levels,
@@ -253,10 +269,10 @@ export function treeTrace({ tree, layout, params = {}, locals, allNulls = false 
   };
 
   /** `novo ← CRIAR_NÓ(valor)`: o nó existe, mas ninguém aponta para ele, e `esquerda`/`direita` nascem nulos. */
-  const create = (value, name = 'novo', { pending = false } = {}) => {
+  const create = (value, name = 'novo', { pending = false, h } = {}) => {
     const id = st.nodes.length;
     st.nodes.push({
-      id, value, origin: value, left: pending ? undefined : null, right: pending ? undefined : null,
+      id, value, origin: value, left: pending ? undefined : null, right: pending ? undefined : null, ...(h === undefined ? {} : { h }),
     });
     st.float = id;
     if (name) {
@@ -312,6 +328,24 @@ export function treeTrace({ tree, layout, params = {}, locals, allNulls = false 
 
   const clearBadges = () => st.badges.clear();
 
+  /** `nó.altura ← ...`: a altura guardada no nó. */
+  const setHeight = (id, h) => {
+    st.nodes[id].h = h;
+  };
+
+  /** Mostra o fator de balanceamento já calculado de um nó; sem `value`, tira o selo. */
+  const setFb = (id, value = null) => {
+    if (value === null) st.fb.delete(id);
+    else st.fb.set(id, value);
+  };
+
+  const clearFb = () => st.fb.clear();
+
+  /** Liga o alias de uma rotação (`to` sobe para o lugar de `from`); sem argumentos, desliga. */
+  const setAlias = (from = null, to = null) => {
+    st.alias = from === null ? null : { from, to };
+  };
+
   /** Variáveis locais de uma nova chamada: voltam a "não atribuídas" e o caminho percorrido recomeça. */
   const clear = (names) => {
     names.forEach((name) => {
@@ -328,8 +362,10 @@ export function treeTrace({ tree, layout, params = {}, locals, allNulls = false 
     const rootStack = Math.max(1, ...steps.map(({ scene }) => (scene.root === null
       ? EMPTY_CHIPS.filter((name) => scene.refs[name] === null && !scene.nullAt[name]).length
       : CHIP_ORDER.filter((name) => scene.refs[name] === scene.root).length)));
+    // Layout sem `levels` (árvores que giram): vale a maior profundidade de toda a execução.
+    const levels = layout.levels ?? Math.max(1, ...steps.flatMap(({ scene }) => Object.values(scene.depth)).map((d) => d + 1));
     return steps.map((item) => ({
-      ...item, run: runs, scene: { ...item.scene, floatCol, rootStack },
+      ...item, run: runs, scene: { ...item.scene, floatCol, rootStack, levels },
     }));
   };
 
@@ -339,7 +375,7 @@ export function treeTrace({ tree, layout, params = {}, locals, allNulls = false 
   };
 
   return {
-    st, node, step, create, set, follow, setChild, setValue, drop, badge, clearBadges, clear, setParams, finish,
+    st, node, step, create, set, follow, setChild, setValue, drop, badge, clearBadges, setHeight, setFb, clearFb, setAlias, clear, setParams, finish,
   };
 }
 
@@ -433,11 +469,18 @@ export function afterRenderTree({ step, stage }) {
 
 const DEFAULT_LEGEND = [['current', 'atual'], ['processed', 'visitado'], ['compared', 'alterado'], ['result', 'resultado']];
 
-/** Altura (arestas) de um nó da cena. */
-function heightIn(scene, id) {
-  if (typeof id !== 'number') return -1;
+/**
+ * Altura (arestas) de um nó da cena. No meio de uma rotação os ponteiros chegam a formar um ciclo
+ * (`x.direito ← y` enquanto `y.esquerdo` ainda é `x`), então um nó que já está no caminho não conta.
+ */
+function heightIn(scene, id, path = new Set()) {
+  if (typeof id !== 'number' || path.has(id)) return -1;
   const node = scene.nodes.find((item) => item.id === id);
-  return node ? 1 + Math.max(heightIn(scene, node.left), heightIn(scene, node.right)) : -1;
+  if (!node) return -1;
+  path.add(id);
+  const height = 1 + Math.max(heightIn(scene, node.left, path), heightIn(scene, node.right, path));
+  path.delete(id);
+  return height;
 }
 
 /**
@@ -616,11 +659,17 @@ export function renderTree({
     if (state.inspectedItem === node.id) classes.push('inspected');
     const { cls, vars } = motion(`n${node.id}`, p);
     const badge = scene.badges?.[node.id];
-    const links = `esquerda: ${target(node.left ?? null)}, direita: ${target(node.right ?? null)}${badge ? `, visita ${escapeText(badge)}` : ''}`;
+    // Árvores AVL: a altura guardada no nó e, quando já foi calculado, o fator de balanceamento.
+    const hasHeight = typeof node.h === 'number';
+    const factor = scene.fb?.[node.id];
+    const meta = hasHeight
+      ? `<em class="tree-meta" aria-hidden="true">alt ${node.h}</em>${factor === undefined ? '' : `<em class="tree-meta fb${Math.abs(factor) > 1 ? ' bad' : ''}" aria-hidden="true">FB ${factor > 0 ? '+' : ''}${factor}</em>`}`
+      : '';
+    const links = `esquerda: ${target(node.left ?? null)}, direita: ${target(node.right ?? null)}${badge ? `, visita ${escapeText(badge)}` : ''}${hasHeight ? `, altura guardada ${node.h}` : ''}${factor === undefined ? '' : `, fator de balanceamento ${factor}`}`;
     return `<div class="tree-slot${cls}" style="left:${p.x - R}px;top:${p.y - R}px${vars}">`
       + `<button type="button" class="${classes.join(' ')}" data-module-action="pick-node" data-index="${node.id}" data-value="${escapeText(node.value)}" aria-label="Nó com valor ${escapeText(fmt(node.value))}, ${links}">`
       + `<span>${escapeText(fmt(node.value))}</span></button>`
-      + `${p.float ? '<em class="tree-tag">isolado</em>' : ''}${badge ? `<em class="tree-badge" aria-hidden="true">${escapeText(badge)}</em>` : ''}</div>`;
+      + `${meta}${p.float ? '<em class="tree-tag">isolado</em>' : ''}${badge ? `<em class="tree-badge" aria-hidden="true">${escapeText(badge)}</em>` : ''}</div>`;
   }).join('');
 
   const chipHtml = chips.map((chip) => {

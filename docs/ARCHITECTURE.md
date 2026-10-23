@@ -64,6 +64,9 @@ modules/
 │   ├── algorithms.js
 │   ├── tree-traversal-module.js
 │   └── views.js
+├── avl-trees/
+│   ├── algorithms.js
+│   └── avl-tree-module.js
 ├── shotgun-sort/
 │   ├── algorithms.js
 │   └── shotgun-sort-module.js
@@ -100,7 +103,7 @@ modules/
 
 `shared/node-scene.js` reúne o que os módulos de lista circular e de lista duplamente encadeada têm em comum: a execução do algoritmo "como num depurador" (`trace`), o layout, as fichas das variáveis, as setas e as animações (`renderScene`, `afterRenderScene`). Veja "Cena de nós com ponteiros" abaixo.
 
-`shared/tree-scene.js` é o equivalente para árvores: a estrutura (`buildTree`, `preorder`, `inorder`, `postorder`, `levelorder`, `heightOf`, `layoutOf`...), a execução "como num depurador" (`treeTrace`) e o desenho (`renderTree`, `afterRenderTree`). É usado pelos módulos de Árvore Binária de Busca e de Percursos em Árvores Binárias. Veja "Módulo de Árvore Binária de Busca" e "Módulo de Percursos em Árvores Binárias" abaixo.
+`shared/tree-scene.js` é o equivalente para árvores: a estrutura (`buildTree`, `preorder`, `inorder`, `postorder`, `levelorder`, `heightOf`, `layoutOf`...), a execução "como num depurador" (`treeTrace`) e o desenho (`renderTree`, `afterRenderTree`). É usado pelos módulos de Árvore Binária de Busca, de Percursos em Árvores Binárias e de Árvore AVL. Veja "Módulo de Árvore Binária de Busca", "Módulo de Percursos em Árvores Binárias" e "Módulo de Árvore AVL" abaixo.
 
 `algorithms.js` contém metadados, pseudocódigos e a geração dos estados da simulação. O arquivo `*-module.js` define entrada de dados, parâmetros, renderização e eventos específicos da estrutura.
 
@@ -122,6 +125,7 @@ modules/
 - `hash-table-simulator.js`: conecta `SimulatorApp` ao `hashTableModule`;
 - `binary-search-tree-simulator.js`: conecta `SimulatorApp` ao `binarySearchTreeModule`;
 - `tree-traversal-simulator.js`: conecta `SimulatorApp` ao `treeTraversalModule`;
+- `avl-tree-simulator.js`: conecta `SimulatorApp` ao `avlTreeModule`;
 - `shotgun-sort-simulator.js`: conecta `SimulatorApp` ao `shotgunSortModule`;
 - `selection-sort-simulator.js`: conecta `SimulatorApp` ao `selectionSortModule`;
 - `bubble-sort-simulator.js`: conecta `SimulatorApp` ao `bubbleSortModule`;
@@ -394,6 +398,31 @@ Cada simulador:
 - `preorder`, `inorder`, `postorder`: a mesma função com o `IMPRIMIR` antes, entre ou depois das duas chamadas. O último passo mostra a sequência e a aplicação do slide (cópia da árvore e notação prefixa; ordem crescente numa ABB; liberar a árvore de baixo para cima e notação pós-fixa);
 - `bfs`: `bfs(raiz)` com a fila (`CRIE uma fila`, `INSIRA a raiz na fila`, `ENQUANTO a fila não está vazia`, `fila.remover()`, os dois testes de filho e `fila.inserir`);
 - `compare`: seis passos (a árvore, as quatro sequências com o selo de ordem de cada uma, e "quando usar cada um", com a pilha máxima do DFS, altura + 2, e a fila máxima do BFS desta árvore).
+
+## Módulo de Árvore AVL
+
+Aulas 13 (AVL: o conceito) e 14 (implementação da AVL) de Estrutura de Dados 2, num módulo só: a aula 14 dá o pseudocódigo e os slides de debug, a 13 dá o conceito (fator de balanceamento, os casos, as rotações) e os exercícios. São sete simuladores, em quatro grupos: **Fundamentos** (`balance`), **Rotações** (`rotRight`, `rotLeft`, `cases`), **Inserção** (`insert`, `build`) e **Remoção** (`remove`). Usa `codeScroll`, porque cada painel tem várias funções.
+
+Os dados são `{ values, balanced }`: os valores na ordem de inserção (inteiros de 0 a 999, até 12, **sem repetidos**, como o `inserir` da aula) e a forma de montar a árvore de partida: `balanced: true` insere com rotações (`avlTree`) e `balanced: false` insere como numa ABB (`abbTree`), sem rotações. O segundo modo existe porque a aula 13 manda inserir "sem rotacionar" e depois remover, e porque o slide 66 da aula 14 parte de uma árvore que não é AVL. O id de um nó é a posição do valor na lista nos dois modos (as rotações não mudam os ids) e o nó novo de `insert` recebe o id `n`. A configuração tem `insertValue` e `removeValue` (um por operação), `pivot` (o nó que `rotRight`/`rotLeft` giram; clicar em um nó com o filho necessário o escolhe) e `caseId` (`LL`, `RR`, `LR` ou `RL`, de `cases`). Os valores iniciais de `insertValue` e `removeValue` são os primeiros cuja operação rotaciona, para o exemplo padrão já mostrar uma rotação.
+
+**Convenção do fator de balanceamento: FB = altura(esquerda) − altura(direita)**, a do código da aula 14 (a aula 13 define o contrário). FB positivo é esquerda mais alta, e a rotação que conserta é à direita. A altura de um nó nulo é −1 e a de uma folha, 0, e a altura fica **guardada no nó**: o selo `alt` abaixo de cada nó mostra o valor guardado, que fica desatualizado até a linha `nó.altura ← ...` executar, como no código. Os selos azuis `FB` mostram o fator já calculado (vermelho quando |FB| > 1).
+
+Os pseudocódigos são os da aula 14, com as correções listadas no README (`raiz ←` nos invólucros, o `Fim se` que sobrava em `inserir`, o `Fim Se` e o `)` que faltavam em `remover`, e `menorValorNo`, que os slides usam sem mostrar). Cada simulador junta no painel as funções que usa (`program()` em `algorithms.js` guarda a linha de cada marca, como `ins.nullTest` ou `rotR.l1`), e cada passo é uma linha executada. Os três exemplos dos slides de debug batem com o simulador nas alturas e nos FB, na mesma ordem (`inserir(4)`: 1, 1, 2, 2, 0, 1; `inserir(12)`: 1, 1, 2, −1, 3, −2, 1, 2; `remover(80)`: 3, 3, −1, 1, 2, 0, 2), e a árvore final de 1.520 operações aleatórias (AVL e ABB de partida; inserir, remover e construir) é igual à do `ArvoreAVL.java` da aula. Convenções dos passos: não há passo para `Senão`, `Fim se` nem comentários; quando |FB| ≤ 1, os quatro testes dos casos são um passo só (as quatro linhas destacadas), e, quando |FB| > 1, cada teste é um passo até o caso valer; `altura()` e `fatorDeBalanceamento()` não têm passo próprio (o resultado vai na descrição), como na maioria dos slides.
+
+`treeTrace` ganhou o necessário para a AVL: a altura guardada (`h` em cada nó e `setHeight`), o selo de FB (`setFb`, `clearFb`, `scene.fb`), as fichas `nó`, `temp`, `y`, `x` e `T2`, e `layout.levels` opcional (sem ele, o número de níveis é o da execução inteira, porque a profundidade muda com as rotações). A posição horizontal continua sendo a ordem em ordem (`ranks`, por valor), então uma rotação só desloca os nós na vertical e o percurso em ordem não muda, o que o simulador `rotRight`/`rotLeft` mostra no console.
+
+**Alias de rotação.** Dentro de `rotacaoDireita(y)`, depois de `x.direito ← y`, o pai ainda aponta para `y`, e só quem chamou a função liga o retorno. Para a cena já mostrar a subárvore girada, como nos slides, `setAlias(from, to)` faz a cena desenhar `to` (`x`) no lugar de `from` (`y`) para os ponteiros de fora da subárvore girada. É só visual: `refs` e as setas do próprio `x` e `y` são os ponteiros reais. O alias é desligado quando o chamador liga o retorno (`setChild` do pai ou `raiz`). Enquanto isso, a subárvore `T2` fica solta (tracejada, "solto"), pois só a variável `T2` aponta para ela, até `y.esquerdo ← T2`. No meio da rotação os ponteiros chegam a formar um ciclo, então `heightIn` em `shared/tree-scene.js` ignora os nós que já estão no caminho.
+
+A recursão usa `step.stack` (desenhada por `renderStack`, como nos percursos): `inserir(valor)` na base, um frame `inserir(nó, valor)` por nível e um `rotacaoDireita(nó)` enquanto a rotação executa. Os passos usam `activeIndices` (o nó da chamada), `leftIndices` (os nós que esperam na pilha), `changedIndices`, `foundIndices` (o nó novo ou o que sobe), `errorIndices` (|FB| > 1), `dimIndices` (o nó que sai na remoção) e `hotEdges` (o caminho da descida).
+
+Cada simulador:
+
+- `balance`: a altura guardada e o FB de cada nó, de baixo para cima (pós-ordem), e o veredito "é AVL / não é AVL". Com ABB comum e valores em ordem crescente aparecem nós com |FB| > 1;
+- `rotRight` e `rotLeft`: `rotacaoDireita(y)` e `rotacaoEsquerda(x)` em 8 passos, mais o passo em que o chamador liga o retorno (9 no total). O console mostra o percurso em ordem antes e depois;
+- `cases`: a ABB que sobra depois de inserir 3 (LL), 13 (RR), 5 (LR) ou 11 (RL), antes de balancear, e o trecho de `inserir` que calcula o FB, escolhe o caso e rotaciona. Tem 14 e 15 passos (LL e RR) ou 26 e 27 (LR e RL, com duas rotações). Os casos LL e RR são a "Caso 1" da aula 13 (filho pesado do mesmo lado) e LR e RL, a "Caso 2" (lado oposto);
+- `insert`: `inserir(valor)` completo. `inserir(4)` em 32, 16 tem 31 passos, `inserir(12)` em 8, 4, 10, 9, 15 tem 42, o caso LR (5) tem 52 e o RL (11), 54. Um valor repetido volta pela linha `Retornar nó // Não permite valores duplicados`;
+- `build`: `inserir` para cada valor, em passos condensados (a criação, a ligação, o FB do nó desbalanceado, uma linha por rotação), todos na linha `inserir(valor)`. Termina comparando a altura da AVL com a de uma ABB comum feita com os mesmos valores;
+- `remove`: `remover(valor)` completo (folha, um filho e dois filhos; o sucessor é o menor valor da direita), com a decisão dos casos pelo FB do filho. Valor inexistente volta por `Retornar nó // Nada a remover`. `remover(80)` dos slides tem 45 passos e o exemplo corrigido, `remover(90)`, 55.
 
 ## Módulo de Filas
 

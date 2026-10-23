@@ -474,6 +474,10 @@ button.sort-cell:hover{border-color:var(--cyan);transform:translateY(-2px)}
 .sort-slot.split{position:relative;margin-left:14px}
 .sort-slot.split:before{content:"";position:absolute;left:-11px;top:2px;bottom:2px;width:4px;border-radius:2px;background:var(--border-strong)}
 .tree-badge{position:absolute;left:50%;top:100%;min-width:18px;height:15px;margin-top:3px;padding:0 5px;transform:translateX(-50%);border:1px solid rgba(52,211,153,.55);border-radius:999px;background:var(--surface);color:var(--green);font-size:9px;font-style:normal;font-weight:800;font-variant-numeric:tabular-nums;line-height:13px;text-align:center;white-space:nowrap;pointer-events:none}
+.tree-meta{position:absolute;left:50%;top:100%;min-width:30px;height:14px;margin-top:3px;padding:0 6px;transform:translateX(-50%);border:1px solid var(--border-strong);border-radius:999px;background:var(--surface);color:var(--muted);font-size:9px;font-style:normal;font-weight:800;font-variant-numeric:tabular-nums;line-height:12px;text-align:center;white-space:nowrap;pointer-events:none}
+.tree-meta.fb{margin-top:19px;border-color:rgba(96,165,250,.6);color:#60a5fa}
+.tree-meta.fb.bad{border-color:var(--rose);background:rgba(251,113,133,.14);color:var(--rose)}
+.tree-meta~.tree-tag{margin-top:21px}
 .tree-extra{align-self:stretch}
 .tree-extra .sort-stack{width:100%}
 .rec-stack{width:min(100%,380px);display:flex;flex-direction:column;gap:8px}

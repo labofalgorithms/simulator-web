@@ -168,6 +168,25 @@ O pseudocódigo e os passos seguem os slides de teoria e de debug da aula: `INSE
 
 O pseudocódigo é o dos slides da aula (em PT-BR, com `NULO` no lugar de `NULL`) e cada passo é uma linha executada, com a pilha de chamadas dos percursos em profundidade, a fila do percurso em largura, o ponteiro `No`, o console com a saída e o selo de ordem de visita (1º, 2º...) sob cada nó. Os slides de debug mostram um quadro por chegada a um nó, então os passos do simulador (80 na árvore de 11 nós dos slides de pré-ordem) são um refinamento deles: todos os quadros dos slides aparecem, na mesma ordem, entre os passos. Os dados são os valores na ordem de inserção (inteiros de 0 a 999, até 15; iguais vão para a direita), e há atalhos para a árvore de cada percurso dos slides e para o exercício 1.
 
+### Árvore AVL
+
+- Altura e fator de balanceamento (`altura`, `fatorDeBalanceamento`): a árvore é AVL quando |FB| ≤ 1 em todos os nós
+- Rotação simples à direita (`rotacaoDireita`) e à esquerda (`rotacaoEsquerda`), com a subárvore `T2` e a ordem em ordem inalterada
+- Os quatro casos de desbalanceamento: LL, RR, LR e RL (rotação simples ou dupla)
+- Inserir (`inserir`): recursivo, com altura, FB e rotação no caminho de volta
+- Construir a árvore: inserções em sequência, comparando a altura com a de uma ABB comum
+- Remover (`remover`): folha, um filho e dois filhos, com rebalanceamento em cada nível
+
+O módulo junta as aulas 13 (conceito: FB, os casos e as rotações) e 14 (implementação: pseudocódigo e depuração). O pseudocódigo é o da aula 14 em PT-BR, e cada passo é uma linha executada, com a pilha de chamadas, as variáveis (`nó`, `y`, `x`, `T2`, `temp`), a altura guardada em cada nó e o FB já calculado. Os três exemplos depurados nos slides (`inserir(4)`, `inserir(12)` e `remover(80)`) têm as mesmas alturas e FB, na mesma ordem, e o simulador foi conferido contra o `ArvoreAVL.java` da aula em 1.520 inserções e remoções. Os dados são os valores na ordem de inserção (inteiros de 0 a 999, até 12, sem repetidos), montados com inserção AVL ou com ABB comum, e há atalhos para os exemplos e para os oito exercícios das aulas.
+
+Onde as aulas se contradizem ou escorregam, o módulo corrige:
+
+- **Sinal do fator de balanceamento.** A aula 13 define FB = hD − hE (positivo: rotação à esquerda); o código da aula 14 usa `altura(esquerdo) − altura(direito)` (positivo: rotação à direita). O módulo segue o código, então os exemplos da aula 13 aparecem com o sinal trocado. Nos slides 4, 5–12, 33–54 da aula 13 o sinal precisa ser invertido (ou a definição mudada) para as aulas combinarem.
+- **`remover(80)` parte de uma árvore que não é AVL** (slide 66, aula 14): na raiz 50, a esquerda tem altura 2 e a direita, 0. O exemplo continua disponível, montado como ABB comum e avisado como "não é AVL". O atalho `remover(90)` é a versão corrigida: o mesmo exemplo com o 90 à direita do 80, que é AVL e também termina em LR.
+- **Pseudocódigo.** `raiz ← ...` nos dois invólucros (os slides usam `=`), o `Fim se` que sobrava antes do `Senão` de `inserir`, o `Fim Se` e o `)` que faltavam em `remover` e os `Fim se` que faltavam em `altura` e `fatorDeBalanceamento`. Os slides chamam `menorValorNo` sem mostrá-la; o módulo traz o código do projeto Java.
+- **Nomes dos casos.** A aula 13 fala em "Caso 1" e "Caso 2"; o módulo usa LL, RR, LR e RL, como o código da aula 14.
+- **Árvore já desbalanceada.** Inserir numa ABB comum que já tinha |FB| = 2 pode chamar uma rotação sem o filho necessário (no Java, um erro de ponteiro nulo); o simulador mostra o aviso e segue.
+
 ## Algoritmos
 
 ### Shotgun Sort
@@ -288,6 +307,8 @@ simulator-web/
 │   │   └── index.html
 │   ├── percursos-arvores-binarias/
 │   │   └── index.html
+│   ├── arvore-avl/
+│   │   └── index.html
 │   ├── shotgun-sort/
 │   │   └── index.html
 │   ├── selection-sort/
@@ -324,6 +345,7 @@ simulator-web/
 │       │   ├── hash-tables/
 │       │   ├── binary-search-trees/
 │       │   ├── tree-traversals/
+│       │   ├── avl-trees/
 │       │   ├── shotgun-sort/
 │       │   ├── selection-sort/
 │       │   ├── bubble-sort/
@@ -346,6 +368,8 @@ Alternativamente:
 ```bash
 python3 -m http.server 8000
 ```
+
+O `http.server` do Python não manda cabeçalhos de cache, então o navegador pode continuar usando arquivos antigos depois de uma atualização do código (uma página nova que usa uma função nova de um arquivo compartilhado abre em branco). Se isso acontecer, force o recarregamento com **Ctrl+Shift+R**.
 
 Acesse:
 
