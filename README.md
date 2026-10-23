@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo/logo-on-dark.svg" />
+    <img src="assets/logo/logo-on-light.svg" alt="Lab of Algorithms: visualizing logic." width="260" />
+  </picture>
+</p>
+
 # LabOfAlgorithms
 
 Portal estático e modular de simuladores interativos para Estruturas de Dados e Algoritmos.
@@ -278,6 +285,8 @@ O site conta acessos de forma anônima com o [GoatCounter](https://www.goatcount
 ```text
 simulator-web/
 ├── index.html
+├── assets/
+│   └── logo/              (logo, ícone, favicon e imagem de compartilhamento)
 ├── simuladores/
 │   ├── vetores/
 │   │   └── index.html

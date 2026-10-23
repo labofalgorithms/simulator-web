@@ -144,6 +144,12 @@ modules/
 
 Para incluir um módulo, copie um card `.module-card.available` para o grupo certo e ajuste o número (`ED2 · 05`), o título (`h4`), a descrição, a contagem de simuladores, o link e o `data-keywords` (sinônimos e termos em inglês que o aluno pode digitar). Os cards `.module-card` sem `available` são os "Em breve".
 
+## Identidade visual
+
+`assets/logo/` guarda o logo (SVG e PNG, em versões para fundo escuro e claro), o favicon, o ícone do iOS, o avatar e a imagem de compartilhamento (`og-image.png`); o `assets/logo/README.md` lista cada arquivo e as regras de uso. Todas as páginas apontam para `favicon.ico`, `favicon.svg` (que troca de cor com o tema do navegador) e `apple-touch-icon.png`; só a home tem as tags `og:` e `twitter:card`, e o `og:image` usa a URL absoluta do GitHub Pages.
+
+O ícone do cabeçalho (`.brand-mark`, na home e no menu lateral dos simuladores) é um SVG inline, e não um `<img>`: assim ele usa `currentColor` com `color: var(--cyan)` e muda junto com o tema (`#22d3ee` no escuro, `#0e7490` no claro), algo que um arquivo externo não consegue por causa do botão de tema. O desenho está repetido nas 23 páginas; ao mudá-lo, troque em todas.
+
 ## Contagem de acessos
 
 `core/analytics.js` carrega o script do GoatCounter (`labofalgorithms.goatcounter.com`), que conta cada abertura de página sem cookies e sem guardar o IP. O site continua no GitHub Pages; o GoatCounter só recebe o aviso de acesso. O arquivo é chamado por `home.js` e por `SimulatorApp.start()`, então nenhuma página HTML precisa ser editada. A contagem fica desligada em `localhost`, `127.0.0.1` e `file:`, para os testes não entrarem nos números, e insere no rodapé uma nota de transparência com link para a política de privacidade.
