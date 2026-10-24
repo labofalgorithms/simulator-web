@@ -288,6 +288,7 @@ simulator-web/
 ├── 404.html               (página de erro do GitHub Pages)
 ├── robots.txt
 ├── sitemap.xml            (lista as páginas para os buscadores)
+├── manifest.webmanifest   (permite instalar o site na tela inicial do celular)
 ├── LICENSE
 ├── assets/
 │   └── logo/              (logo, ícone, favicon e imagem de compartilhamento)

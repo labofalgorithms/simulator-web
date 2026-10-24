@@ -14,6 +14,7 @@ O "A" é um grafo: três arestas ligando quatro nós, com o nó do meio apoiado 
 | `favicon.ico` | Favicon de reserva (16, 32 e 48 px) para navegadores sem suporte a SVG |
 | `apple-touch-icon.png` | Ícone da tela inicial do iOS (180 px) |
 | `avatar.svg` / `.png` | Foto de perfil circular (512 px), só com o ícone |
+| `icon-192.png` / `icon-512.png` | Ícones do `manifest.webmanifest` (site instalável): ícone sobre fundo `#080c18`, com margem para o recorte arredondado do Android |
 | `og-image.png` | Imagem de pré-visualização para links compartilhados (1200 × 630) |
 
 ## Cores
