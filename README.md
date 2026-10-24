@@ -285,6 +285,10 @@ O site conta acessos de forma anônima com o [GoatCounter](https://www.goatcount
 ```text
 simulator-web/
 ├── index.html
+├── 404.html               (página de erro do GitHub Pages)
+├── robots.txt
+├── sitemap.xml            (lista as páginas para os buscadores)
+├── LICENSE
 ├── assets/
 │   └── logo/              (logo, ícone, favicon e imagem de compartilhamento)
 ├── simuladores/
@@ -523,3 +527,11 @@ git push
 ```
 
 O workflow do GitHub Pages continuará publicando todo o repositório.
+
+## Licença
+
+- **Código-fonte:** todos os direitos reservados. O repositório é público para consulta e para publicar o site, mas o código não pode ser copiado nem reutilizado sem autorização.
+- **Conteúdo didático** (textos, explicações e pseudocódigos dos simuladores): [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/deed.pt-br). Pode ser compartilhado e adaptado, com citação do autor e sem fins comerciais.
+- **Marca e logotipo:** todos os direitos reservados.
+
+O texto completo está em [LICENSE](LICENSE). Para pedir autorização de uso, escreva para [contact@labofalgorithms.com](mailto:contact@labofalgorithms.com).

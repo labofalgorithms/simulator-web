@@ -1,0 +1,46 @@
+LabOfAlgorithms
+Copyright (c) 2026 Bruno de A. Iizuka Moritani
+
+Este repositório tem duas partes, com licenças diferentes.
+
+1. CÓDIGO-FONTE — TODOS OS DIREITOS RESERVADOS
+
+   Todo o código do site e dos simuladores (HTML, CSS e JavaScript, incluindo
+   o motor de simulação e os renderizadores) é propriedade de Bruno de A. Iizuka
+   Moritani, com todos os direitos reservados. Não é permitido copiar,
+   modificar, redistribuir nem reutilizar esse código, no todo ou em parte,
+   sem autorização prévia e por escrito do autor.
+
+   O repositório é público apenas para consulta e para o funcionamento do site.
+   O uso e a visualização feitos dentro das regras do GitHub (por exemplo,
+   ver o código e criar um fork pessoal na própria plataforma) continuam
+   permitidos pelos Termos de Serviço do GitHub.
+
+2. CONTEÚDO DIDÁTICO — CC BY-NC 4.0
+
+   Os textos, as explicações e os pseudocódigos exibidos nos simuladores estão
+   licenciados sob a Creative Commons Atribuição-NãoComercial 4.0 Internacional
+   (CC BY-NC 4.0). Você pode compartilhar e adaptar esse conteúdo, inclusive em
+   aulas e materiais de estudo, desde que:
+
+   - cite o autor (Bruno de A. Iizuka Moritani, LabOfAlgorithms,
+     https://labofalgorithms.com);
+   - indique se fez alterações;
+   - não use o conteúdo para fins comerciais.
+
+   Texto completo da licença:
+   https://creativecommons.org/licenses/by-nc/4.0/legalcode.pt
+
+3. MARCA
+
+   O nome "LabOfAlgorithms" e os arquivos da pasta assets/logo (logotipo, marca,
+   favicon e imagens de divulgação) não estão cobertos pela licença do item 2 e
+   têm todos os direitos reservados.
+
+Contato: contact@labofalgorithms.com
+
+---
+
+English summary: the source code is All Rights Reserved. The educational
+content (texts, explanations and pseudocode shown in the simulators) is
+licensed under CC BY-NC 4.0. The name and logo assets are All Rights Reserved.
