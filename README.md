@@ -291,7 +291,8 @@ simulator-web/
 ├── manifest.webmanifest   (permite instalar o site na tela inicial do celular)
 ├── LICENSE
 ├── assets/
-│   └── logo/              (logo, ícone, favicon e imagem de compartilhamento)
+│   ├── logo/              (logo, ícone, favicon e imagem de compartilhamento)
+│   └── og/                (uma imagem de compartilhamento por simulador, 1200 × 630)
 ├── simuladores/
 │   ├── vetores/
 │   │   └── index.html
