@@ -1,5 +1,6 @@
 import { algorithms, buildSteps } from './algorithms.js';
 import { hasIndex } from '../../core/utils.js';
+import { displayValue, tr, variableName } from '../../core/i18n.js';
 
 const NODE_COUNT = 3;
 const MAX_ABS_VALUE = 999;
@@ -8,11 +9,11 @@ const DEFAULT_DATA = { values: [42, 51, 63] };
 function parseNodeValues(text) {
   const tokens = String(text).trim().split(/[;,\s]+/).map((token) => token.trim()).filter(Boolean);
   if (tokens.length !== NODE_COUNT) {
-    return { error: `Informe exatamente ${NODE_COUNT} números, um para cada nó (n1, n2 e n3).` };
+    return { error: tr(`Informe exatamente ${NODE_COUNT} números, um para cada nó (n1, n2 e n3).`, `Enter exactly ${NODE_COUNT} numbers, one for each node (n1, n2 and n3).`) };
   }
   const values = tokens.map(Number);
   if (values.some((value) => !Number.isInteger(value) || Math.abs(value) > MAX_ABS_VALUE)) {
-    return { error: `Use apenas números inteiros entre -${MAX_ABS_VALUE} e ${MAX_ABS_VALUE}.` };
+    return { error: tr(`Use apenas números inteiros entre -${MAX_ABS_VALUE} e ${MAX_ABS_VALUE}.`, `Use only integers between -${MAX_ABS_VALUE} and ${MAX_ABS_VALUE}.`) };
   }
   return { values };
 }
@@ -40,7 +41,7 @@ function renderObjects(scene, step, escapeText) {
     } else {
       content = `<span class="mem-ref">${escapeText(objectById(variable.target)?.address ?? '?')}</span>`;
     }
-    return `<div class="${classes.join(' ')}"><span class="mem-var-name">${escapeText(variable.name)}</span>${content}</div>`;
+    return `<div class="${classes.join(' ')}"><span class="mem-var-name">${escapeText(variableName(variable.name))}</span>${content}</div>`;
   }).join('');
 
   const objects = scene.objects.length
@@ -48,22 +49,22 @@ function renderObjects(scene, step, escapeText) {
       const born = step.bornObject === object.id ? ' born' : '';
       const fields = object.fields.map((field) => {
         const changed = step.changedField === field.name ? ' changed' : '';
-        return `<div class="mem-object-field${changed}"><span>${escapeText(field.name)}</span><strong>${escapeText(field.value)}</strong></div>`;
+        return `<div class="mem-object-field${changed}"><span>${escapeText(variableName(field.name))}</span><strong>${escapeText(displayValue(field.value))}</strong></div>`;
       }).join('');
       return `<div class="mem-object${born}"><div class="mem-object-head"><span>${escapeText(object.type)}</span><span class="mem-object-address">${escapeText(object.address)}</span></div>${fields}</div>`;
     }).join('')
-    : '<div class="mem-empty">nenhum objeto criado</div>';
+    : `<div class="mem-empty">${tr('nenhum objeto criado', 'no object created')}</div>`;
 
   const pointing = scene.vars.some((variable) => variable.kind === 'ref' && !variable.pending && variable.target !== null);
   const error = scene.error ? `<div class="mem-error" role="alert">⚠ ${escapeText(scene.error)}</div>` : '';
 
   return `
     <div class="mem-stage">
-      <div class="node-dimensions"><span>variáveis: ${scene.vars.length} · objetos: ${scene.objects.length}</span></div>
+      <div class="node-dimensions"><span>${tr('variáveis:', 'variables:')} ${scene.vars.length} ${tr('· objetos:', '· objects:')} ${scene.objects.length}</span></div>
       <div class="mem-board">
-        <div class="mem-zone"><span class="mem-zone-label">Variáveis</span>${vars}</div>
+        <div class="mem-zone"><span class="mem-zone-label">${tr('Variáveis', 'Variables')}</span>${vars}</div>
         <span class="mem-arrow${pointing ? ' on' : ''}" aria-hidden="true">→</span>
-        <div class="mem-zone"><span class="mem-zone-label">Memória</span>${objects}</div>
+        <div class="mem-zone"><span class="mem-zone-label">${tr('Memória', 'Memory')}</span>${objects}</div>
       </div>
       ${error}
     </div>`;
@@ -72,7 +73,7 @@ function renderObjects(scene, step, escapeText) {
 function renderNodes(scene, step, state, icons, escapeText) {
   const chipsFor = (target) => scene.refs
     .filter((ref) => ref.target === target)
-    .map((ref) => `<span class="mem-chip${ref.cursor ? ' cursor' : ''}">${escapeText(ref.name)}</span>`)
+    .map((ref) => `<span class="mem-chip${ref.cursor ? ' cursor' : ''}">${escapeText(variableName(ref.name))}</span>`)
     .join('');
 
   const cells = scene.nodes.map((item, position) => {
@@ -88,16 +89,16 @@ function renderNodes(scene, step, state, icons, escapeText) {
 
     const next = item.next === undefined ? '?' : item.next === null ? 'null' : '●';
     const nextClass = item.next === undefined ? ' pending' : item.next === null ? ' null' : ' linked';
-    const lostTag = item.state === 'lost' ? '<span class="mem-node-tag">inacessível</span>' : item.state === 'freed' ? '<span class="mem-node-tag">liberado</span>' : '';
+    const lostTag = item.state === 'lost' ? `<span class="mem-node-tag">${tr('inacessível', 'unreachable')}</span>` : item.state === 'freed' ? `<span class="mem-node-tag">${tr('liberado', 'freed')}</span>` : '';
     const valueText = item.value === null ? '?' : escapeText(item.value);
 
     const box = `
       <div class="mem-node-box">
         <div class="mem-chips">${chipsFor(item.id)}</div>
-        <button type="button" class="${classes.join(' ')}" data-module-action="inspect-item" data-index="${item.id}" aria-label="Nó ${escapeText(item.id + 1)}, valor ${valueText}">
+        <button type="button" class="${classes.join(' ')}" data-module-action="inspect-item" data-index="${item.id}" aria-label="${tr('Nó', 'Node')} ${escapeText(item.id + 1)}${tr(', valor', ', value')} ${valueText}">
           <span class="mem-node-value">${valueText}</span><span class="mem-node-next${nextClass}">${next}</span>
         </button>
-        <div class="mem-node-caption"><span>valor</span><span>próximo</span></div>
+        <div class="mem-node-caption"><span>${tr('valor', 'value')}</span><span>${tr('próximo', 'next')}</span></div>
         ${lostTag}
       </div>`;
 
@@ -119,34 +120,34 @@ function renderNodes(scene, step, state, icons, escapeText) {
 
   const inspected = state.inspectedItem !== null ? scene.nodes.find((item) => item.id === state.inspectedItem) : null;
   const inspection = inspected
-    ? `<div class="inspection-card">${icons.info}<span>Nó selecionado</span><strong>${escapeText(nodeSummary(inspected, scene))}</strong></div>`
+    ? `<div class="inspection-card">${icons.info}<span>${tr('Nó selecionado', 'Selected node')}</span><strong>${escapeText(nodeSummary(inspected, scene))}</strong></div>`
     : '';
 
   return `
     <div class="mem-stage">
-      <div class="node-dimensions"><span>nós na memória: ${scene.nodes.length}</span></div>
+      <div class="node-dimensions"><span>${tr('nós na memória:', 'nodes in memory:')} ${scene.nodes.length}</span></div>
       <div class="node-scroll">
         <div class="mem-row">${cells}${nullSlot}</div>
       </div>
-      <div class="node-legend" aria-label="Legenda">
-        <span><i class="legend-dot current"></i> atual</span>
-        <span><i class="legend-dot compared"></i> alterado</span>
-        <span><i class="legend-dot processed"></i> processado</span>
-        <span><i class="legend-dot result"></i> resultado</span>
+      <div class="node-legend" aria-label="${tr('Legenda', 'Legend')}">
+        <span><i class="legend-dot current"></i> ${tr('atual', 'current')}</span>
+        <span><i class="legend-dot compared"></i> ${tr('alterado', 'changed')}</span>
+        <span><i class="legend-dot processed"></i> ${tr('processado', 'processed')}</span>
+        <span><i class="legend-dot result"></i> ${tr('resultado', 'result')}</span>
       </div>
     </div>${inspection}`;
 }
 
 function nodeSummary(item, scene) {
-  const target = item.next === undefined ? 'indefinido' : item.next === null ? 'null' : `nó ${scene.nodes.find((candidate) => candidate.id === item.next)?.value ?? '?'}`;
-  return `valor = ${item.value ?? '?'}, proximoNo = ${target}`;
+  const target = item.next === undefined ? tr('indefinido', 'undefined') : item.next === null ? 'null' : tr(`nó ${scene.nodes.find((candidate) => candidate.id === item.next)?.value ?? '?'}`, `node ${scene.nodes.find((candidate) => candidate.id === item.next)?.value ?? '?'}`);
+  return tr(`valor = ${item.value ?? '?'}, proximoNo = ${target}`, `value = ${item.value ?? '?'}, nextNode = ${target}`);
 }
 
 export const dynamicAllocationModule = {
   id: 'dynamic-allocation',
-  name: 'Alocação Dinâmica',
+  name: tr('Alocação Dinâmica', 'Dynamic Allocation'),
   version: '1.0',
-  visualizationTitle: 'Variáveis, referências e nós na memória',
+  visualizationTitle: tr('Variáveis, referências e nós na memória', 'Variables, references and nodes in memory'),
   defaultAlgorithmId: 'allocation',
   defaultData: DEFAULT_DATA,
   defaultRandomCount: NODE_COUNT,
@@ -179,18 +180,18 @@ export const dynamicAllocationModule = {
   renderEditor({ state, icons, escapeText }) {
     return `
       <div class="panel-heading compact-heading">
-        <div><span class="eyebrow">Dados de entrada</span><h2 id="data-editor-title">Defina os valores dos nós</h2></div>
-        <span class="size-badge">${NODE_COUNT} nós</span>
+        <div><span class="eyebrow">${tr('Dados de entrada', 'Input data')}</span><h2 id="data-editor-title">${tr('Defina os valores dos nós', 'Set the node values')}</h2></div>
+        <span class="size-badge">${NODE_COUNT} ${tr('nós', 'nodes')}</span>
       </div>
-      <label class="field-label" for="node-input">Valores de n1, n2 e n3</label>
+      <label class="field-label" for="node-input">${tr('Valores de n1, n2 e n3', 'Values of n1, n2 and n3')}</label>
       <div class="input-action-row">
         <input id="node-input" class="text-input ${state.inputError ? 'invalid' : ''}" value="${escapeText(state.draft)}" placeholder="42, 51, 63" aria-describedby="node-help node-error" data-module-input="draft" data-module-enter="apply" />
-        <button class="button primary" type="button" data-module-action="apply-data">${icons.check}<span>Aplicar</span></button>
+        <button class="button primary" type="button" data-module-action="apply-data">${icons.check}<span>${tr('Aplicar', 'Apply')}</span></button>
       </div>
-      <p id="node-help" class="field-help">Informe três números inteiros separados por vírgula, espaço ou ponto e vírgula. Eles são usados nos algoritmos de nós encadeados (03 a 06).</p>
+      <p id="node-help" class="field-help">${tr('Informe três números inteiros separados por vírgula, espaço ou ponto e vírgula. Eles são usados nos algoritmos de nós encadeados (03 a 06).', 'Enter three integers separated by comma, space or semicolon. They are used in the linked node algorithms (03 to 06).')}</p>
       <p id="node-error" class="error-message" role="alert">${escapeText(state.inputError)}</p>
       <div class="random-row single">
-        <button class="button secondary" type="button" data-module-action="random-data">${icons.shuffle}<span>Gerar valores aleatórios</span></button>
+        <button class="button secondary" type="button" data-module-action="random-data">${icons.shuffle}<span>${tr('Gerar valores aleatórios', 'Generate random values')}</span></button>
       </div>`;
   },
 

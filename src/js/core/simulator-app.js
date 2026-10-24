@@ -5,7 +5,7 @@ import { storage } from './storage.js';
 import {
   $, escapeText, mirrorSpeed, speedLabel,
 } from './utils.js';
-import { tr, variableName } from './i18n.js';
+import { tr, variableName, displayValue } from './i18n.js';
 
 const DEFAULT_CATEGORY = { name: tr('Estruturas de Dados', 'Data Structures'), anchor: 'estruturas' };
 
@@ -168,7 +168,7 @@ export class SimulatorApp {
     $('#step-description').textContent = step.description;
     const entries = Object.entries(step.variables || {});
     $('#variables').innerHTML = entries.length
-      ? `<dl>${entries.map(([name, value]) => `<div><dt>${escapeText(variableName(name))}</dt><dd>${escapeText(value)}</dd></div>`).join('')}</dl>`
+      ? `<dl>${entries.map(([name, value]) => `<div><dt>${escapeText(variableName(name))}</dt><dd>${escapeText(displayValue(value))}</dd></div>`).join('')}</dl>`
       : `<p class="empty-state">${tr('As variáveis aparecerão durante a execução.', 'Variables will appear during execution.')}</p>`;
     const output = step.output || [];
     $('#console-output').innerHTML = output.length

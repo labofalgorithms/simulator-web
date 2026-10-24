@@ -1,5 +1,5 @@
 import { hasIndex } from '../../core/utils.js';
-import { locale } from '../../core/i18n.js';
+import { locale, tr, variableName } from '../../core/i18n.js';
 
 /*
  * Cena de nós com ponteiros, compartilhada pelos módulos de lista circular e de lista duplamente
@@ -26,7 +26,7 @@ import { locale } from '../../core/i18n.js';
  */
 
 const NONE = '—';
-const NULO = 'nulo';
+const NULO = tr('nulo', 'null');
 
 /** Nós de uma lista com os ponteiros já ligados: circular (o último volta ao primeiro) ou duplamente encadeada. */
 function initialNodes(kind, valores) {
@@ -363,7 +363,7 @@ export function renderScene({ state, step, icons, escapeText, showLost = false }
   const lost = lostNodes(scene);
   const chips = chipsOf(scene, geo, shape);
   const valueOf = (id) => scene.nodes.find((node) => node.id === id)?.value;
-  const target = (id) => (id === null ? NULO : `nó ${escapeText(valueOf(id))}`);
+  const target = (id) => (id === null ? NULO : tr(`nó ${escapeText(valueOf(id))}`, `node ${escapeText(valueOf(id))}`));
 
   // Nós e fichas que mudaram de lugar deslizam do último passo desenhado; os que acabaram de
   // surgir aparecem com um "pop".
@@ -393,10 +393,10 @@ export function renderScene({ state, step, icons, escapeText, showLost = false }
     if (hasIndex(step.activeIndices, node.id)) classes.push('active');
     if (hasIndex(step.foundIndices, node.id)) classes.push('found');
     if (state.inspectedItem === node.id) classes.push('inspected');
-    const links = `próximo: ${target(node.next)}${scene.doubly ? `, anterior: ${target(node.prev)}` : ''}`;
+    const links = tr(`próximo: ${target(node.next)}${scene.doubly ? `, anterior: ${target(node.prev)}` : ''}`, `next: ${target(node.next)}${scene.doubly ? `, previous: ${target(node.prev)}` : ''}`);
     const { cls, vars } = motion(`n${node.id}`, p);
     return `<div class="circ-slot${cls}" style="left:${p.x}px;top:${p.y}px${vars}">`
-      + `<button type="button" class="${classes.join(' ')}" data-module-action="inspect-item" data-index="${node.id}" aria-label="Nó com valor ${escapeText(node.value)}, ${links}">`
+      + `<button type="button" class="${classes.join(' ')}" data-module-action="inspect-item" data-index="${node.id}" aria-label="${tr('Nó com valor', 'Node with value')} ${escapeText(node.value)}, ${links}">`
       + `${scene.doubly ? cell('prev', node.prev) : ''}<span class="circ-value">${escapeText(node.value)}</span>${cell('next', node.next)}`
       + '</button></div>';
   }).join('');
@@ -408,14 +408,14 @@ export function renderScene({ state, step, icons, escapeText, showLost = false }
   const chipHtml = chips.map((chip) => {
     const { cls, vars } = motion(`c:${chip.name}`, chip);
     const classes = ['circ-chip', chip.kind, chip.below ? 'below' : '', chip.near ? 'near' : ''].filter(Boolean).join(' ');
-    return `<div class="circ-pos${cls}" style="left:${chip.x}px;top:${chip.y}px${vars}"><span class="${classes}">${escapeText(chip.name)}</span></div>`;
+    return `<div class="circ-pos${cls}" style="left:${chip.x}px;top:${chip.y}px${vars}"><span class="${classes}">${escapeText(variableName(chip.name))}</span></div>`;
   }).join('');
 
   const wires = wiresOf(scene, geo, shape, lost, (id) => id !== null && geo.pos.has(id) && moved(id));
 
   const inspected = state.inspectedItem === null ? null : scene.nodes.find((node) => node.id === state.inspectedItem);
   const inspection = inspected
-    ? `<div class="inspection-card">${icons.info}<span>Nó selecionado</span><strong>valor = ${escapeText(inspected.value)}, proximo = ${target(inspected.next)}${scene.doubly ? `, anterior = ${target(inspected.prev)}` : ''}</strong></div>`
+    ? `<div class="inspection-card">${icons.info}<span>${tr('Nó selecionado', 'Selected node')}</span><strong>${tr('valor =', 'value =')} ${escapeText(inspected.value)}${tr(', proximo =', ', next =')} ${target(inspected.next)}${scene.doubly ? tr(`, anterior = ${target(inspected.prev)}`, `, previous = ${target(inspected.prev)}`) : ''}</strong></div>`
     : '';
 
   const varsHtml = scene.vars.map((item) => {
@@ -423,18 +423,18 @@ export function renderScene({ state, step, icons, escapeText, showLost = false }
     // Variável que ainda aponta para um nó já removido: o nó saiu da cena, mas a variável continua valendo.
     const gone = item.status === 'set' && !scene.nodes.some((node) => node.id === item.target);
     const classes = ['circ-var', kind, item.status === 'unset' || item.status === 'null' ? item.status : '', gone ? 'gone' : '', item.changed ? 'changed' : ''].filter(Boolean).join(' ');
-    return `<span class="${classes}"><b>${escapeText(item.name)}</b><i>${item.status === 'param' ? '=' : '→'}</i><span>${escapeText(item.text)}${gone ? ' (removido)' : ''}</span></span>`;
+    return `<span class="${classes}"><b>${escapeText(variableName(item.name))}</b><i>${item.status === 'param' ? '=' : '→'}</i><span>${escapeText(item.text)}${gone ? tr(' (removido)', ' (removed)') : ''}</span></span>`;
   }).join('');
 
   const arrowLegend = scene.doubly
-    ? '<span><i class="legend-dot next"></i> próximo</span><span><i class="legend-dot prev"></i> anterior</span>'
+    ? `<span><i class="legend-dot next"></i> ${tr('próximo', 'next')}</span><span><i class="legend-dot prev"></i> ${tr('anterior', 'previous')}</span>`
     : '';
-  const lostLegend = showLost ? '<span><i class="legend-dot lost"></i> fora da lista</span>' : '';
+  const lostLegend = showLost ? `<span><i class="legend-dot lost"></i> ${tr('fora da lista', 'outside the list')}</span>` : '';
 
   return `
     <div class="node-stage">
-      <div class="node-dimensions"><span>nós na lista: ${scene.row.length}</span></div>
-      <div class="circ-vars" aria-label="Variáveis do algoritmo">${varsHtml}</div>
+      <div class="node-dimensions"><span>${tr('nós na lista:', 'nodes in the list:')} ${scene.row.length}</span></div>
+      <div class="circ-vars" aria-label="${tr('Variáveis do algoritmo', 'Algorithm variables')}">${varsHtml}</div>
       <div class="node-scroll">
         <div class="circ-board${scene.doubly ? ' doubly' : ''}" style="width:${geo.width}px;height:${geo.height}px;--w:${shape.width}px;--pw:${shape.prev}px;--vw:${shape.value}px">
           ${nodes}${pills}
@@ -442,11 +442,11 @@ export function renderScene({ state, step, icons, escapeText, showLost = false }
           ${chipHtml}
         </div>
       </div>
-      <div class="node-legend" aria-label="Legenda">
-        <span><i class="legend-dot current"></i> atual</span>
-        <span><i class="legend-dot compared"></i> alterado</span>
-        <span><i class="legend-dot processed"></i> processado</span>
-        <span><i class="legend-dot result"></i> resultado</span>
+      <div class="node-legend" aria-label="${tr('Legenda', 'Legend')}">
+        <span><i class="legend-dot current"></i> ${tr('atual', 'current')}</span>
+        <span><i class="legend-dot compared"></i> ${tr('alterado', 'changed')}</span>
+        <span><i class="legend-dot processed"></i> ${tr('processado', 'processed')}</span>
+        <span><i class="legend-dot result"></i> ${tr('resultado', 'result')}</span>
         ${arrowLegend}${lostLegend}
       </div>
     </div>${inspection}`;

@@ -14,9 +14,8 @@ const PAGES = join(ROOT, 'src/js/pages');
 
 /** Simuladores ainda sem tradução: só a estrutura é conferida. Cada um sai daqui quando fica pronto. */
 const PENDING = new Set([
-  'dynamic-allocation-simulator.js', 'avl-tree-simulator.js', 'binary-search-tree-simulator.js', 'bubble-sort-simulator.js',
-  'circular-list-simulator.js', 'doubly-linked-list-simulator.js', 'dynamic-list-simulator.js', 'dynamic-queue-simulator.js',
-  'dynamic-stack-simulator.js', 'hash-table-simulator.js', 'heap-sort-simulator.js', 'insertion-sort-simulator.js',
+  'avl-tree-simulator.js', 'binary-search-tree-simulator.js', 'bubble-sort-simulator.js',
+  'hash-table-simulator.js', 'heap-sort-simulator.js', 'insertion-sort-simulator.js',
   'merge-sort-simulator.js', 'quick-sort-simulator.js', 'selection-sort-simulator.js', 'shotgun-sort-simulator.js',
   'tree-traversal-simulator.js',
 ]);

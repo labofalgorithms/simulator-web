@@ -13,4 +13,11 @@ export const locale = isEnglish ? 'en-US' : 'pt-BR';
 export const tr = (pt, en) => (isEnglish && en !== undefined ? en : pt);
 
 // Nomes de variáveis mostrados no painel "Variáveis" (os mesmos do pseudocódigo em inglês).
-export const variableName = (name) => (isEnglish ? variableNames[name] ?? name : name);
+// Um simulador pode trocar o inglês de algum nome (a fila dinâmica usa front/rear onde as listas usam head/tail).
+const overrides = {};
+export const extendVariableNames = (names) => Object.assign(overrides, names);
+export const variableName = (name) => (isEnglish ? overrides[name] ?? variableNames[name] ?? name : name);
+
+// Valores de texto que o painel "Variáveis" mostra como estão no código (`'nulo'`, `'verdadeiro'`...).
+const valueWords = { nulo: 'null', verdadeiro: 'true', falso: 'false', vazio: 'empty', vazia: 'empty' };
+export const displayValue = (value) => (isEnglish && typeof value === 'string' && value in valueWords ? valueWords[value] : value);

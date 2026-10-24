@@ -16,6 +16,10 @@ export const variableNames = {
   ultimoValor: 'lastValue', valido: 'valid', valor: 'value', valorA: 'valueA', valorAnterior: 'previousValue',
   valorAtual: 'currentValue', valorBuscado: 'searchValue', valorEspelhado: 'mirroredValue', vazia: 'empty',
   vazio: 'empty',
+  // estruturas dinâmicas
+  saida: 'output', chave: 'key', removItem: 'removedItem', removedItem: 'removedItem', item: 'item', unico: 'single', auxiliar: 'helper', contador: 'counter', dado: 'data', proximo: 'next', inicio: 'head', novoNo: 'newNode', temp: 'temp', d: 'd',
+  // alocação dinâmica
+  a1: 'a1', n1: 'n1', n2: 'n2', n3: 'n3', idade: 'age', nome: 'name', curso: 'course', proximoNo: 'nextNode',
   // vetores: rótulos dinâmicos (maior/menor)
   largest: 'largest', smallest: 'smallest', largestIndex: 'largestIndex', smallestIndex: 'smallestIndex',
 };
