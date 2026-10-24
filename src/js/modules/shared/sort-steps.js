@@ -1,3 +1,4 @@
+import { locale } from '../../core/i18n.js';
 // Peças de execução compartilhadas pelos módulos de ordenação (Selection Sort, Bubble Sort e
 // Insertion Sort): o formato de um passo, a formatação dos valores e os itens com letra que marcam
 // a ordem original dos repetidos (estabilidade).
@@ -6,7 +7,7 @@
 export const NONE = '—';
 
 export const clone = (values) => [...values];
-export const fmt = (value) => (Number.isInteger(value) ? String(value) : value.toLocaleString('pt-BR', { maximumFractionDigits: 2 }));
+export const fmt = (value) => (Number.isInteger(value) ? String(value) : value.toLocaleString(locale, { maximumFractionDigits: 2 }));
 export const range = (end, start = 0) => Array.from({ length: Math.max(0, end - start) }, (_, index) => start + index);
 export const ascending = (values) => [...values].sort((x, y) => x - y);
 

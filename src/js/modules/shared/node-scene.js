@@ -1,4 +1,5 @@
 import { hasIndex } from '../../core/utils.js';
+import { locale } from '../../core/i18n.js';
 
 /*
  * Cena de nós com ponteiros, compartilhada pelos módulos de lista circular e de lista duplamente
@@ -35,7 +36,7 @@ function initialNodes(kind, valores) {
     : { id, value, next: (id + 1) % n, prev: null }));
 }
 
-const fmt = (value) => (Number.isInteger(value) ? String(value) : value.toLocaleString('pt-BR', { maximumFractionDigits: 2 }));
+const fmt = (value) => (Number.isInteger(value) ? String(value) : value.toLocaleString(locale, { maximumFractionDigits: 2 }));
 const range = (end, start = 0) => Array.from({ length: Math.max(0, end - start) }, (_, index) => start + index);
 
 let runs = 0;

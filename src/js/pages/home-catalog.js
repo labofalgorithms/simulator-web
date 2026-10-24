@@ -1,4 +1,5 @@
 import { storage } from '../core/storage.js';
+import { tr } from '../core/i18n.js';
 
 // Catálogo da home: abas (Estruturas de Dados / Algoritmos) e busca entre os módulos.
 // O HTML já traz o estado inicial (aba Estruturas de Dados aberta); este arquivo só o altera.
@@ -35,7 +36,7 @@ export function initCatalog() {
     tabButtons[name].querySelector('.tab-count').textContent = panels[name].querySelectorAll('.module-card.available').length;
   });
   groups.forEach((group) => {
-    group.dataset.total = count(group.querySelectorAll('.module-card.available').length, 'módulo', 'módulos');
+    group.dataset.total = count(group.querySelectorAll('.module-card.available').length, tr('módulo', 'module'), tr('módulos', 'modules'));
   });
 
   const savedTab = storage.get(TAB_KEY, '');
@@ -74,12 +75,12 @@ export function initCatalog() {
     TABS.forEach((name) => {
       const visible = panels[name].querySelectorAll('.module-card:not([hidden])').length;
       panels[name].hidden = searching ? visible === 0 : name !== activeTab;
-      panels[name].querySelector('.panel-count').textContent = searching ? count(visible, 'resultado', 'resultados') : '';
+      panels[name].querySelector('.panel-count').textContent = searching ? count(visible, tr('resultado', 'result'), tr('resultados', 'results')) : '';
     });
 
     empty.hidden = !searching || found > 0;
-    empty.querySelector('p').textContent = `Nada para “${query}”. Tente “pilha”, “ordenação” ou “remover”.`;
-    status.textContent = !searching ? '' : found > 0 ? `${count(found, 'módulo encontrado', 'módulos encontrados')}.` : 'Nenhum módulo encontrado.';
+    empty.querySelector('p').textContent = tr(`Nada para “${query}”. Tente “pilha”, “ordenação” ou “remover”.`, `Nothing for “${query}”. Try “stack”, “sorting” or “remove”.`);
+    status.textContent = !searching ? '' : found > 0 ? `${count(found, tr('módulo encontrado', 'module found'), tr('módulos encontrados', 'modules found'))}.` : tr('Nenhum módulo encontrado.', 'No modules found.');
   }
 
   function setQuery(value) {

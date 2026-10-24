@@ -3,6 +3,8 @@
 // hospedado no GitHub Pages; o GoatCounter só recebe o aviso de que a página abriu.
 // Para trocar de serviço, basta alterar este arquivo.
 
+import { tr } from './i18n.js';
+
 const GOATCOUNTER_CODE = 'labofalgorithms';
 const SCRIPT_URL = 'https://gc.zgo.at/count.js';
 const PRIVACY_URL = 'https://www.goatcounter.com/privacy';
@@ -18,12 +20,12 @@ function addPrivacyNote() {
   if (!footer || footer.querySelector('.privacy-note')) return;
   const note = document.createElement('p');
   note.className = 'privacy-note';
-  note.append('Contamos os acessos de forma anônima com o GoatCounter: sem cookies e sem guardar o seu IP. ');
+  note.append(tr('Contamos os acessos de forma anônima com o GoatCounter: sem cookies e sem guardar o seu IP. ', 'We count visits anonymously with GoatCounter: no cookies and no IP address stored. '));
   const link = document.createElement('a');
   link.href = PRIVACY_URL;
   link.target = '_blank';
   link.rel = 'noopener';
-  link.textContent = 'Saiba mais';
+  link.textContent = tr('Saiba mais', 'Learn more');
   note.append(link);
   footer.append(note);
 }

@@ -5,6 +5,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { published } from './en-strings.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const BASE = 'https://labofalgorithms.com';
@@ -17,11 +18,16 @@ const simulators = readdirSync(join(ROOT, 'simuladores'))
   .filter((name) => statSync(join(ROOT, 'simuladores', name)).isDirectory())
   .sort();
 
-const pages = [
+const ptPages = [
   { file: 'index.html', url: `${BASE}/`, kind: 'home' },
   { file: '404.html', url: null, kind: 'erro' },
   ...simulators.map((slug) => ({ file: `simuladores/${slug}/index.html`, url: `${BASE}/simuladores/${slug}/`, kind: 'simulador', slug })),
-];
+].map((page) => ({ ...page, lang: 'pt' }));
+// As páginas em inglês ficam em en/ e são geradas das em português por scripts/build-en-pages.mjs.
+const enPages = ptPages.filter((page) => page.kind !== 'erro').map((page) => ({
+  ...page, lang: 'en', file: `en/${page.file}`, url: page.url.replace(`${BASE}/`, `${BASE}/en/`),
+}));
+const pages = [...ptPages, ...enPages];
 
 const attr = (html, tag, key, value, wanted) => {
   const re = new RegExp(`<${tag}\\b[^>]*\\b${key}="${value}"[^>]*>`, 'i');
@@ -36,7 +42,10 @@ for (const page of pages) {
   const at = page.file;
   const tag = (re) => (html.match(re) || [])[0];
 
-  if (!/<html lang="pt-BR">/.test(html)) fail(at, 'falta <html lang="pt-BR">');
+  const htmlLang = page.lang === 'en' ? 'en' : 'pt-BR';
+  if (!html.includes(`<html lang="${htmlLang}">`)) fail(at, `falta <html lang="${htmlLang}">`);
+  if (page.lang === 'en' && !published && !tag(/<meta name="robots" content="noindex"/)) fail(at, 'enquanto o inglês não é publicado, a página precisa de noindex');
+  if (page.lang === 'en' && published && tag(/<meta name="robots" content="noindex"/)) fail(at, 'o inglês já está publicado, mas a página tem noindex');
   if (!tag(/<meta name="viewport"/)) fail(at, 'falta a meta viewport');
   const title = html.match(/<title>([^<]*)<\/title>/)?.[1];
   if (!title) fail(at, 'falta o <title>');
@@ -60,7 +69,7 @@ for (const page of pages) {
       if (prop(html, 'og:description') !== description) fail(at, 'og:description difere da meta description');
     }
     const image = prop(html, 'og:image') ?? '';
-    const expectedImage = page.kind === 'simulador' ? `${BASE}/assets/og/${page.slug}.jpg` : `${BASE}/assets/logo/og-image.png`;
+    const expectedImage = page.kind === 'simulador' ? `${BASE}/assets/og/${page.lang === 'en' ? 'en/' : ''}${page.slug}.jpg` : `${BASE}/assets/logo/og-image.png`;
     if (image !== expectedImage) fail(at, `og:image é ${image}, o esperado é ${expectedImage}`);
     else if (!exists(image.slice(BASE.length + 1))) fail(at, `a imagem ${image} não existe no repositório`);
     if (!/<link rel="manifest" href="[^"]+"/.test(html)) fail(at, 'falta <link rel="manifest">');
@@ -90,27 +99,39 @@ for (const page of pages) {
 }
 
 // A home precisa listar todos os simuladores.
-const home = read('index.html');
-for (const slug of simulators) {
-  if (!home.includes(`./simuladores/${slug}/`)) fail('index.html', `a home não tem o cartão de ${slug}`);
+for (const file of ['index.html', 'en/index.html']) {
+  const home = read(file);
+  for (const slug of simulators) {
+    if (!home.includes(`./simuladores/${slug}/`)) fail(file, `a home não tem o cartão de ${slug}`);
+  }
 }
 
 // Sitemap e robots.
-const expected = new Set(pages.filter((p) => p.url).map((p) => p.url));
+const expected = new Set(pages.filter((p) => p.url && (p.lang === 'pt' || published)).map((p) => p.url));
 const sitemap = new Set([...read('sitemap.xml').matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]));
 for (const url of expected) if (!sitemap.has(url)) fail('sitemap.xml', `falta ${url}`);
 for (const url of sitemap) if (!expected.has(url)) fail('sitemap.xml', `lista uma página que não existe: ${url}`);
 if (!read('robots.txt').includes(`Sitemap: ${BASE}/sitemap.xml`)) fail('robots.txt', 'falta a linha Sitemap');
 
-// Manifesto.
-try {
-  const manifest = JSON.parse(read('manifest.webmanifest'));
-  for (const icon of manifest.icons ?? []) if (!exists(icon.src)) fail('manifest.webmanifest', `o ícone ${icon.src} não existe`);
-  if (!(manifest.icons ?? []).some((i) => i.sizes === '192x192') || !(manifest.icons ?? []).some((i) => i.sizes === '512x512')) {
-    fail('manifest.webmanifest', 'faltam os ícones de 192 e 512 px');
+// Manifestos (português na raiz, inglês em en/).
+for (const file of ['manifest.webmanifest', 'en/manifest.webmanifest']) {
+  try {
+    const manifest = JSON.parse(read(file));
+    for (const icon of manifest.icons ?? []) {
+      if (!exists(join(dirname(file), icon.src))) fail(file, `o ícone ${icon.src} não existe`);
+    }
+    if (!(manifest.icons ?? []).some((i) => i.sizes === '192x192') || !(manifest.icons ?? []).some((i) => i.sizes === '512x512')) {
+      fail(file, 'faltam os ícones de 192 e 512 px');
+    }
+  } catch (error) {
+    fail(file, `JSON inválido (${error.message})`);
   }
-} catch (error) {
-  fail('manifest.webmanifest', `JSON inválido (${error.message})`);
+}
+
+// As páginas em inglês precisam estar em dia com as em português, e os textos do JavaScript traduzidos.
+for (const [script, label] of [['build-en-pages.mjs', 'páginas em inglês'], ['check-i18n.mjs', 'textos em inglês']]) {
+  const run = spawnSync(process.execPath, [join(ROOT, 'scripts', script), ...(script === 'build-en-pages.mjs' ? ['--check'] : [])], { encoding: 'utf8' });
+  if (run.status !== 0) for (const line of (run.stderr || run.stdout).trim().split('\n')) fail(label, line.trim());
 }
 
 // JavaScript: sintaxe e imports relativos.

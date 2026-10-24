@@ -1,6 +1,7 @@
 import {
   NONE, ascending, clone, fmt, isStable, label, range, step, tagDuplicates, tagsOf, toItems, valuesOf,
 } from '../shared/sort-steps.js';
+import { locale } from '../../core/i18n.js';
 
 const SORT_CODE = [
   'FUNÇÃO selectionSort(vetor)',
@@ -310,7 +311,7 @@ function countingSteps(values) {
     final: true,
     sortedCount: n,
     variables: { n, 'comparações': comparisons, 'n(n−1)/2': expected, trocas: swaps },
-    output: [`Comparações: ${comparisons}`, `Trocas: ${swaps}`, `n(n−1)/2 = ${n}·${n - 1}/2 = ${expected}`, `Com n = ${doubled}: ${(doubled * (doubled - 1)) / 2} comparações (≈ ${((doubled * (doubled - 1)) / 2 / Math.max(1, expected)).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}×)`],
+    output: [`Comparações: ${comparisons}`, `Trocas: ${swaps}`, `n(n−1)/2 = ${n}·${n - 1}/2 = ${expected}`, `Com n = ${doubled}: ${(doubled * (doubled - 1)) / 2} comparações (≈ ${((doubled * (doubled - 1)) / 2 / Math.max(1, expected)).toLocaleString(locale, { maximumFractionDigits: 1 })}×)`],
   })));
   return steps;
 }

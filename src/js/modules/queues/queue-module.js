@@ -1,5 +1,6 @@
 import { algorithms, buildSteps } from './algorithms.js';
 import { hasIndex } from '../../core/utils.js';
+import { tr } from '../../core/i18n.js';
 
 const DEFAULT_DATA = { capacity: 5, values: [27, 7, 19, 85] };
 const MAX_CAPACITY = 8;
@@ -9,11 +10,11 @@ function parseQueueValues(text, capacity) {
   if (!trimmed) return { values: [] };
   const tokens = trimmed.split(/[;,\s]+/).map((token) => token.trim()).filter(Boolean);
   if (tokens.length > capacity) {
-    return { error: `A capacidade atual é ${capacity}; reduza a quantidade de valores ou aumente a capacidade.` };
+    return { error: tr(`A capacidade atual é ${capacity}; reduza a quantidade de valores ou aumente a capacidade.`, `The current capacity is ${capacity}; reduce the number of values or increase the capacity.`) };
   }
   const values = tokens.map(Number);
   if (values.some((value) => !Number.isFinite(value))) {
-    return { error: 'Use apenas números separados por espaço, vírgula ou ponto e vírgula.' };
+    return { error: tr('Use apenas números separados por espaço, vírgula ou ponto e vírgula.', 'Use only numbers separated by space, comma or semicolon.') };
   }
   return { values };
 }
@@ -28,9 +29,9 @@ function slotsFromStep(step) {
 
 export const queueModule = {
   id: 'queues',
-  name: 'Filas',
+  name: tr('Filas', 'Queues'),
   version: '1.0',
-  visualizationTitle: 'Fila na memória',
+  visualizationTitle: tr('Fila na memória', 'Queue in memory'),
   defaultAlgorithmId: 'creation',
   defaultData: DEFAULT_DATA,
   defaultRandomCount: 3,
@@ -65,21 +66,21 @@ export const queueModule = {
     const { capacity, values } = state.data;
     return `
       <div class="panel-heading compact-heading">
-        <div><span class="eyebrow">Dados de entrada</span><h2 id="data-editor-title">Monte sua fila</h2></div>
-        <span id="queue-size-badge" class="size-badge">${values.length}/${capacity} posições</span>
+        <div><span class="eyebrow">${tr('Dados de entrada', 'Input data')}</span><h2 id="data-editor-title">${tr('Monte sua fila', 'Build your queue')}</h2></div>
+        <span id="queue-size-badge" class="size-badge">${values.length}/${capacity} ${tr('posições', 'positions')}</span>
       </div>
-      <label class="field-label" for="queue-input">Elementos (do início para o fim)</label>
+      <label class="field-label" for="queue-input">${tr('Elementos (do início para o fim)', 'Elements (from front to rear)')}</label>
       <div class="input-action-row">
         <input id="queue-input" class="text-input ${state.inputError ? 'invalid' : ''}" value="${escapeText(state.draft)}" placeholder="27, 7, 19, 85" aria-describedby="queue-help queue-error" data-module-input="draft" data-module-enter="apply" />
-        <button class="button primary" type="button" data-module-action="apply-data">${icons.check}<span>Aplicar</span></button>
+        <button class="button primary" type="button" data-module-action="apply-data">${icons.check}<span>${tr('Aplicar', 'Apply')}</span></button>
       </div>
-      <p id="queue-help" class="field-help">Informe os valores já enfileirados, do início para o fim, separados por vírgula, espaço ou ponto e vírgula. Deixe em branco para uma fila vazia. Máximo: a capacidade atual.</p>
+      <p id="queue-help" class="field-help">${tr('Informe os valores já enfileirados, do início para o fim, separados por vírgula, espaço ou ponto e vírgula. Deixe em branco para uma fila vazia. Máximo: a capacidade atual.', 'Enter the values already enqueued, from front to rear, separated by comma, space or semicolon. Leave blank for an empty queue. Maximum: the current capacity.')}</p>
       <p id="queue-error" class="error-message" role="alert">${escapeText(state.inputError)}</p>
       <div class="random-row">
-        <label for="queue-capacity">Capacidade</label>
+        <label for="queue-capacity">${tr('Capacidade', 'Capacity')}</label>
         <input id="queue-capacity" type="range" min="1" max="${MAX_CAPACITY}" value="${capacity}" data-module-input="capacity" />
         <output id="queue-capacity-output">${capacity}</output>
-        <button class="button secondary" type="button" data-module-action="random-data">${icons.shuffle}<span>Gerar fila aleatória</span></button>
+        <button class="button secondary" type="button" data-module-action="random-data">${icons.shuffle}<span>${tr('Gerar fila aleatória', 'Generate random queue')}</span></button>
       </div>`;
   },
 
@@ -87,9 +88,9 @@ export const queueModule = {
     if (state.algorithmId !== 'enqueue') return '';
     const cheia = state.data.values.length >= state.data.capacity;
     return `
-      <div class="panel-heading compact-heading"><div><span class="eyebrow">Parâmetros</span><h2 id="config-title">Escolha o valor a inserir</h2></div></div>
-      <label class="config-field"><span>Valor</span><input id="enqueue-value-input" type="number" value="${state.config.enqueueValue}" data-module-input="enqueue-value" /><small>Será inserido no final, se houver espaço.</small></label>
-      ${cheia ? '<p class="matrix-config-note">A fila está cheia: o enqueue demonstrará a verificação de isFull() sem inserir o valor.</p>' : ''}`;
+      <div class="panel-heading compact-heading"><div><span class="eyebrow">${tr('Parâmetros', 'Parameters')}</span><h2 id="config-title">${tr('Escolha o valor a inserir', 'Choose the value to insert')}</h2></div></div>
+      <label class="config-field"><span>${tr('Valor', 'Value')}</span><input id="enqueue-value-input" type="number" value="${state.config.enqueueValue}" data-module-input="enqueue-value" /><small>${tr('Será inserido no final, se houver espaço.', 'It will be inserted at the end, if there is room.')}</small></label>
+      ${cheia ? `<p class="matrix-config-note">${tr('A fila está cheia: o enqueue demonstrará a verificação de isFull() sem inserir o valor.', 'The queue is full: enqueue will demonstrate the isFull() check without inserting the value.')}</p>` : ''}`;
   },
 
   renderVisualization({ state, step, icons, escapeText }) {
@@ -99,9 +100,9 @@ export const queueModule = {
       const isStart = i === 0;
       const isEnd = i === fim;
       let marker = '';
-      if (isStart && isEnd) marker = 'início · fim';
-      else if (isStart) marker = 'início';
-      else if (isEnd) marker = 'fim';
+      if (isStart && isEnd) marker = tr('início · fim', 'front · rear');
+      else if (isStart) marker = tr('início', 'front');
+      else if (isEnd) marker = tr('fim', 'rear');
 
       const classes = ['queue-cell'];
       if (value === null) classes.push('empty');
@@ -111,24 +112,24 @@ export const queueModule = {
       if (hasIndex(step.foundIndices, i)) classes.push('found');
       if (state.inspectedItem === i) classes.push('inspected');
       const cellMarkup = value === null
-        ? `<div class="${classes.join(' ')}">vazio</div>`
-        : `<button type="button" class="${classes.join(' ')}" data-module-action="inspect-item" data-index="${i}" aria-label="Posição ${i}, valor ${escapeText(value)}"><span>${escapeText(value)}</span></button>`;
+        ? `<div class="${classes.join(' ')}">${tr('vazio', 'empty')}</div>`
+        : `<button type="button" class="${classes.join(' ')}" data-module-action="inspect-item" data-index="${i}" aria-label="${tr('Posição', 'Position')} ${i}${tr(', valor', ', value')} ${escapeText(value)}"><span>${escapeText(value)}</span></button>`;
       return `<div class="queue-slot"><span class="queue-marker">${marker}</span>${cellMarkup}<span class="queue-index">${i}</span></div>`;
     }).join('');
 
     const inspection = state.inspectedItem !== null && state.inspectedItem <= fim && state.inspectedItem >= 0
-      ? `<div class="inspection-card">${icons.info}<span>Posição selecionada</span><strong>vetorFila[${state.inspectedItem}] = ${escapeText(step.values[state.inspectedItem])}</strong></div>`
+      ? `<div class="inspection-card">${icons.info}<span>${tr('Posição selecionada', 'Selected position')}</span><strong>${tr('vetorFila[', 'queueArray[')}${state.inspectedItem}] = ${escapeText(step.values[state.inspectedItem])}</strong></div>`
       : '';
 
     return `
       <div class="queue-stage">
-        <div class="queue-dimensions"><span>capacidade: ${capacidade}</span><span>elementos: ${fim + 1}</span><span>fim: ${fim}</span></div>
+        <div class="queue-dimensions"><span>${tr('capacidade:', 'capacity:')} ${capacidade}</span><span>${tr('elementos:', 'elements:')} ${fim + 1}</span><span>${tr('fim:', 'rear:')} ${fim}</span></div>
         <div class="queue-scroll"><div class="queue-row">${cells}</div></div>
-        <div class="queue-legend" aria-label="Legenda">
-          <span><i class="legend-dot current"></i> atual</span>
-          <span><i class="legend-dot compared"></i> alterado</span>
-          <span><i class="legend-dot processed"></i> processado</span>
-          <span><i class="legend-dot result"></i> resultado</span>
+        <div class="queue-legend" aria-label="${tr('Legenda', 'Legend')}">
+          <span><i class="legend-dot current"></i> ${tr('atual', 'current')}</span>
+          <span><i class="legend-dot compared"></i> ${tr('alterado', 'changed')}</span>
+          <span><i class="legend-dot processed"></i> ${tr('processado', 'processed')}</span>
+          <span><i class="legend-dot result"></i> ${tr('resultado', 'result')}</span>
         </div>
       </div>${inspection}`;
   },
@@ -150,7 +151,7 @@ export const queueModule = {
         const output = document.querySelector('#queue-capacity-output');
         if (output) output.textContent = capacity;
         const badge = document.querySelector('#queue-size-badge');
-        if (badge) badge.textContent = `${app.state.data.values.length}/${capacity} posições`;
+        if (badge) badge.textContent = tr(`${app.state.data.values.length}/${capacity} posições`, `${app.state.data.values.length}/${capacity} positions`);
         app.rebuildSteps();
         break;
       }

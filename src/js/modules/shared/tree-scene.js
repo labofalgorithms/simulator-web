@@ -1,4 +1,5 @@
 import { hasIndex } from '../../core/utils.js';
+import { locale } from '../../core/i18n.js';
 
 /*
  * Cena de árvore binária, usada pelo módulo de Árvore Binária de Busca. Como em node-scene.js, cada
@@ -35,7 +36,7 @@ import { hasIndex } from '../../core/utils.js';
 const NONE = '—';
 const NULO = 'nulo';
 
-export const fmt = (value) => (Number.isInteger(value) ? String(value) : value.toLocaleString('pt-BR', { maximumFractionDigits: 2 }));
+export const fmt = (value) => (Number.isInteger(value) ? String(value) : value.toLocaleString(locale, { maximumFractionDigits: 2 }));
 
 // ---------------------------------------------------------------------------------------------
 // Estrutura

@@ -1,6 +1,7 @@
 import {
   NONE, ascending, clone, fmt, isStable, label, range, step, tagDuplicates, tagsOf, toItems, valuesOf, withRepeats,
 } from '../shared/sort-steps.js';
+import { locale } from '../../core/i18n.js';
 
 // Pseudocódigo da aula (slides 40 e 41): mergeSort divide o trecho em duas metades e intercala,
 // e intercala copia a 1ª metade para B, a 2ª metade invertida, e junta as duas de fora para dentro.
@@ -517,7 +518,7 @@ function countingSteps(values) {
       `Comparações: ${total}`,
       `Cópias: ${2 * total} (2 por elemento intercalado)`,
       `Limite n · ⌈log₂ n⌉ = ${bound}`,
-      `Com n = ${doubled}: ${doubledTotal} comparações (≈ ${(doubledTotal / Math.max(1, total)).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}×)`,
+      `Com n = ${doubled}: ${doubledTotal} comparações (≈ ${(doubledTotal / Math.max(1, total)).toLocaleString(locale, { maximumFractionDigits: 1 })}×)`,
       `Um método quadrático faria n(n−1)/2 = ${quadratic} no pior caso`,
     ],
   }));

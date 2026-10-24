@@ -1,3 +1,4 @@
+import { locale } from '../../core/i18n.js';
 export const algorithms = [
   {
     id: 'creation', title: 'Criação da fila dinâmica', menuLabel: 'Criação da fila', group: 'Fundamentos', number: '01',
@@ -51,7 +52,7 @@ export const algorithms = [
 ];
 
 const clone = (values) => [...values];
-const fmt = (value) => (Number.isInteger(value) ? String(value) : value.toLocaleString('pt-BR', { maximumFractionDigits: 2 }));
+const fmt = (value) => (Number.isInteger(value) ? String(value) : value.toLocaleString(locale, { maximumFractionDigits: 2 }));
 const range = (end, start = 0) => Array.from({ length: Math.max(0, end - start) }, (_, index) => start + index);
 
 const frame = (values, line, title, description, tone = 'neutral', extra = {}) => ({

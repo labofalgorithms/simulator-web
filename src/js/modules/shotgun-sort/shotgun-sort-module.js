@@ -3,6 +3,7 @@ import { icons } from '../../core/icons.js';
 import {
   legend, parseVector, randomVector, renderArray, renderCompare, renderInspection, renderPhase, renderStats, renderVectorEditor,
 } from '../shared/sort-view.js';
+import { locale } from '../../core/i18n.js';
 
 const DEFAULT_VECTOR = [42, 15, 73, 28];
 const MIN_ITEMS = 2;
@@ -126,7 +127,7 @@ export const shotgunSortModule = {
       return `
         ${heading('Cada execução é um sorteio novo')}
         <div class="config-note-row">
-          <p>Com ${state.data.length} elementos a média esperada é de ${total.toLocaleString('pt-BR')} tentativas; a simulação para em ${MAX_ATTEMPTS}. Um vetor já ordenado termina na primeira verificação.</p>
+          <p>Com ${state.data.length} elementos a média esperada é de ${total.toLocaleString(locale)} tentativas; a simulação para em ${MAX_ATTEMPTS}. Um vetor já ordenado termina na primeira verificação.</p>
           <div class="config-buttons">
             <button class="button secondary" type="button" data-module-action="new-run">${icons.restart}<span>Sortear outra execução</span></button>
             ${sortedButton}

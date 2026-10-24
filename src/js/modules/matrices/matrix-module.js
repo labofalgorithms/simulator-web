@@ -1,4 +1,5 @@
 import { algorithms, buildSteps } from './algorithms.js';
+import { tr } from '../../core/i18n.js';
 
 const DEFAULT_MATRIX = [
   [61, 12, 43],
@@ -12,14 +13,14 @@ const hasCoord = (items, row, col) => Array.isArray(items) && items.includes(coo
 
 function parseMatrix(text) {
   const rowTexts = String(text).split(/\n|;/).map((row) => row.trim()).filter(Boolean);
-  if (!rowTexts.length) return { error: 'Digite pelo menos uma linha da matriz.' };
-  if (rowTexts.length > MAX_ROWS) return { error: `Use no máximo ${MAX_ROWS} linhas.` };
+  if (!rowTexts.length) return { error: tr('Digite pelo menos uma linha da matriz.', 'Enter at least one row of the matrix.') };
+  if (rowTexts.length > MAX_ROWS) return { error: tr(`Use no máximo ${MAX_ROWS} linhas.`, `Use at most ${MAX_ROWS} rows.`) };
   const matrix = rowTexts.map((rowText) => rowText.split(/[\s,]+/).map((token) => token.trim()).filter(Boolean).map(Number));
-  if (matrix.some((row) => row.length === 0)) return { error: 'Cada linha precisa ter pelo menos um número.' };
-  if (matrix.some((row) => row.length > MAX_COLS)) return { error: `Use no máximo ${MAX_COLS} colunas.` };
-  if (matrix.some((row) => row.some((value) => !Number.isFinite(value)))) return { error: 'Use apenas números. Separe colunas por espaço ou vírgula.' };
+  if (matrix.some((row) => row.length === 0)) return { error: tr('Cada linha precisa ter pelo menos um número.', 'Each row needs at least one number.') };
+  if (matrix.some((row) => row.length > MAX_COLS)) return { error: tr(`Use no máximo ${MAX_COLS} colunas.`, `Use at most ${MAX_COLS} columns.`) };
+  if (matrix.some((row) => row.some((value) => !Number.isFinite(value)))) return { error: tr('Use apenas números. Separe colunas por espaço ou vírgula.', 'Use only numbers. Separate columns by space or comma.') };
   const cols = matrix[0].length;
-  if (matrix.some((row) => row.length !== cols)) return { error: 'Para a matriz regular, todas as linhas devem ter a mesma quantidade de colunas.' };
+  if (matrix.some((row) => row.length !== cols)) return { error: tr('Para a matriz regular, todas as linhas devem ter a mesma quantidade de colunas.', 'For the regular matrix, all rows must have the same number of columns.') };
   return { matrix };
 }
 
@@ -58,7 +59,7 @@ function matrixHtml(matrix, step, escapeText, options = {}) {
       if (hasCoord(changedCells, i, j)) classes.push('changed');
       if (!options.secondary && options.inspectedItem === coord(i, j)) classes.push('inspected');
       content += interactive
-        ? `<button type="button" class="${classes.join(' ')}" data-module-action="inspect-item" data-row="${i}" data-col="${j}" aria-label="Linha ${i}, coluna ${j}, valor ${escapeText(row[j])}">${escapeText(row[j])}</button>`
+        ? `<button type="button" class="${classes.join(' ')}" data-module-action="inspect-item" data-row="${i}" data-col="${j}" aria-label="${tr('Linha', 'Row')} ${i}${tr(', coluna', ', column')} ${j}${tr(', valor', ', value')} ${escapeText(row[j])}">${escapeText(row[j])}</button>`
         : `<span class="${classes.join(' ')}">${escapeText(row[j])}</span>`;
     }
   });
@@ -72,16 +73,16 @@ function jaggedHtml(matrix, step, escapeText) {
     const isAllocated = allocated.includes(i);
     const cells = isAllocated
       ? row.map((value, j) => `<span class="matrix-cell ${hasCoord(step.changedCells, i, j) ? 'changed' : ''} ${hasCoord(step.processedCells, i, j) ? 'processed' : ''}">${escapeText(value)}<span class="cell-index">${j}</span></span>`).join('')
-      : '<span class="jagged-empty">linha ainda não alocada</span>';
+      : `<span class="jagged-empty">${tr('linha ainda não alocada', 'row not allocated yet')}</span>`;
     return `<div class="jagged-row ${step.activeRows?.includes(i) ? 'active' : ''}"><span class="jagged-row-label">[${i}] →</span>${cells}</div>`;
   }).join('')}</div>`;
 }
 
 export const matrixModule = {
   id: 'matrices',
-  name: 'Matrizes',
+  name: tr('Matrizes', 'Matrices'),
   version: '1.0',
-  visualizationTitle: 'Matriz na memória',
+  visualizationTitle: tr('Matriz na memória', 'Matrix in memory'),
   defaultAlgorithmId: 'dimensions',
   defaultData: DEFAULT_MATRIX,
   defaultRandomCount: 3,
@@ -128,50 +129,50 @@ export const matrixModule = {
     const cols = state.data[0].length;
     return `
       <div class="panel-heading compact-heading">
-        <div><span class="eyebrow">Dados de entrada</span><h2 id="data-editor-title">Monte sua matriz</h2></div>
+        <div><span class="eyebrow">${tr('Dados de entrada', 'Input data')}</span><h2 id="data-editor-title">${tr('Monte sua matriz', 'Build your matrix')}</h2></div>
         <span class="size-badge">${rows} × ${cols}</span>
       </div>
-      <label class="field-label" for="matrix-input">Valores da matriz</label>
+      <label class="field-label" for="matrix-input">${tr('Valores da matriz', 'Matrix values')}</label>
       <div class="input-action-row">
         <textarea id="matrix-input" class="matrix-textarea ${state.inputError ? 'invalid' : ''}" aria-describedby="matrix-help matrix-error" data-module-input="draft">${escapeText(state.draft)}</textarea>
-        <button class="button primary" type="button" data-module-action="apply-data">${icons.check}<span>Aplicar</span></button>
+        <button class="button primary" type="button" data-module-action="apply-data">${icons.check}<span>${tr('Aplicar', 'Apply')}</span></button>
       </div>
-      <p id="matrix-help" class="field-help">Uma linha por linha da matriz. Separe colunas por espaço ou vírgula; também aceitamos ponto e vírgula entre linhas. Máximo: ${MAX_ROWS} × ${MAX_COLS}.</p>
+      <p id="matrix-help" class="field-help">${tr('Uma linha por linha da matriz. Separe colunas por espaço ou vírgula; também aceitamos ponto e vírgula entre linhas. Máximo:', 'One matrix row per line. Separate columns by space or comma; a semicolon between rows is also accepted. Maximum:')} ${MAX_ROWS} × ${MAX_COLS}.</p>
       <p id="matrix-error" class="error-message" role="alert">${escapeText(state.inputError)}</p>
       <div class="matrix-random-controls">
-        <label for="random-rows">Linhas</label><input id="random-rows" type="range" min="1" max="${MAX_ROWS}" value="${state.config.randomRows}" data-module-input="random-rows" /><output id="random-rows-output">${state.config.randomRows}</output>
-        <label for="random-cols">Colunas</label><input id="random-cols" type="range" min="1" max="${MAX_COLS}" value="${state.config.randomCols}" data-module-input="random-cols" /><output id="random-cols-output">${state.config.randomCols}</output>
-        <button class="button secondary" type="button" data-module-action="random-data">${icons.shuffle}<span>Gerar matriz</span></button>
+        <label for="random-rows">${tr('Linhas', 'Rows')}</label><input id="random-rows" type="range" min="1" max="${MAX_ROWS}" value="${state.config.randomRows}" data-module-input="random-rows" /><output id="random-rows-output">${state.config.randomRows}</output>
+        <label for="random-cols">${tr('Colunas', 'Columns')}</label><input id="random-cols" type="range" min="1" max="${MAX_COLS}" value="${state.config.randomCols}" data-module-input="random-cols" /><output id="random-cols-output">${state.config.randomCols}</output>
+        <button class="button secondary" type="button" data-module-action="random-data">${icons.shuffle}<span>${tr('Gerar matriz', 'Generate matrix')}</span></button>
       </div>`;
   },
   renderConfig({ state, escapeText }) {
     const rows = state.data.length;
     const cols = state.data[0].length;
     if (state.algorithmId === 'access') {
-      return `<div class="panel-heading compact-heading"><div><span class="eyebrow">Parâmetros</span><h2 id="config-title">Escolha uma posição</h2></div></div>
+      return `<div class="panel-heading compact-heading"><div><span class="eyebrow">${tr('Parâmetros', 'Parameters')}</span><h2 id="config-title">${tr('Escolha uma posição', 'Choose a position')}</h2></div></div>
         <div class="matrix-config-wide two">
-          <label class="config-field"><span>Linha</span><input type="number" value="${state.config.row}" data-module-input="row" /><small>Índices válidos: 0..${rows - 1}.</small></label>
-          <label class="config-field"><span>Coluna</span><input type="number" value="${state.config.col}" data-module-input="col" /><small>Índices válidos: 0..${cols - 1}.</small></label>
-        </div><p class="matrix-config-note">Você também pode clicar diretamente em uma célula da matriz.</p>`;
+          <label class="config-field"><span>${tr('Linha', 'Row')}</span><input type="number" value="${state.config.row}" data-module-input="row" /><small>${tr('Índices válidos: 0..', 'Valid indices: 0..')}${rows - 1}.</small></label>
+          <label class="config-field"><span>${tr('Coluna', 'Column')}</span><input type="number" value="${state.config.col}" data-module-input="col" /><small>${tr('Índices válidos: 0..', 'Valid indices: 0..')}${cols - 1}.</small></label>
+        </div><p class="matrix-config-note">${tr('Você também pode clicar diretamente em uma célula da matriz.', 'You can also click a matrix cell directly.')}</p>`;
     }
     if (state.algorithmId === 'update') {
-      return `<div class="panel-heading compact-heading"><div><span class="eyebrow">Parâmetros</span><h2 id="config-title">Altere uma célula</h2></div></div>
+      return `<div class="panel-heading compact-heading"><div><span class="eyebrow">${tr('Parâmetros', 'Parameters')}</span><h2 id="config-title">${tr('Altere uma célula', 'Change a cell')}</h2></div></div>
         <div class="matrix-config-wide">
-          <label class="config-field"><span>Linha</span><input type="number" value="${state.config.row}" data-module-input="row" /><small>0..${rows - 1}</small></label>
-          <label class="config-field"><span>Coluna</span><input type="number" value="${state.config.col}" data-module-input="col" /><small>0..${cols - 1}</small></label>
-          <label class="config-field"><span>Novo valor</span><input type="number" value="${state.config.newValue}" data-module-input="new-value" /><small>Valor a ser escrito.</small></label>
-        </div><p class="matrix-config-note">Clique em uma célula para preencher automaticamente linha e coluna.</p>`;
+          <label class="config-field"><span>${tr('Linha', 'Row')}</span><input type="number" value="${state.config.row}" data-module-input="row" /><small>0..${rows - 1}</small></label>
+          <label class="config-field"><span>${tr('Coluna', 'Column')}</span><input type="number" value="${state.config.col}" data-module-input="col" /><small>0..${cols - 1}</small></label>
+          <label class="config-field"><span>${tr('Novo valor', 'New value')}</span><input type="number" value="${state.config.newValue}" data-module-input="new-value" /><small>${tr('Valor a ser escrito.', 'Value to be written.')}</small></label>
+        </div><p class="matrix-config-note">${tr('Clique em uma célula para preencher automaticamente linha e coluna.', 'Click a cell to fill in the row and column automatically.')}</p>`;
     }
     if (state.algorithmId === 'identity') {
-      return `<div class="panel-heading compact-heading"><div><span class="eyebrow">Parâmetros</span><h2 id="config-title">Ordem da matriz identidade</h2></div></div>
-        <label class="config-field"><span>n</span><input type="range" min="1" max="${MAX_ROWS}" value="${state.config.order}" data-module-input="order" /><small>Será criada uma matriz ${state.config.order} × ${state.config.order}.</small></label>`;
+      return `<div class="panel-heading compact-heading"><div><span class="eyebrow">${tr('Parâmetros', 'Parameters')}</span><h2 id="config-title">${tr('Ordem da matriz identidade', 'Identity matrix order')}</h2></div></div>
+        <label class="config-field"><span>n</span><input type="range" min="1" max="${MAX_ROWS}" value="${state.config.order}" data-module-input="order" /><small>${tr('Será criada uma matriz', 'A matrix will be created')} ${state.config.order} × ${state.config.order}.</small></label>`;
     }
     if (state.algorithmId === 'jagged') {
-      return `<div class="panel-heading compact-heading"><div><span class="eyebrow">Parâmetros</span><h2 id="config-title">Tamanhos das linhas</h2></div></div>
-        <label class="config-field"><span>Comprimentos</span><input type="text" value="${escapeText(state.config.jaggedText)}" data-module-input="jagged-lengths" /><small>Exemplo dos slides: 2, 4, 3. Use de 1 a ${MAX_COLS} posições por linha.</small></label>`;
+      return `<div class="panel-heading compact-heading"><div><span class="eyebrow">${tr('Parâmetros', 'Parameters')}</span><h2 id="config-title">${tr('Tamanhos das linhas', 'Row sizes')}</h2></div></div>
+        <label class="config-field"><span>${tr('Comprimentos', 'Lengths')}</span><input type="text" value="${escapeText(state.config.jaggedText)}" data-module-input="jagged-lengths" /><small>${tr('Exemplo dos slides: 2, 4, 3. Use de 1 a', 'Example from the slides: 2, 4, 3. Use from 1 to')} ${MAX_COLS} ${tr('posições por linha.', 'positions per row.')}</small></label>`;
     }
     if (state.algorithmId === 'symmetric' && rows !== cols) {
-      return `<div class="panel-heading compact-heading"><div><span class="eyebrow">Observação</span><h2 id="config-title">Matriz não quadrada</h2></div></div><p class="matrix-config-note">A verificação encerrará imediatamente. Gere ou digite uma matriz com o mesmo número de linhas e colunas para testar a simetria.</p>`;
+      return `<div class="panel-heading compact-heading"><div><span class="eyebrow">${tr('Observação', 'Note')}</span><h2 id="config-title">${tr('Matriz não quadrada', 'Non-square matrix')}</h2></div></div><p class="matrix-config-note">${tr('A verificação encerrará imediatamente. Gere ou digite uma matriz com o mesmo número de linhas e colunas para testar a simetria.', 'The check will end immediately. Generate or type a matrix with the same number of rows and columns to test symmetry.')}</p>`;
     }
     return '';
   },
@@ -182,7 +183,7 @@ export const matrixModule = {
     if (step.jagged) {
       visual = `<div class="matrix-block"><div class="matrix-block-title">jagged</div><div class="matrix-scroll">${jaggedHtml(matrix, step, escapeText)}</div></div>`;
     } else if (step.secondaryMatrix) {
-      visual = `<div class="matrix-pair"><div class="matrix-block"><div class="matrix-block-title">${escapeText(step.primaryLabel || 'A')}</div><div class="matrix-scroll">${matrixHtml(matrix, step, escapeText, { inspectedItem: state.inspectedItem })}</div></div><div class="matrix-arrow">→</div><div class="matrix-block"><div class="matrix-block-title">${escapeText(step.secondaryLabel || 'Resultado')}</div><div class="matrix-scroll">${matrixHtml(step.secondaryMatrix, step, escapeText, { secondary: true })}</div></div></div>`;
+      visual = `<div class="matrix-pair"><div class="matrix-block"><div class="matrix-block-title">${escapeText(step.primaryLabel || 'A')}</div><div class="matrix-scroll">${matrixHtml(matrix, step, escapeText, { inspectedItem: state.inspectedItem })}</div></div><div class="matrix-arrow">→</div><div class="matrix-block"><div class="matrix-block-title">${escapeText(step.secondaryLabel || tr('Resultado', 'Result'))}</div><div class="matrix-scroll">${matrixHtml(step.secondaryMatrix, step, escapeText, { secondary: true })}</div></div></div>`;
     } else {
       visual = `<div class="matrix-block"><div class="matrix-scroll">${matrixHtml(matrix, step, escapeText, { inspectedItem: state.inspectedItem })}</div></div>`;
     }
@@ -192,9 +193,9 @@ export const matrixModule = {
     let inspection = '';
     if (state.inspectedItem && !step.jagged) {
       const [row, col] = state.inspectedItem.split(',').map(Number);
-      if (matrix[row] && col < matrix[row].length) inspection = `<div class="inspection-card matrix-inspection">${icons.info}<span>Posição selecionada</span><strong>A[${row}][${col}] = ${escapeText(matrix[row][col])}</strong></div>`;
+      if (matrix[row] && col < matrix[row].length) inspection = `<div class="inspection-card matrix-inspection">${icons.info}<span>${tr('Posição selecionada', 'Selected position')}</span><strong>A[${row}][${col}] = ${escapeText(matrix[row][col])}</strong></div>`;
     }
-    return `<div class="matrix-stage"><div class="matrix-stage-header"><span class="matrix-stage-label">estrutura bidimensional</span><span class="matrix-dimensions">${dimensions}</span></div>${visual}${resultVector}<div class="matrix-legend"><span><i class="legend-dot current"></i> atual</span><span><i class="legend-dot compared"></i> comparação</span><span><i class="legend-dot processed"></i> processado</span><span><i class="legend-dot result"></i> resultado</span></div></div>${inspection}`;
+    return `<div class="matrix-stage"><div class="matrix-stage-header"><span class="matrix-stage-label">${tr('estrutura bidimensional', 'two-dimensional structure')}</span><span class="matrix-dimensions">${dimensions}</span></div>${visual}${resultVector}<div class="matrix-legend"><span><i class="legend-dot current"></i> ${tr('atual', 'current')}</span><span><i class="legend-dot compared"></i> ${tr('comparação', 'comparison')}</span><span><i class="legend-dot processed"></i> ${tr('processado', 'processed')}</span><span><i class="legend-dot result"></i> ${tr('resultado', 'result')}</span></div></div>${inspection}`;
   },
   handleInput(name, input, app) {
     switch (name) {

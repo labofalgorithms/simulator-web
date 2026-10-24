@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#080c18" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="../assets/logo/favicon.ico" sizes="32x32" />
+  <link rel="icon" href="../assets/logo/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="../assets/logo/apple-touch-icon.png" />
+  <meta name="description" content="LabOfAlgorithms: interactive simulators for learning data structures and algorithms." />
+  <link rel="canonical" href="https://labofalgorithms.com/en/" />
+  <meta property="og:site_name" content="LabOfAlgorithms" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:url" content="https://labofalgorithms.com/en/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="LabOfAlgorithms · Simulators" />
+  <meta property="og:description" content="Interactive simulators for learning data structures and algorithms, step by step." />
+  <meta property="og:image" content="https://labofalgorithms.com/assets/logo/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="LabOfAlgorithms logo: visualizing logic." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <title>LabOfAlgorithms · Simulators</title>
+  <link rel="stylesheet" href="../src/css/base.css" />
+  <link rel="stylesheet" href="../src/css/home.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "LabOfAlgorithms",
+    "alternateName": "Lab of Algorithms",
+    "url": "https://labofalgorithms.com/en/",
+    "description": "LabOfAlgorithms: interactive simulators for learning data structures and algorithms.",
+    "inLanguage": "en",
+    "author": {
+      "@type": "Person",
+      "name": "Bruno de A. Iizuka Moritani",
+      "sameAs": [
+        "https://www.linkedin.com/in/bruno-iizuka/"
+      ]
+    },
+    "image": "https://labofalgorithms.com/assets/logo/og-image.png"
+  }
+  </script>
+</head>
+<body class="home-body">
+  <a class="skip-link" href="#conteudo">Skip to content</a>
+  <div class="home-shell">
+    <nav class="home-nav" aria-label="Main navigation">
+      <a class="home-brand" href="./index.html">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="414.3 -32.4 1236.7 1236.7" focusable="false"><path d="M994.5 73.4L520.4 1098.5M994.5 73.4L1544.9 956.3M754.5 592.3L1544.9 956.3" fill="none" stroke="currentColor" stroke-width="84" stroke-linecap="butt"/><g fill="currentColor" stroke="none"><circle cx="994.5" cy="73.4" r="82"/><circle cx="754.5" cy="592.3" r="82"/><circle cx="520.4" cy="1098.5" r="82"/><circle cx="1544.9" cy="956.3" r="82"/></g></svg></span>
+        <span><strong>LabOfAlgorithms</strong><small>Learn by watching the algorithm happen</small></span>
+      </a>
+      <div class="home-actions">
+        <a href="#estruturas">Data Structures</a>
+        <a href="#algoritmos">Algorithms</a>
+        <a href="#sobre">About the project</a>
+        <button id="theme-button" class="theme-button" type="button" aria-label="Toggle theme"></button>
+      </div>
+    </nav>
+    <main id="conteudo" tabindex="-1">
+      <section class="hero">
+        <div>
+          <span class="hero-kicker"><i></i> interactive lab</span>
+          <h1>Data structures and algorithms you can <span>see and control.</span></h1>
+          <p>Run algorithms step by step, follow the pseudocode, inspect variables and try your own data. LabOfAlgorithms turns every operation into a visual sequence.</p>
+          <div class="hero-buttons">
+            <a class="home-button secondary" href="#estruturas">Data Structures</a>
+            <a class="home-button secondary" href="#algoritmos">Algorithms</a>
+          </div>
+        </div>
+        <div class="hero-visual" aria-label="Preview of an array simulation">
+          <div class="visual-top"><span>Visual execution</span><span class="visual-status">● step by step</span></div>
+          <div class="mini-array"><span class="mini-cell">8</span><span class="mini-cell">3</span><span class="mini-cell active">12</span><span class="mini-cell">5</span><span class="mini-cell">9</span></div>
+          <div class="visual-code"><span></span><span></span><span></span><span></span></div>
+        </div>
+      </section>
+      <section id="catalogo" class="catalog" aria-label="Simulator catalog">
+        <div class="catalog-bar">
+          <div class="catalog-tabs" role="tablist" aria-label="Catalog categories">
+            <button id="tab-estruturas" class="catalog-tab" type="button" role="tab" aria-selected="true" aria-controls="estruturas">Data Structures <span class="tab-count"></span></button>
+            <button id="tab-algoritmos" class="catalog-tab" type="button" role="tab" aria-selected="false" aria-controls="algoritmos" tabindex="-1">Algorithms <span class="tab-count"></span></button>
+          </div>
+          <div class="catalog-search">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input id="catalog-search" type="search" placeholder="Search: push, bubble, remove leaf" autocomplete="off" spellcheck="false" aria-label="Search simulator" />
+            <kbd aria-hidden="true">/</kbd>
+          </div>
+        </div>
+        <p id="catalog-status" class="visually-hidden" role="status" aria-live="polite"></p>
+        <div id="estruturas" class="catalog-panel" role="tabpanel" aria-labelledby="tab-estruturas">
+          <h2 class="panel-title">Data Structures <span class="panel-count"></span></h2>
+          <p class="panel-intro">All modules share the same execution engine, the same controls and the same visual identity.</p>
+          <div class="module-group">
+            <div class="group-heading"><h3>DS1 · Static and dynamic structures</h3><span class="group-count"></span></div>
+            <div class="module-grid">
+              <article class="module-card available" data-keywords="array arrays arranjo vetor busca linear array arrays vector linear search sequential">
+                <div class="module-number"><span>DS1 · 01</span></div>
+                <div class="module-icon" aria-hidden="true">[ ]</div>
+                <h4>Arrays</h4>
+                <p>Indices, access, traversal, sum, mean, largest, smallest, sequential search and simple sorting.</p>
+                <div class="module-footer"><span>9 simulators</span><strong>Open →</strong></div>
+                <a class="module-link" href="./simuladores/vetores/">Open the array simulators</a>
+              </article>
+              <article class="module-card available" data-keywords="matrix 2d bidimensional array linha coluna matrix matrices 2d two-dimensional array row column jagged">
+                <div class="module-number"><span>DS1 · 02</span></div>
+                <div class="module-icon" aria-hidden="true">▦</div>
+                <h4>Matrices</h4>
+                <p>2D indices, access, update, traversals, sum, mean, largest, row/column sums, identity, transpose, symmetry and jagged arrays.</p>
+                <div class="module-footer"><span>14 simulators</span><strong>Open →</strong></div>
+                <a class="module-link" href="./simuladores/matrizes/">Open the matrix simulators</a>
+              </article>
+              <article class="module-card available" data-keywords="stack lifo empilhar desempilhar array stack lifo push pop array">
+                <div class="module-number"><span>DS1 · 03</span></div>
+                <div class="module-icon" aria-hidden="true">↥</div>
+                <h4>Static Stacks</h4>
+                <p>Creation, isFull, isEmpty, push, pop, peek, size and show on a static stack.</p>
+                <div class="module-footer"><span>8 simulators</span><strong>Open →</strong></div>
+                <a class="module-link" href="./simuladores/pilhas/">Open the stack simulators</a>
+              </article>
+              <article class="module-card available" data-keywords="queue fifo enfileirar desenfileirar array queue fifo enqueue dequeue array">
+                <div class="module-number"><span>DS1 · 04</span></div>
+                <div class="module-icon" aria-hidden="true">⇥</div>
+                <h4>Static Queues</h4>
+                <p>Creation, isFull, isEmpty, enqueue, dequeue, peek and show on a static queue.</p>
+                <div class="module-footer"><span>7 simulators</span><strong>Open →</strong></div>
+                <a class="module-link" href="./simuladores/filas/">Open the queue simulators</a>
+              </article>
+              <article class="module-card available" data-keywords="list array sequencial list array sequential">
+                <div class="module-number"><span>DS1 · 05</span></div>
+                <div class="module-icon" aria-hidden="true">○→○</div>
+                <h4>Static Lists</h4>
+                <p>Creation, isFull, isEmpty, add, remove, set, get, show and size on a static list.</p>
+                <div class="module-footer"><span>9 simulators</span><strong>Open →</strong></div>
+                <a class="module-link" href="./simuladores/listas/">Open the list simulators</a>
+              </article>
+              <article class="module-card available" data-keywords="no node ponteiro referencia heap memoria garbage collector gc new node pointer reference heap memory garbage collector gc new dynamic allocation">
+                <div class="module-number"><span>DS1 · 06</span></div>
+                <div class="module-icon" aria-hidden="true">▤</div>
+                <h4>Dynamic Allocation</h4>
+                <p>Variables and references, null, the Node class, creating and linking nodes, traversal and losing a reference to the Garbage Collector.</p>
+                <div class="module-footer"><span>6 simulators</span><strong>Open →</strong></div>
+                <a class="module-link" href="./simuladores/alocacao-dinamica/">Open the dynamic allocation simulators</a>
+              </article>
+              <article class="module-card available" data-keywords="stack lifo empilhar desempilhar encadeada no node stack lifo push pop linked node">
+                <div class="module-number"><span>DS1 · 07</span></div>
+                <div class="module-icon" aria-hidden="true">⛓</div>
+                <h4>Dynamic Stacks</h4>
+                <p>Creation, isEmpty, push, pop, peek, size and display on a linked stack, with no maximum size.</p>
+                <div class="module-footer"><span>7 simulators</span><strong>Open →</strong></div>
+                <a class="module-link" href="./simuladores/pilhas-dinamicas/">Open the dynamic stack simulators</a>
+              </article>
+              <article class="module-card available" data-keywords="queue fifo enfileirar desenfileirar encadeada no node queue fifo enqueue dequeue linked node">
+                <div class="module-number"><span>DS1 · 08</span></div>
+                <div class="module-icon" aria-hidden="true">⛓</div>
+                <h4>Dynamic Queues</h4>
+                <p>Creation, isEmpty, enqueue, dequeue, peek, size and show on a linked queue, with no maximum size.</p>
+                <div class="module-footer"><span>7 simulators</span><strong>Open →</strong></div>
+                <a class="module-link" href="./simuladores/filas-dinamicas/">Open the dynamic queue simulators</a>
+              </article>
+              <article class="module-card available" data-keywords="linked list lista ligada encadeada no node linked list node">
+                <div class="module-number"><span>DS1 · 09</span></div>
+                <div class="module-icon" aria-hidden="true">⛓</div>
+                <h4>Dynamic Lists</h4>
+                <p>Creation, isEmpty, insertAtFront, insertAtBack, insertAtPosition, removeAtFront, removeAtBack, remove, find and show on a linked list.</p>
+                <div class="module-footer"><span>10 simulators</span><strong>Open →</strong></div>
+                <a class="module-link" href="./simuladores/listas-dinamicas/">Open the dynamic list simulators</a>
+              </article>
+            </div>
+          </div>
+          <div class="module-group">
+            <div class="group-heading"><h3>DS2 · Special lists, hashing, trees and graphs</h3><span class="group-count"></span></div>
+            <div class="module-grid">
+              <article class="module-card available" data-keywords="circular linked list lista ligada encadeada no node circular linked list node">
+                <div class="module-number"><span>DS2 · 01</span></div>
+                <div class="module-icon" aria-hidden="true">↺</div>
+                <h4>Circular Lists</h4>
+                <p>Creation, insertAtStart, insertAtEnd, deleteNode and show on a circular linked list, with no tail pointer.</p>
+                <div class="module-footer"><span>5 simulators</span><strong>Open →</strong></div>
+                <a class="module-link" href="./simuladores/listas-circulares/">Open the circular list simulators</a>
+              </article>
+              <article class="module-card available" data-keywords="doubly linked list lista ligada anterior proximo prev next no node doubly linked list previous next prev node">
+                <div class="module-number"><span>DS2 · 02</span></div>
+                <div class="module-icon" aria-hidden="true">⇄</div>
+                <h4>Doubly Linked Lists</h4>
+                <p>Creation, insertAtStart, insertAtEnd, removeNode and show on a list with next and previous pointers.</p>
+                <div class="module-footer"><span>5 simulators</span><strong>Open →</strong></div>
+                <a class="module-link" href="./simuladores/listas-duplamente-encadeadas/">Open the doubly linked list simulators</a>
+              </article>
+              <article class="module-card available" data-keywords="hash map dicionario colisao dispersao chave hash table map dictionary collision key probing chaining">
+                <div class="module-number"><span>DS2 · 03</span></div>
+                <div class="module-icon" aria-hidden="true">#</div>
+                <h4>Hash Tables</h4>
+                <p>Hash function, open addressing with linear probing and separate chaining: create, add, search, remove and display.</p>
+                <div class="module-footer"><span>12 simulators</span><strong>Open →</strong></div>
+                <a class="module-link" href="./simuladores/tabelas-hash/">Open the hash table simulators</a>
+              </article>
+              <article class="module-card available" data-keywords="bst binary search tree arvore folha raiz sucessor bst binary search tree leaf root successor">
+                <div class="module-number"><span>DS2 · 04</span></div>
+                <div class="module-icon" aria-hidden="true">⋔</div>
+                <h4>Binary Search Tree</h4>
+                <p>Node, anatomy and the BST rule; insert, build the tree, search and remove (leaf, one child and two children, using the in-order successor).</p>
+                <div class="module-footer"><span>7 simulators</span><strong>Open →</strong></div>
+                <a class="module-link" href="./simuladores/arvore-binaria-busca/">Open the binary search tree simulators</a>
+              </article>
+              <article class="module-card available" data-keywords="preorder inorder postorder pre ordem pos ordem bfs dfs largura profundidade percurso travessia recursao fatorial pilha fila preorder inorder postorder pre-order in-order post-order bfs dfs breadth depth traversal recursion factorial stack queue">
+                <div class="module-number"><span>DS2 · 05</span></div>
+                <div class="module-icon" aria-hidden="true">⇢</div>
+                <h4>Binary Tree Traversals</h4>
+                <p>Recursion with the factorial; depth-first traversals (pre-order, in-order and post-order) with the call stack and breadth-first with the queue; DFS versus BFS compared.</p>
+                <div class="module-footer"><span>6 simulators</span><strong>Open →</strong></div>
+                <a class="module-link" href="./simuladores/percursos-arvores-binarias/">Open the binary tree traversal simulators</a>
+              </article>
+              <article class="module-card available" data-keywords="avl balanceada balanceamento fator rotacao rotation ll rr lr rl altura balanced tree adelson velskii landis avl balanced balance factor rotation ll rr lr rl height tree adelson velskii landis">
+                <div class="module-number"><span>DS2 · 06</span></div>
+                <div class="module-icon" aria-hidden="true">⚖︎</div>
+                <h4>AVL Tree</h4>
+                <p>Height and balance factor, single and double rotations (LL, RR, LR and RL), insert, build the tree and remove with rebalancing.</p>
+                <div class="module-footer"><span>7 simulators</span><strong>Open →</strong></div>
+                <a class="module-link" href="./simuladores/arvore-avl/">Open the AVL tree simulators</a>
+              </article>
+              <article class="module-card" data-keywords="btree b tree arvore b pagina chave grau btree b-tree b tree page key degree">
+                <div class="module-number"><span>DS2 · 07</span><span class="module-state">Coming soon</span></div>
+                <div class="module-icon" aria-hidden="true">⌘</div>
+                <h4>B-Trees</h4>
+                <p>Nodes with several keys, node splitting and search in B-trees.</p>
+                <div class="module-footer"><span>Future expansion</span></div>
+              </article>
+              <article class="module-card" data-keywords="graph bfs dfs largura profundidade vertice aresta graph bfs dfs breadth depth vertex edge">
+                <div class="module-number"><span>DS2 · 08</span><span class="module-state">Coming soon</span></div>
+                <div class="module-icon" aria-hidden="true">◎</div>
+                <h4>Graphs</h4>
+                <p>Representations, BFS, DFS and path visualization.</p>
+                <div class="module-footer"><span>Future expansion</span></div>
+              </article>
+            </div>
+          </div>
+        </div>
+        <div id="algoritmos" class="catalog-panel" role="tabpanel" aria-labelledby="tab-algoritmos" hidden>
+          <h2 class="panel-title">Algorithms <span class="panel-count"></span></h2>
+          <p class="panel-intro">Watch the algorithm run step by step, follow the cost of each operation and find out how it behaves with different inputs.</p>
+          <div class="module-group">
+            <div class="group-heading"><h3>ALG1 · Sorting methods</h3><span class="group-count"></span></div>
+            <div class="module-grid">
+              <article class="module-card available" data-keywords="bogosort bogo aleatorio embaralhar ordenar ordenacao fatorial bogosort bogo random shuffle sort sorting factorial shotgun">
+                <div class="module-number"><span>ALG1 · 01</span></div>
+                <div class="module-icon" aria-hidden="true">⚄</div>
+                <h4>Shotgun Sort</h4>
+                <p>The isSorted check, shuffling until it gets lucky and the cost analysis: why n! makes it the worst sorting algorithm.</p>
+                <div class="module-footer"><span>3 simulators</span><strong>Open →</strong></div>
+                <a class="module-link" href="./simuladores/shotgun-sort/">Open the Shotgun Sort simulators</a>
+              </article>
+              <article class="module-card available" data-keywords="selecao ordenar ordenacao selection sort sorting">
+                <div class="module-number"><span>ALG1 · 02</span></div>
+                <div class="module-icon" aria-hidden="true">⇅</div>
+                <h4>Selection Sort</h4>
+                <p>Finding the smallest value, swapping it with the first position of the sub-array, time and space complexity, adaptivity and stability.</p>
+                <div class="module-footer"><span>5 simulators</span><strong>Open →</strong></div>
+                <a class="module-link" href="./simuladores/selection-sort/">Open the Selection Sort simulators</a>
+              </article>
+              <article class="module-card available" data-keywords="bolha ordenar ordenacao bubble sort sorting">
+                <div class="module-number"><span>ALG1 · 03</span></div>
+                <div class="module-icon" aria-hidden="true">◌</div>
+                <h4>Bubble Sort</h4>
+                <p>The sweep that pushes the largest value to the end, the classroom algorithm and its optimized version, time and space complexity, adaptivity and stability.</p>
+                <div class="module-footer"><span>6 simulators</span><strong>Open →</strong></div>
+                <a class="module-link" href="./simuladores/bubble-sort/">Open the Bubble Sort simulators</a>
+              </article>
+              <article class="module-card available" data-keywords="insercao ordenar ordenacao insertion sort sorting">
+                <div class="module-number"><span>ALG1 · 04</span></div>
+                <div class="module-icon" aria-hidden="true">⤵</div>
+                <h4>Insertion Sort</h4>
+                <p>Inserting an element into the sorted sub-array, the full algorithm, time (best and worst case) and space complexity, adaptivity and stability.</p>
+                <div class="module-footer"><span>5 simulators</span><strong>Open →</strong></div>
+                <a class="module-link" href="./simuladores/insertion-sort/">Open the Insertion Sort simulators</a>
+              </article>
+              <article class="module-card available" data-keywords="mergesort intercalacao intercalar dividir conquistar recursao recursivo ordenar ordenacao mergesort merge divide conquer recursion recursive sort sorting">
+                <div class="module-number"><span>ALG1 · 05</span></div>
+                <div class="module-icon" aria-hidden="true">⋈</div>
+                <h4>Merge Sort</h4>
+                <p>Splitting the array in half, merging two halves with the auxiliary array B, the full algorithm with the call stack, time and space complexity, adaptivity and stability.</p>
+                <div class="module-footer"><span>6 simulators</span><strong>Open →</strong></div>
+                <a class="module-link" href="./simuladores/merge-sort/">Open the Merge Sort simulators</a>
+              </article>
+              <article class="module-card available" data-keywords="quicksort rapido pivo particionar particao dividir conquistar recursao recursivo ordenar ordenacao quicksort quick pivot partition divide conquer recursion recursive sort sorting">
+                <div class="module-number"><span>ALG1 · 06</span></div>
+                <div class="module-icon" aria-hidden="true">⇋</div>
+                <h4>Quick Sort</h4>
+                <p>Partitioning the array around the pivot, the full algorithm with the call stack, time complexity (best and worst case), adaptivity and stability.</p>
+                <div class="module-footer"><span>5 simulators</span><strong>Open →</strong></div>
+                <a class="module-link" href="./simuladores/quick-sort/">Open the Quick Sort simulators</a>
+              </article>
+              <article class="module-card available" data-keywords="heapsort heap monte arvore binaria completa max-heap criaheap arrumaheap selecao ordenar ordenacao heapsort heap binary tree complete max-heap buildheap heapify selection sort sorting">
+                <div class="module-number"><span>ALG1 · 07</span></div>
+                <div class="module-icon" aria-hidden="true">△</div>
+                <h4>Heap Sort</h4>
+                <p>The binary heap (array and tree), heapify and buildHeap, the full algorithm with the call stack, time complexity, adaptivity and stability.</p>
+                <div class="module-footer"><span>7 simulators</span><strong>Open →</strong></div>
+                <a class="module-link" href="./simuladores/heap-sort/">Open the Heap Sort simulators</a>
+              </article>
+              <article class="module-card" data-keywords="ordenar ordenacao linear contagem counting radix bucket sort sorting linear counting radix bucket">
+                <div class="module-number"><span>ALG1 · 08</span><span class="module-state">Coming soon</span></div>
+                <div class="module-icon" aria-hidden="true">≋</div>
+                <h4>Linear sorts</h4>
+                <p>Counting Sort, Radix Sort and other sorts that do not compare elements, compared by cost, adaptivity and stability.</p>
+                <div class="module-footer"><span>Future expansion</span></div>
+              </article>
+            </div>
+          </div>
+        </div>
+        <div class="catalog-empty" hidden>
+          <strong>No modules found</strong>
+          <p></p>
+        </div>
+      </section>
+      <section id="sobre" class="architecture about">
+        <div>
+          <span class="hero-kicker"><i></i> about</span>
+          <h2>Made in the classroom, open to everyone.</h2>
+          <p>LabOfAlgorithms is a project by Bruno de A. Iizuka Moritani, who teaches Algorithms and Data Structures. The idea is simple: instead of imagining what happens in memory, you run each step, follow the pseudocode and watch the variables change.</p>
+        </div>
+        <div class="architecture-flow">
+          <div class="flow-item"><b>Students</b><strong>Practice at your own pace</strong><small>Step forward and back and test your own data, with no sign-up and nothing to install.</small></div>
+          <div class="flow-item"><b>Teachers</b><strong>Use it in class</strong><small>Texts and pseudocode under <a href="https://github.com/labofalgorithms/simulator-web/blob/main/LICENSE" target="_blank" rel="noopener">CC BY-NC 4.0</a>: adapt and share with credit, for non-commercial use.</small></div>
+          <div class="flow-item"><b>Contact</b><strong>Get in touch</strong><small>Found a mistake or have a suggestion? Write to <a href="mailto:contact@labofalgorithms.com">contact@labofalgorithms.com</a> or open an <a href="https://github.com/labofalgorithms/simulator-web/issues" target="_blank" rel="noopener">issue on GitHub</a>.</small></div>
+        </div>
+      </section>
+      <section id="arquitetura" class="architecture">
+        <div>
+          <span class="hero-kicker"><i></i> modular architecture</span>
+          <h2>One engine, many simulators.</h2>
+          <p>The step controller, autoplay, theme and storage are shared. Each structure provides only its own algorithms, parameters and visual representation.</p>
+        </div>
+        <div class="architecture-flow">
+          <div class="flow-item"><b>Core</b><strong>SimulationController</strong><small>Run, pause, step forward, step back and control the speed.</small></div>
+          <div class="flow-item"><b>Module</b><strong>Algorithms</strong><small>Generation of the states and explanations of each operation.</small></div>
+          <div class="flow-item"><b>Renderer</b><strong>Visualization</strong><small>Array, matrix, stack, queue, list, sorting, tree or graph.</small></div>
+        </div>
+      </section>
+    </main>
+    <footer class="home-footer"><span>LabOfAlgorithms · Data Structures and Algorithms</span><span class="footer-links"><a class="footer-contact" href="mailto:contact@labofalgorithms.com">contact@labofalgorithms.com</a><a class="footer-link" href="https://github.com/labofalgorithms/simulator-web" target="_blank" rel="noopener">Code on GitHub<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a><a class="footer-link" href="https://github.com/labofalgorithms/simulator-web/blob/main/LICENSE" target="_blank" rel="noopener">License</a></span><span>© <span id="current-year"></span> <a class="footer-link" href="https://www.linkedin.com/in/bruno-iizuka/" target="_blank" rel="noopener" aria-label="Bruno de A. Iizuka Moritani on LinkedIn">Bruno de A. Iizuka Moritani<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></span></footer>
+  </div>
+  <script type="module" src="../src/js/pages/home.js"></script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 import {
   NONE, ascending, clone, fmt, isStable, label, range, step, tagDuplicates, tagsOf, toItems, valuesOf,
 } from '../shared/sort-steps.js';
+import { locale } from '../../core/i18n.js';
 
 // Pseudocódigo da aula (slide 37): n passadas, e em cada uma o laço de j varre o vetor inteiro.
 const SORT_CODE = [
@@ -341,7 +342,7 @@ function countingSteps(values) {
       `Comparações: ${comparisons}`,
       `Trocas: ${swaps}`,
       `n(n−1) = ${n}·${n - 1} = ${expected}`,
-      `Com n = ${doubled}: ${doubledExpected} comparações (≈ ${(doubledExpected / Math.max(1, expected)).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}×)`,
+      `Com n = ${doubled}: ${doubledExpected} comparações (≈ ${(doubledExpected / Math.max(1, expected)).toLocaleString(locale, { maximumFractionDigits: 1 })}×)`,
       `Versão otimizada: n(n−1)/2 = ${expected / 2} comparações`,
     ],
   })));

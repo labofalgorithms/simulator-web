@@ -1,5 +1,6 @@
 import { algorithms, buildSteps } from './algorithms.js';
 import { hasIndex } from '../../core/utils.js';
+import { tr } from '../../core/i18n.js';
 
 const DEFAULT_DATA = { capacity: 4, values: [8, 3, 9] };
 const MAX_CAPACITY = 8;
@@ -9,11 +10,11 @@ function parseStackValues(text, capacity) {
   if (!trimmed) return { values: [] };
   const tokens = trimmed.split(/[;,\s]+/).map((token) => token.trim()).filter(Boolean);
   if (tokens.length > capacity) {
-    return { error: `A capacidade atual é ${capacity}; reduza a quantidade de valores ou aumente a capacidade.` };
+    return { error: tr(`A capacidade atual é ${capacity}; reduza a quantidade de valores ou aumente a capacidade.`, `The current capacity is ${capacity}; reduce the number of values or increase the capacity.`) };
   }
   const values = tokens.map(Number);
   if (values.some((value) => !Number.isFinite(value))) {
-    return { error: 'Use apenas números separados por espaço, vírgula ou ponto e vírgula.' };
+    return { error: tr('Use apenas números separados por espaço, vírgula ou ponto e vírgula.', 'Use only numbers separated by space, comma or semicolon.') };
   }
   return { values };
 }
@@ -28,9 +29,9 @@ function slotsFromStep(step) {
 
 export const stackModule = {
   id: 'stacks',
-  name: 'Pilhas',
+  name: tr('Pilhas', 'Stacks'),
   version: '1.0',
-  visualizationTitle: 'Pilha na memória',
+  visualizationTitle: tr('Pilha na memória', 'Stack in memory'),
   defaultAlgorithmId: 'creation',
   defaultData: DEFAULT_DATA,
   defaultRandomCount: 3,
@@ -65,21 +66,21 @@ export const stackModule = {
     const { capacity, values } = state.data;
     return `
       <div class="panel-heading compact-heading">
-        <div><span class="eyebrow">Dados de entrada</span><h2 id="data-editor-title">Monte sua pilha</h2></div>
-        <span id="stack-size-badge" class="size-badge">${values.length}/${capacity} posições</span>
+        <div><span class="eyebrow">${tr('Dados de entrada', 'Input data')}</span><h2 id="data-editor-title">${tr('Monte sua pilha', 'Build your stack')}</h2></div>
+        <span id="stack-size-badge" class="size-badge">${values.length}/${capacity} ${tr('posições', 'positions')}</span>
       </div>
-      <label class="field-label" for="stack-input">Elementos (da base para o topo)</label>
+      <label class="field-label" for="stack-input">${tr('Elementos (da base para o topo)', 'Elements (from base to top)')}</label>
       <div class="input-action-row">
         <input id="stack-input" class="text-input ${state.inputError ? 'invalid' : ''}" value="${escapeText(state.draft)}" placeholder="8, 3, 9" aria-describedby="stack-help stack-error" data-module-input="draft" data-module-enter="apply" />
-        <button class="button primary" type="button" data-module-action="apply-data">${icons.check}<span>Aplicar</span></button>
+        <button class="button primary" type="button" data-module-action="apply-data">${icons.check}<span>${tr('Aplicar', 'Apply')}</span></button>
       </div>
-      <p id="stack-help" class="field-help">Informe os valores já empilhados, da base para o topo, separados por vírgula, espaço ou ponto e vírgula. Deixe em branco para uma pilha vazia. Máximo: a capacidade atual.</p>
+      <p id="stack-help" class="field-help">${tr('Informe os valores já empilhados, da base para o topo, separados por vírgula, espaço ou ponto e vírgula. Deixe em branco para uma pilha vazia. Máximo: a capacidade atual.', 'Enter the values already pushed, from base to top, separated by comma, space or semicolon. Leave blank for an empty stack. Maximum: the current capacity.')}</p>
       <p id="stack-error" class="error-message" role="alert">${escapeText(state.inputError)}</p>
       <div class="random-row">
-        <label for="stack-capacity">Capacidade</label>
+        <label for="stack-capacity">${tr('Capacidade', 'Capacity')}</label>
         <input id="stack-capacity" type="range" min="1" max="${MAX_CAPACITY}" value="${capacity}" data-module-input="capacity" />
         <output id="stack-capacity-output">${capacity}</output>
-        <button class="button secondary" type="button" data-module-action="random-data">${icons.shuffle}<span>Gerar pilha aleatória</span></button>
+        <button class="button secondary" type="button" data-module-action="random-data">${icons.shuffle}<span>${tr('Gerar pilha aleatória', 'Generate random stack')}</span></button>
       </div>`;
   },
 
@@ -87,9 +88,9 @@ export const stackModule = {
     if (state.algorithmId !== 'push') return '';
     const cheia = state.data.values.length >= state.data.capacity;
     return `
-      <div class="panel-heading compact-heading"><div><span class="eyebrow">Parâmetros</span><h2 id="config-title">Escolha o valor a empilhar</h2></div></div>
-      <label class="config-field"><span>Valor</span><input id="push-value-input" type="number" value="${state.config.pushValue}" data-module-input="push-value" /><small>Será inserido no topo, se houver espaço.</small></label>
-      ${cheia ? '<p class="matrix-config-note">A pilha está cheia: o push demonstrará a verificação de isFull() sem inserir o valor.</p>' : ''}`;
+      <div class="panel-heading compact-heading"><div><span class="eyebrow">${tr('Parâmetros', 'Parameters')}</span><h2 id="config-title">${tr('Escolha o valor a empilhar', 'Choose the value to push')}</h2></div></div>
+      <label class="config-field"><span>${tr('Valor', 'Value')}</span><input id="push-value-input" type="number" value="${state.config.pushValue}" data-module-input="push-value" /><small>${tr('Será inserido no topo, se houver espaço.', 'It will be inserted at the top, if there is room.')}</small></label>
+      ${cheia ? `<p class="matrix-config-note">${tr('A pilha está cheia: o push demonstrará a verificação de isFull() sem inserir o valor.', 'The stack is full: push will demonstrate the isFull() check without inserting the value.')}</p>` : ''}`;
   },
 
   renderVisualization({ state, step, icons, escapeText }) {
@@ -107,27 +108,27 @@ export const stackModule = {
       if (hasIndex(step.foundIndices, i)) classes.push('found');
       if (state.inspectedItem === i) classes.push('inspected');
       const cellMarkup = value === null
-        ? `<div class="${classes.join(' ')}">vazio</div>`
-        : `<button type="button" class="${classes.join(' ')}" data-module-action="inspect-item" data-index="${i}" aria-label="Posição ${i}, valor ${escapeText(value)}"><span>${escapeText(value)}</span></button>`;
-      rows.push(`<div class="stack-row ${isTopo ? 'is-topo' : ''}"><span class="stack-index">${i}</span>${cellMarkup}${isTopo ? '<span class="stack-pointer">topo</span>' : ''}</div>`);
+        ? `<div class="${classes.join(' ')}">${tr('vazio', 'empty')}</div>`
+        : `<button type="button" class="${classes.join(' ')}" data-module-action="inspect-item" data-index="${i}" aria-label="${tr('Posição', 'Position')} ${i}${tr(', valor', ', value')} ${escapeText(value)}"><span>${escapeText(value)}</span></button>`;
+      rows.push(`<div class="stack-row ${isTopo ? 'is-topo' : ''}"><span class="stack-index">${i}</span>${cellMarkup}${isTopo ? `<span class="stack-pointer">${tr('topo', 'top')}</span>` : ''}</div>`);
     }
     const floor = topo === -1
-      ? '<div class="stack-row stack-row-floor"><span class="stack-index">-1</span><span class="stack-floor-note">nenhuma posição ocupada</span><span class="stack-pointer">topo</span></div>'
+      ? `<div class="stack-row stack-row-floor"><span class="stack-index">-1</span><span class="stack-floor-note">${tr('nenhuma posição ocupada', 'no position occupied')}</span><span class="stack-pointer">${tr('topo', 'top')}</span></div>`
       : '';
 
     const inspection = state.inspectedItem !== null && state.inspectedItem <= topo && state.inspectedItem >= 0
-      ? `<div class="inspection-card">${icons.info}<span>Posição selecionada</span><strong>pilha[${state.inspectedItem}] = ${escapeText(step.values[state.inspectedItem])}</strong></div>`
+      ? `<div class="inspection-card">${icons.info}<span>${tr('Posição selecionada', 'Selected position')}</span><strong>${tr('pilha[', 'stack[')}${state.inspectedItem}] = ${escapeText(step.values[state.inspectedItem])}</strong></div>`
       : '';
 
     return `
       <div class="stack-stage">
-        <div class="stack-dimensions"><span>capacidade: ${capacidade}</span><span>elementos: ${topo + 1}</span><span>topo: ${topo}</span></div>
+        <div class="stack-dimensions"><span>${tr('capacidade:', 'capacity:')} ${capacidade}</span><span>${tr('elementos:', 'elements:')} ${topo + 1}</span><span>${tr('topo:', 'top:')} ${topo}</span></div>
         <div class="stack-frame">${rows.join('')}${floor}</div>
-        <div class="stack-legend" aria-label="Legenda">
-          <span><i class="legend-dot current"></i> atual</span>
-          <span><i class="legend-dot compared"></i> alterado</span>
-          <span><i class="legend-dot processed"></i> processado</span>
-          <span><i class="legend-dot result"></i> resultado</span>
+        <div class="stack-legend" aria-label="${tr('Legenda', 'Legend')}">
+          <span><i class="legend-dot current"></i> ${tr('atual', 'current')}</span>
+          <span><i class="legend-dot compared"></i> ${tr('alterado', 'changed')}</span>
+          <span><i class="legend-dot processed"></i> ${tr('processado', 'processed')}</span>
+          <span><i class="legend-dot result"></i> ${tr('resultado', 'result')}</span>
         </div>
       </div>${inspection}`;
   },
@@ -149,7 +150,7 @@ export const stackModule = {
         const output = document.querySelector('#stack-capacity-output');
         if (output) output.textContent = capacity;
         const badge = document.querySelector('#stack-size-badge');
-        if (badge) badge.textContent = `${app.state.data.values.length}/${capacity} posições`;
+        if (badge) badge.textContent = tr(`${app.state.data.values.length}/${capacity} posições`, `${app.state.data.values.length}/${capacity} positions`);
         app.rebuildSteps();
         break;
       }

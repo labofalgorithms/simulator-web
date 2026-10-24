@@ -5,8 +5,9 @@ import { storage } from './storage.js';
 import {
   $, escapeText, mirrorSpeed, speedLabel,
 } from './utils.js';
+import { tr, variableName } from './i18n.js';
 
-const DEFAULT_CATEGORY = { name: 'Estruturas de Dados', anchor: 'estruturas' };
+const DEFAULT_CATEGORY = { name: tr('Estruturas de Dados', 'Data Structures'), anchor: 'estruturas' };
 
 export class SimulatorApp {
   constructor(module) {
@@ -77,15 +78,15 @@ export class SimulatorApp {
 
   renderHeader() {
     const item = this.algorithm;
-    $('#module-chip-name').textContent = `Módulo: ${this.module.name}`;
+    $('#module-chip-name').textContent = tr(`Módulo: ${this.module.name}`, `Module: ${this.module.name}`);
     const category = this.module.category || DEFAULT_CATEGORY;
     $('#breadcrumb').innerHTML = [
-      '<a href="../../index.html">Simuladores</a>',
+      `<a href="../../index.html">${tr('Simuladores', 'Simulators')}</a>`,
       `<a href="../../index.html#${escapeText(category.anchor)}">${escapeText(category.name)}</a>`,
       escapeText(this.module.name),
       escapeText(item.menuLabel),
     ].join(' <b>/</b> ');
-    $('#lesson-kicker').innerHTML = `<span>${escapeText(item.number)}</span> algoritmo interativo`;
+    $('#lesson-kicker').innerHTML = `<span>${escapeText(item.number)}</span> ${tr('algoritmo interativo', 'interactive algorithm')}`;
     $('#lesson-title').textContent = item.title;
     $('#lesson-description').textContent = item.description;
     $('#time-complexity').textContent = item.complexity.time;
@@ -94,7 +95,7 @@ export class SimulatorApp {
     $('#complexity-note').textContent = item.complexity.note;
     $('#info-icon').innerHTML = icons.info;
     $('#visualization-title').textContent = this.module.visualizationTitle;
-    $('#footer-module').textContent = `${this.module.name} · versão ${this.module.version}`;
+    $('#footer-module').textContent = tr(`${this.module.name} · versão ${this.module.version}`, `${this.module.name} · version ${this.module.version}`);
   }
 
   renderEditor() {
@@ -131,7 +132,7 @@ export class SimulatorApp {
     track.setAttribute('aria-valuemin', 1);
     track.setAttribute('aria-valuemax', total);
     track.setAttribute('aria-valuenow', current + 1);
-    track.setAttribute('aria-valuetext', `Passo ${current + 1} de ${total}`);
+    track.setAttribute('aria-valuetext', tr(`Passo ${current + 1} de ${total}`, `Step ${current + 1} of ${total}`));
     [...track.children].forEach((seg, index) => {
       seg.className = `step-seg ${index < current ? 'done' : index === current ? 'current' : ''}`.trim();
     });
@@ -147,14 +148,14 @@ export class SimulatorApp {
     this.renderStepTrack(total);
     $('#mini-progress').style.width = `${progress}%`;
     $('#step-current').textContent = this.controller.index + 1;
-    $('#step-total').textContent = `/ ${total} passos`;
+    $('#step-total').textContent = tr(`/ ${total} passos`, `/ ${total} steps`);
     $('#restart').innerHTML = icons.restart;
     $('#previous').innerHTML = icons.previous;
     $('#next').innerHTML = icons.next;
     $('#restart').disabled = this.controller.index === 0;
     $('#previous').disabled = this.controller.index === 0;
     $('#next').disabled = this.controller.index >= total - 1;
-    $('#play-toggle').innerHTML = `${this.controller.playing ? icons.pause : icons.play}<span>${this.controller.playing ? 'Pausar' : 'Executar'}</span>`;
+    $('#play-toggle').innerHTML = `${this.controller.playing ? icons.pause : icons.play}<span>${this.controller.playing ? tr('Pausar', 'Pause') : tr('Executar', 'Run')}</span>`;
     $('#speed').value = mirrorSpeed($('#speed'), this.controller.speed);
     $('#speed-output').textContent = speedLabel(this.controller.speed);
   }
@@ -162,17 +163,17 @@ export class SimulatorApp {
   renderDetails() {
     const step = this.currentStep;
     if (!step) return;
-    $('#step-eyebrow').textContent = `Passo ${this.controller.index + 1} de ${this.controller.steps.length}`;
+    $('#step-eyebrow').textContent = tr(`Passo ${this.controller.index + 1} de ${this.controller.steps.length}`, `Step ${this.controller.index + 1} of ${this.controller.steps.length}`);
     $('#step-title').textContent = step.title;
     $('#step-description').textContent = step.description;
     const entries = Object.entries(step.variables || {});
     $('#variables').innerHTML = entries.length
-      ? `<dl>${entries.map(([name, value]) => `<div><dt>${escapeText(name)}</dt><dd>${escapeText(value)}</dd></div>`).join('')}</dl>`
-      : '<p class="empty-state">As variáveis aparecerão durante a execução.</p>';
+      ? `<dl>${entries.map(([name, value]) => `<div><dt>${escapeText(variableName(name))}</dt><dd>${escapeText(value)}</dd></div>`).join('')}</dl>`
+      : `<p class="empty-state">${tr('As variáveis aparecerão durante a execução.', 'Variables will appear during execution.')}</p>`;
     const output = step.output || [];
     $('#console-output').innerHTML = output.length
       ? output.map((line) => `<p><span>›</span>${escapeText(line)}</p>`).join('')
-      : '<p class="console-placeholder">Aguardando saída...</p>';
+      : `<p class="console-placeholder">${tr('Aguardando saída...', 'Waiting for output...')}</p>`;
   }
 
   renderPseudocode() {

@@ -1,3 +1,4 @@
+import { locale } from '../../core/i18n.js';
 // Pseudocódigo da aula (slide 15), em base 0: o laço de isOrdenado vai até
 // vetor.length - 2, porque o último par é (n-2, n-1).
 const SHOTGUN_CODE = [
@@ -51,7 +52,7 @@ export const algorithms = [
 ];
 
 const clone = (values) => [...values];
-const fmt = (value) => (Number.isInteger(value) ? String(value) : value.toLocaleString('pt-BR', { maximumFractionDigits: 2 }));
+const fmt = (value) => (Number.isInteger(value) ? String(value) : value.toLocaleString(locale, { maximumFractionDigits: 2 }));
 const pad = (number) => String(number).padStart(2, '0');
 const list = (values) => `[${values.map(fmt).join(', ')}]`;
 const step = (values, line, title, description, tone = 'neutral', extra = {}) => ({ values: clone(values), line, title, description, tone, variables: {}, output: [], ...extra });
@@ -238,14 +239,14 @@ const SUPERSCRIPT = { 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6
 
 function bigNumber(value) {
   const number = Number(value);
-  if (number < 1e9) return value.toLocaleString('pt-BR');
+  if (number < 1e9) return value.toLocaleString(locale);
   const exponent = Math.floor(Math.log10(number));
-  const mantissa = (number / 10 ** exponent).toLocaleString('pt-BR', { maximumFractionDigits: 1 });
+  const mantissa = (number / 10 ** exponent).toLocaleString(locale, { maximumFractionDigits: 1 });
   return `${mantissa} × 10${String(exponent).split('').map((digit) => SUPERSCRIPT[digit]).join('')}`;
 }
 
 function humanTime(seconds) {
-  const f = (value) => value.toLocaleString('pt-BR', { maximumFractionDigits: value < 10 ? 1 : 0 });
+  const f = (value) => value.toLocaleString(locale, { maximumFractionDigits: value < 10 ? 1 : 0 });
   if (seconds < 1) return 'menos de 1 segundo';
   if (seconds < 60) return `${f(seconds)} s`;
   const minutes = seconds / 60;
@@ -267,7 +268,7 @@ function oddsSteps(values) {
   const n = values.length;
   const total = arrangements(values);
   const repeated = total !== factorial(n);
-  const chance = (100 / total).toLocaleString('pt-BR', { maximumFractionDigits: 2 });
+  const chance = (100 / total).toLocaleString(locale, { maximumFractionDigits: 2 });
   const row = (size, attempts, mine = false) => ({
     n: size,
     selection: (size * (size - 1)) / 2,
@@ -297,7 +298,7 @@ function oddsSteps(values) {
   ];
 
   growth(10);
-  steps.push(step(values, LINE.whileLoop, 'Com n = 10', `10! = ${bigFactorial(10).toLocaleString('pt-BR')}. O Selection Sort faz 45 comparações; o Shotgun Sort, em média, mais de 3,6 milhões de tentativas.`, 'update', withTable({ ...base, variables: { n: 10 } })));
+  steps.push(step(values, LINE.whileLoop, 'Com n = 10', `10! = ${bigFactorial(10).toLocaleString(locale)}. O Selection Sort faz 45 comparações; o Shotgun Sort, em média, mais de 3,6 milhões de tentativas.`, 'update', withTable({ ...base, variables: { n: 10 } })));
   growth(15);
   steps.push(step(values, LINE.whileLoop, 'Com n = 15', `15! passa de 1,3 trilhão. Mesmo testando um milhão de ordens por segundo, a média seria de uns ${humanTime(Number(bigFactorial(15)) / ATTEMPTS_PER_SECOND)}.`, 'update', withTable({ ...base, variables: { n: 15 } })));
   growth(20);

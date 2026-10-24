@@ -1,4 +1,5 @@
 import { trace } from '../shared/node-scene.js';
+import { locale } from '../../core/i18n.js';
 
 export const algorithms = [
   {
@@ -39,7 +40,7 @@ export const algorithms = [
 ];
 
 
-const fmt = (value) => (Number.isInteger(value) ? String(value) : value.toLocaleString('pt-BR', { maximumFractionDigits: 2 }));
+const fmt = (value) => (Number.isInteger(value) ? String(value) : value.toLocaleString(locale, { maximumFractionDigits: 2 }));
 const range = (end, start = 0) => Array.from({ length: Math.max(0, end - start) }, (_, index) => start + index);
 
 function creationSteps() {
