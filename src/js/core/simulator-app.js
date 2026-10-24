@@ -59,6 +59,8 @@ export class SimulatorApp {
     this.renderConfig();
     this.renderSimulation();
     this.renderTheme();
+    // O conteúdo só aparece depois do primeiro desenho, para a página não pular quando o JavaScript termina de montá-lo.
+    $('.main-content').classList.add('is-ready');
   }
 
   renderSidebar() {
@@ -126,6 +128,10 @@ export class SimulatorApp {
       track.innerHTML = Array.from({ length: total }, () => '<span class="step-seg"><i></i></span>').join('');
     }
     track.classList.toggle('dense', total > 20);
+    track.setAttribute('aria-valuemin', 1);
+    track.setAttribute('aria-valuemax', total);
+    track.setAttribute('aria-valuenow', current + 1);
+    track.setAttribute('aria-valuetext', `Passo ${current + 1} de ${total}`);
     [...track.children].forEach((seg, index) => {
       seg.className = `step-seg ${index < current ? 'done' : index === current ? 'current' : ''}`.trim();
     });
