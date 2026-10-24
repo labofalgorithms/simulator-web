@@ -30,6 +30,14 @@ export const variableNames = {
   'nós': 'nodes', altura: 'height', 'nó escolhido': 'chosen node', profundidade: 'depth', 'raiz = NULO': 'root = NULL', comparação: 'comparison', 'atual = NULO': 'current = NULL', 'dois filhos': 'two children', 'pai = NULO': 'parent = NULL',
   'nó v': 'node v', 'condição do ENQUANTO': 'WHILE condition', regra: 'rule',
   raiz: 'root', No: 'node', 'nó': 'node', pai: 'parent', suc: 'succ', paiSuc: 'succParent', filho: 'child', novo: 'newNode', x: 'x', y: 'y', T2: 'T2',
+  // ordenações
+  minimo: 'min', 'comparações': 'comparisons', trocas: 'swaps', 'n(n−1)/2': 'n(n−1)/2', melhor: 'best', ordens: 'orders', tentativas: 'attempts', chance: 'chance',
   // vetores: rótulos dinâmicos (maior/menor)
   largest: 'largest', smallest: 'smallest', largestIndex: 'largestIndex', smallestIndex: 'smallestIndex',
+  'comparações da passada': 'comparisons in the pass', 'comparações acumuladas': 'accumulated comparisons', 'vetor[i]': 'array[i]', 'vetor[i+1]': 'array[i+1]', 'ordens possíveis': 'possible orders', 'chance por tentativa': 'chance per attempt', 'tentativas esperadas': 'expected attempts', 'melhor caso': 'best case', 'n(n−1)': 'n(n−1)',
+  'cópias': 'copies', meio: 'mid',
+  nível: 'level', trechos: 'ranges', níveis: 'levels', intercalações: 'merges', intercalação: 'merge', 'comparações do nível': 'comparisons of the level', 'n · ⌈log₂ n⌉': 'n · ⌈log₂ n⌉',
+  trecho: 'range', 'comparações do trecho': 'comparisons of the range', particionamento: 'partitioning', 'pares invertidos': 'reversed pairs', pivô: 'pivot',
+  chamada: 'call', chamadas: 'calls', 'voltas desta': 'turns of this', voltas: 'turns', pares: 'pairs', pai: 'parent',
+  'verificações': 'checks', embaralhamentos: 'shuffles',
 };

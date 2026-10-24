@@ -12,12 +12,8 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const PAGES = join(ROOT, 'src/js/pages');
 
-/** Simuladores ainda sem tradução: só a estrutura é conferida. Cada um sai daqui quando fica pronto. */
-const PENDING = new Set([
-  'bubble-sort-simulator.js',
-  'heap-sort-simulator.js', 'insertion-sort-simulator.js',
-  'merge-sort-simulator.js', 'quick-sort-simulator.js', 'selection-sort-simulator.js', 'shotgun-sort-simulator.js',
-]);
+/** Simuladores ainda sem tradução: só a estrutura é conferida. Está vazio: os 22 estão traduzidos. */
+const PENDING = new Set([]);
 
 const pageFiles = () => readdirSync(PAGES).filter((f) => f.endsWith('-simulator.js')).sort();
 

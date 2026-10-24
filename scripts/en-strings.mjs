@@ -2,7 +2,7 @@
 // scripts/build-en-pages.mjs gera as páginas em en/ trocando cada texto pelo daqui e falha se faltar algum.
 
 /** Enquanto false, as páginas em inglês levam noindex e ficam fora do sitemap e dos links das páginas em português. */
-export const published = false;
+export const published = true;
 
 /** Textos que se repetem na home e nos simuladores. */
 export const common = {

@@ -74,6 +74,16 @@ for (const page of pages) {
     else if (!exists(image.slice(BASE.length + 1))) fail(at, `a imagem ${image} não existe no repositório`);
     if (!/<link rel="manifest" href="[^"]+"/.test(html)) fail(at, 'falta <link rel="manifest">');
 
+    // Cada página aponta para a versão no outro idioma (e para si mesma) com hreflang, e tem o link EN/PT.
+    const ptUrl = page.lang === 'pt' ? page.url : page.url.replace(`${BASE}/en/`, `${BASE}/`);
+    const enUrl = page.lang === 'en' ? page.url : page.url.replace(`${BASE}/`, `${BASE}/en/`);
+    for (const [hreflang, href] of [['pt-BR', ptUrl], ['en', enUrl], ['x-default', ptUrl]]) {
+      if (!html.includes(`<link rel="alternate" hreflang="${hreflang}" href="${href}" />`)) fail(at, `falta o hreflang ${hreflang} apontando para ${href}`);
+    }
+    if (prop(html, 'og:locale:alternate') !== (page.lang === 'pt' ? 'en_US' : 'pt_BR')) fail(at, 'og:locale:alternate errado');
+    const other = page.lang === 'pt' ? 'en' : 'pt-BR';
+    if (!new RegExp(`<a class="lang-link" href="[^"]+" hreflang="${other}"`).test(html)) fail(at, 'falta o link de troca de idioma');
+
     const ld = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
     if (!ld) fail(at, 'falta o bloco JSON-LD');
     else {

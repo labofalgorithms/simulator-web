@@ -134,6 +134,10 @@ modules/
 - `quick-sort-simulator.js`: conecta `SimulatorApp` ao `quickSortModule`;
 - `heap-sort-simulator.js`: conecta `SimulatorApp` ao `heapSortModule`.
 
+## Idiomas
+
+O JavaScript e as páginas existem em português e em inglês com o mesmo código. `src/js/core/i18n.js` decide o idioma pelo `<html lang>` e oferece `tr(pt, en)` para textos, `locale` para formatar números, `variableName` e `displayValue` para o painel de variáveis. Os módulos escrevem `tr('texto', 'text')` onde mostram texto; as chaves de dados (ids, classes, nomes de propriedades) não mudam, para o português continuar igual. O guia completo, com o fluxo para páginas HTML e os testes, está em [DESENVOLVIMENTO.md](DESENVOLVIMENTO.md#idiomas-português-e-inglês).
+
 ## Catálogo da home
 
 `index.html` organiza os módulos em duas abas, `#estruturas` e `#algoritmos`, e cada aba em grupos (`ED1`, `ED2` e `ALG1`). `pages/home-catalog.js` liga as abas e a busca:

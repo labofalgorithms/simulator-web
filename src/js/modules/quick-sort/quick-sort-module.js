@@ -4,6 +4,7 @@ import { renderStack } from '../shared/recursion-view.js';
 import {
   legend, parseVector, randomVector, renderArray, renderChart, renderCompare, renderInspection, renderLockstep, renderPhase, renderStats, renderVectorEditor,
 } from '../shared/sort-view.js';
+import { tr } from '../../core/i18n.js';
 
 // O vetor do exemplo da aula (slides 55 a 200, o debug passo a passo).
 const LESSON_VECTOR = [12, 1, 100, 10, 97, 53, 46, 82];
@@ -11,22 +12,22 @@ const DEFAULT_VECTOR = LESSON_VECTOR;
 const MIN_ITEMS = 2;
 const MAX_ITEMS = 10;
 const LIMITS = { min: MIN_ITEMS, max: MAX_ITEMS };
-const COMPARE_HINT = 'As comparações inicio &lt; fim, i ≤ j, vetor[i] &lt; pivô e vetor[j] &gt; pivô aparecem aqui.';
+const COMPARE_HINT = tr('As comparações inicio &lt; fim, i ≤ j, vetor[i] &lt; pivô e vetor[j] &gt; pivô aparecem aqui.', 'The comparisons start &lt; end, i ≤ j, array[i] &lt; pivot and array[j] &gt; pivot appear here.');
 
-const LEGEND_RANGE = ['range', 'início e fim · trecho atual'];
-const LEGEND_OUTSIDE = ['outside', 'fora do trecho'];
-const LEGEND_PIVOT = ['pivot', 'pivô (vetor[inicio])'];
-const LEGEND_I = ['pointer-i', 'i · procura valor ≥ pivô'];
-const LEGEND_J = ['current', 'j · procura valor ≤ pivô'];
-const LEGEND_SWAP = ['compared', 'valor lido ou trocado'];
-const LEGEND_SORTED = ['sorted', 'posição final'];
+const LEGEND_RANGE = ['range', tr('início e fim · trecho atual', 'start and end · current range')];
+const LEGEND_OUTSIDE = ['outside', tr('fora do trecho', 'outside the range')];
+const LEGEND_PIVOT = ['pivot', tr('pivô (vetor[inicio])', 'pivot (array[start])')];
+const LEGEND_I = ['pointer-i', tr('i · procura valor ≥ pivô', 'i · looks for value ≥ pivot')];
+const LEGEND_J = ['current', tr('j · procura valor ≤ pivô', 'j · looks for value ≤ pivot')];
+const LEGEND_SWAP = ['compared', tr('valor lido ou trocado', 'value read or swapped')];
+const LEGEND_SORTED = ['sorted', tr('posição final', 'final position')];
 
 const LEGENDS = {
   partition: [LEGEND_RANGE, LEGEND_OUTSIDE, LEGEND_PIVOT, LEGEND_I, LEGEND_J, LEGEND_SWAP, LEGEND_SORTED],
   'quick-sort': [LEGEND_RANGE, LEGEND_OUTSIDE, LEGEND_PIVOT, LEGEND_I, LEGEND_J, LEGEND_SWAP, LEGEND_SORTED],
   counting: [LEGEND_RANGE, LEGEND_OUTSIDE, LEGEND_PIVOT, LEGEND_SORTED],
-  adaptability: [['compared', 'trecho particionado'], ['min', 'pivô'], LEGEND_SORTED],
-  stability: [LEGEND_RANGE, LEGEND_OUTSIDE, LEGEND_SORTED, ['warn', 'par de iguais que inverteu'], ['dup', 'repetido (letra = ordem original)']],
+  adaptability: [['compared', tr('trecho particionado', 'partitioned range')], ['min', tr('pivô', 'pivot')], LEGEND_SORTED],
+  stability: [LEGEND_RANGE, LEGEND_OUTSIDE, LEGEND_SORTED, ['warn', tr('par de iguais que inverteu', 'pair of equals that reversed')], ['dup', tr('repetido (letra = ordem original)', 'repeated (letter = original order)')]],
 };
 
 const WITH_COMPARE = ['partition', 'quick-sort'];
@@ -39,10 +40,10 @@ const toInteger = (value, fallback) => {
 
 export const quickSortModule = {
   id: 'quick-sort',
-  name: 'Quick Sort',
-  category: { name: 'Algoritmos', anchor: 'algoritmos' },
+  name: tr('Quick Sort', 'Quick Sort'),
+  category: { name: tr('Algoritmos', 'Algorithms'), anchor: 'algoritmos' },
   version: '1.0',
-  visualizationTitle: 'Vetor sendo ordenado',
+  visualizationTitle: tr('Vetor sendo ordenado', 'Array being sorted'),
   defaultAlgorithmId: 'quick-sort',
   defaultData: DEFAULT_VECTOR,
   defaultRandomCount: 8,
@@ -75,29 +76,29 @@ export const quickSortModule = {
 
   renderEditor(context) {
     return `${renderVectorEditor(context, { ...LIMITS, placeholder: '12, 1, 100, 10, 97, 53, 46, 82' })}
-      <div class="preset-row"><span>Exemplo da aula</span><button class="button secondary compact" type="button" data-module-action="preset">12, 1, 100, 10, 97, 53, 46, 82</button></div>`;
+      <div class="preset-row"><span>${tr('Exemplo da aula', 'Lesson example')}</span><button class="button secondary compact" type="button" data-module-action="preset">12, 1, 100, 10, 97, 53, 46, 82</button></div>`;
   },
 
   renderConfig({ state }) {
-    const heading = (title) => `<div class="panel-heading compact-heading"><div><span class="eyebrow">Parâmetros</span><h2 id="config-title">${title}</h2></div></div>`;
+    const heading = (title) => `<div class="panel-heading compact-heading"><div><span class="eyebrow">${tr('Parâmetros', 'Parameters')}</span><h2 id="config-title">${title}</h2></div></div>`;
 
     if (state.algorithmId === 'partition') {
       const last = state.data.length - 1;
       return `
-        ${heading('Escolha o trecho a particionar')}
+        ${heading(tr('Escolha o trecho a particionar', 'Choose the range to partition'))}
         <div class="config-grid">
-          <label class="config-field"><span>inicio (o pivô é vetor[inicio])</span><input id="inicio-input" type="number" min="0" max="${last - 1}" value="${state.config.inicio}" data-module-input="inicio" /></label>
-          <label class="config-field"><span>fim</span><input id="fim-input" type="number" min="${state.config.inicio + 1}" max="${last}" value="${state.config.fim}" data-module-input="fim" /></label>
+          <label class="config-field"><span>${tr('inicio (o pivô é vetor[inicio])', 'start (the pivot is array[start])')}</span><input id="inicio-input" type="number" min="0" max="${last - 1}" value="${state.config.inicio}" data-module-input="inicio" /></label>
+          <label class="config-field"><span>${tr('fim', 'end')}</span><input id="fim-input" type="number" min="${state.config.inicio + 1}" max="${last}" value="${state.config.fim}" data-module-input="fim" /></label>
         </div>
-        <p class="config-note">Intervalo válido: inicio de 0 a ${last - 1} e fim de inicio + 1 a ${last}. Você também pode clicar em uma posição do vetor para fazer dela o pivô.</p>`;
+        <p class="config-note">${tr('Intervalo válido: inicio de 0 a', 'Valid range: start from 0 to')} ${last - 1} ${tr('e fim de inicio + 1 a', 'and end from start + 1 to')} ${last}${tr('. Você também pode clicar em uma posição do vetor para fazer dela o pivô.', '. You can also click an array position to make it the pivot.')}</p>`;
     }
 
     if (state.algorithmId === 'stability') {
       return `
-        ${heading('Exemplo com valores repetidos')}
+        ${heading(tr('Exemplo com valores repetidos', 'Example with repeated values'))}
         <div class="config-note-row">
-          <p>A estabilidade só aparece quando há valores iguais. O botão ao lado monta um vetor com valores repetidos em que o Quicksort realmente inverte a ordem de dois deles.</p>
-          <button class="button secondary" type="button" data-module-action="stability-example">${icons.shuffle}<span>Gerar exemplo</span></button>
+          <p>${tr('A estabilidade só aparece quando há valores iguais. O botão ao lado monta um vetor com valores repetidos em que o Quicksort realmente inverte a ordem de dois deles.', 'Stability only shows up when there are equal values. The button beside builds an array with repeated values where Quicksort really reverses the order of two of them.')}</p>
+          <button class="button secondary" type="button" data-module-action="stability-example">${icons.shuffle}<span>${tr('Gerar exemplo', 'Generate example')}</span></button>
         </div>`;
     }
 

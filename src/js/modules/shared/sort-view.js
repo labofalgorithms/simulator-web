@@ -5,20 +5,21 @@
 
 import { icons } from '../../core/icons.js';
 import { hasIndex } from '../../core/utils.js';
+import { tr, variableName } from '../../core/i18n.js';
 
 // Os quatro seguintes marcam o trecho do Merge Sort e do Quick Sort (início, meio, fim e o índice k)
 // e os três últimos, o pai e a raiz, o filho e o candidato a trocar do Heap Sort.
 const CHIP_LABELS = {
-  i: 'i', j: 'j', min: 'min', next: 'i+1', prev: 'j−1', inicio: 'início', meio: 'meio', fim: 'fim', k: 'k', pai: 'pai', raiz: 'raiz', filho: 'filho', trocar: 'trocar',
+  i: 'i', j: 'j', min: 'min', next: 'i+1', prev: 'j−1', inicio: tr('início', 'start'), meio: tr('meio', 'mid'), fim: tr('fim', 'end'), k: 'k', pai: tr('pai', 'parent'), raiz: tr('raiz', 'root'), filho: tr('filho', 'child'), trocar: tr('trocar', 'largest'),
 };
 
 export function parseVector(text, { min, max, hint }) {
   const tokens = text.split(/[;,\s]+/).map((token) => token.trim()).filter(Boolean);
-  if (tokens.length < min) return { error: `Digite pelo menos ${min} números para haver o que ordenar.` };
-  if (tokens.length > max) return { error: hint || `Use no máximo ${max} números para manter a visualização legível.` };
+  if (tokens.length < min) return { error: tr(`Digite pelo menos ${min} números para haver o que ordenar.`, `Enter at least ${min} numbers so there is something to sort.`) };
+  if (tokens.length > max) return { error: hint || tr(`Use no máximo ${max} números para manter a visualização legível.`, `Use at most ${max} numbers to keep the visualization readable.`) };
   const values = tokens.map(Number);
   if (values.some((value) => !Number.isFinite(value))) {
-    return { error: 'Use apenas números separados por espaço, vírgula ou ponto e vírgula.' };
+    return { error: tr('Use apenas números separados por espaço, vírgula ou ponto e vírgula.', 'Use only numbers separated by space, comma or semicolon.') };
   }
   return { values };
 }
@@ -35,26 +36,26 @@ export function randomVector(count) {
 export function renderVectorEditor({ state, escapeText }, { min, max, placeholder, help }) {
   return `
     <div class="panel-heading compact-heading">
-      <div><span class="eyebrow">Dados de entrada</span><h2 id="data-editor-title">Monte seu vetor</h2></div>
-      <span class="size-badge">${state.data.length} posições</span>
+      <div><span class="eyebrow">${tr('Dados de entrada', 'Input data')}</span><h2 id="data-editor-title">${tr('Monte seu vetor', 'Build your array')}</h2></div>
+      <span class="size-badge">${state.data.length} ${tr('posições', 'positions')}</span>
     </div>
-    <label class="field-label" for="vector-input">Números do vetor</label>
+    <label class="field-label" for="vector-input">${tr('Números do vetor', 'Array numbers')}</label>
     <div class="input-action-row">
       <input id="vector-input" class="text-input ${state.inputError ? 'invalid' : ''}" value="${escapeText(state.draft)}" placeholder="${escapeText(placeholder)}" aria-describedby="vector-help vector-error" data-module-input="draft" data-module-enter="apply" />
-      <button class="button primary" type="button" data-module-action="apply-data">${icons.check}<span>Aplicar</span></button>
+      <button class="button primary" type="button" data-module-action="apply-data">${icons.check}<span>${tr('Aplicar', 'Apply')}</span></button>
     </div>
-    <p id="vector-help" class="field-help">${help || `Separe os valores por vírgula, espaço ou ponto e vírgula. De ${min} a ${max} números.`}</p>
+    <p id="vector-help" class="field-help">${help || tr(`Separe os valores por vírgula, espaço ou ponto e vírgula. De ${min} a ${max} números.`, `Separate the values by comma, space or semicolon. From ${min} to ${max} numbers.`)}</p>
     <p id="vector-error" class="error-message" role="alert">${escapeText(state.inputError)}</p>
     <div class="random-row">
-      <label for="random-count">Quantidade aleatória</label>
+      <label for="random-count">${tr('Quantidade aleatória', 'Random quantity')}</label>
       <input id="random-count" type="range" min="3" max="${max}" value="${state.randomCount}" data-module-input="random-count" />
       <output id="random-count-output">${state.randomCount}</output>
-      <button class="button secondary" type="button" data-module-action="random-data">${icons.shuffle}<span>Gerar vetor</span></button>
+      <button class="button secondary" type="button" data-module-action="random-data">${icons.shuffle}<span>${tr('Gerar vetor', 'Generate array')}</span></button>
     </div>`;
 }
 
 export const legend = (items) => `
-  <div class="array-legend" aria-label="Legenda">
+  <div class="array-legend" aria-label="${tr('Legenda', 'Legend')}">
     ${items.map(([kind, text]) => `<span><i class="legend-dot ${kind}"></i> ${text}</span>`).join('')}
   </div>`;
 
@@ -96,12 +97,12 @@ export function renderArray(step, state, escapeText, { showTags = false, stacked
     return `
       <div class="${slotClass(step, index)}">
         <div class="sort-chips${stacked ? ' stacked' : ''}"><span>${chips}</span></div>
-        <button type="button" class="${cellClasses(step, state, index, showTags)}" data-module-action="inspect-item" data-index="${index}" aria-label="Posição ${index}, valor ${escapeText(value)}">${escapeText(value)}${tag}</button>
+        <button type="button" class="${cellClasses(step, state, index, showTags)}" data-module-action="inspect-item" data-index="${index}" aria-label="${tr('Posição', 'Position')} ${index}${tr(', valor', ', value')} ${escapeText(value)}">${escapeText(value)}${tag}</button>
         <span class="sort-index">${index}</span>
         <span class="sort-rail ${rail}"></span>
       </div>`;
   }).join('');
-  return `<div class="sort-scroll${stacked ? ' roomy' : ''}" role="group" aria-label="Representação visual do vetor"><div class="sort-row">${slots}</div></div>`;
+  return `<div class="sort-scroll${stacked ? ' roomy' : ''}" role="group" aria-label="${tr('Representação visual do vetor', 'Visual representation of the array')}"><div class="sort-row">${slots}</div></div>`;
 }
 
 export const renderPhase = (step, escapeText) => `<div class="sort-phase">${step.phase
@@ -117,7 +118,7 @@ export function renderCompare(step, escapeText, hint) {
         <span class="sort-compare-side"><small>${escapeText(compare.left.label)}</small><strong>${escapeText(compare.left.value)}</strong></span>
         <span class="sort-compare-op">${escapeText(compare.op)}</span>
         <span class="sort-compare-side"><small>${escapeText(compare.right.label)}</small><strong>${escapeText(compare.right.value)}</strong></span>
-        <span class="sort-compare-result">${compare.result ? 'Sim' : 'Não'}</span>
+        <span class="sort-compare-result">${compare.result ? tr('Sim', 'Yes') : tr('Não', 'No')}</span>
       </div>`
     : `<span class="sort-compare-hint">${hint}</span>`;
   return `<div class="sort-compare-slot">${body}</div>`;
@@ -125,12 +126,12 @@ export function renderCompare(step, escapeText, hint) {
 
 /** `step.stats` é um objeto { rótulo: valor }, exibido na ordem em que foi escrito. */
 export const renderStats = (step) => (step.stats
-  ? `<div class="sort-stats">${Object.entries(step.stats).map(([name, value]) => `<span>${name}: <strong>${value}</strong></span>`).join('')}</div>`
+  ? `<div class="sort-stats">${Object.entries(step.stats).map(([name, value]) => `<span>${variableName(name)}: <strong>${value}</strong></span>`).join('')}</div>`
   : '');
 
 export function renderInspection(step, state, escapeText) {
   if (state.inspectedItem === null || state.inspectedItem >= step.values.length) return '';
-  return `<div class="inspection-card">${icons.info}<span>Posição selecionada</span><strong>vetor[${state.inspectedItem}] = ${escapeText(step.values[state.inspectedItem])}</strong></div>`;
+  return `<div class="inspection-card">${icons.info}<span>${tr('Posição selecionada', 'Selected position')}</span><strong>${tr('vetor[', 'array[')}${state.inspectedItem}] = ${escapeText(step.values[state.inspectedItem])}</strong></div>`;
 }
 
 /**
@@ -147,7 +148,7 @@ export function renderChart(step) {
       <span>${bar.label}</span>
       <span class="sort-bar-track"><i style="width:${bar.value === null ? 0 : (bar.value / longest) * 100}%"></i></span>
       <b class="sort-bar-value">${bar.value === null ? '·' : bar.value}</b>
-      <span class="sort-bar-swap" title="troca">${bar.mark || ''}</span>
+      <span class="sort-bar-swap" title="${tr('troca', 'swap')}">${bar.mark || ''}</span>
     </div>`).join('');
   const boxes = totals.map((total) => `
         <div class="sort-total${final ? ' final' : ''}"><small>${total.label}</small><strong>${total.value}</strong><span>${total.note}</span></div>`).join('');
@@ -179,14 +180,14 @@ export function renderLockstep(step, escapeText, legendItems) {
       <div class="sort-scenario">
         <div class="sort-scenario-head">
           <span class="sort-scenario-label">${escapeText(row.label)}</span>
-          <span class="sort-counters">comparações <strong>${row.comparisons}</strong> · ${row.moveLabel ?? 'trocas'} <strong>${row.swaps}</strong></span>
+          <span class="sort-counters">${tr('comparações', 'comparisons')} <strong>${row.comparisons}</strong> · ${row.moveLabel ?? tr('trocas', 'swaps')} <strong>${row.swaps}</strong></span>
         </div>
         <div class="sort-scroll"><div class="sort-row">${cells}</div></div>
       </div>`;
   }).join('');
   return `
     <div class="sort-stage">
-      <div class="sort-lockstep" role="group" aria-label="Três vetores sendo ordenados em paralelo">${scenarios}</div>
+      <div class="sort-lockstep" role="group" aria-label="${tr('Três vetores sendo ordenados em paralelo', 'Three arrays being sorted in parallel')}">${scenarios}</div>
       ${legend(legendItems)}
     </div>`;
 }

@@ -5,6 +5,7 @@ import {
   legend, parseVector, randomVector, renderArray, renderChart, renderCompare, renderInspection, renderLockstep, renderPhase, renderStats, renderVectorEditor,
 } from '../shared/sort-view.js';
 import { renderHeapInspection, renderHeapTree } from './views.js';
+import { tr } from '../../core/i18n.js';
 
 // O vetor do exemplo da aula (slides 92 a 199, o debug passo a passo), o dos slides 19 a 84
 // (a árvore desenhada) e o max-heap do slide 9.
@@ -17,24 +18,24 @@ const PRESETS = {
 const DEFAULT_VECTOR = LESSON_VECTOR;
 const MIN_ITEMS = 3;
 const MAX_ITEMS = 15;
-const LIMITS = { min: MIN_ITEMS, max: MAX_ITEMS, hint: `Use no máximo ${MAX_ITEMS} números: é o que cabe em um heap de quatro níveis.` };
-const COMPARE_HINT = 'As comparações ENQUANTO, SE e a regra do max-heap aparecem aqui.';
-const CHECK_HINT = 'A comparação vetor[pai] &lt; vetor[filho] aparece aqui: "Sim" quebra a regra do max-heap.';
+const LIMITS = { min: MIN_ITEMS, max: MAX_ITEMS, hint: tr(`Use no máximo ${MAX_ITEMS} números: é o que cabe em um heap de quatro níveis.`, `Use at most ${MAX_ITEMS} numbers: that is what fits in a four-level heap.`) };
+const COMPARE_HINT = tr('As comparações ENQUANTO, SE e a regra do max-heap aparecem aqui.', 'The WHILE and IF comparisons and the max-heap rule appear here.');
+const CHECK_HINT = tr('A comparação vetor[pai] &lt; vetor[filho] aparece aqui: "Sim" quebra a regra do max-heap.', 'The comparison array[parent] &lt; array[child] appears here: "Yes" breaks the max-heap rule.');
 
-const LEGEND_RANGE = ['range', 'início e fim · limites do trecho'];
-const LEGEND_ROOT = ['pivot', 'raiz · nó que está descendo'];
-const LEGEND_CHILD = ['compared', 'filho · comparado'];
-const LEGEND_SWAP = ['result', 'trocar · maior valor até agora'];
-const LEGEND_SORTED = ['sorted', 'já ordenado · fora do heap'];
+const LEGEND_RANGE = ['range', tr('início e fim · limites do trecho', 'start and end · range limits')];
+const LEGEND_ROOT = ['pivot', tr('raiz · nó que está descendo', 'root · node going down')];
+const LEGEND_CHILD = ['compared', tr('filho · comparado', 'child · compared')];
+const LEGEND_SWAP = ['result', tr('trocar · maior valor até agora', 'largest · largest value so far')];
+const LEGEND_SORTED = ['sorted', tr('já ordenado · fora do heap', 'already sorted · outside the heap')];
 
 const LEGENDS = {
-  heap: [['pivot', 'pai'], ['compared', 'filho · conferido'], ['warn', 'par que quebra a regra']],
-  sift: [LEGEND_RANGE, LEGEND_ROOT, LEGEND_CHILD, LEGEND_SWAP, ['outside', 'fora do heap']],
+  heap: [['pivot', 'pai'], ['compared', tr('filho · conferido', 'child · checked')], ['warn', tr('par que quebra a regra', 'pair that breaks the rule')]],
+  sift: [LEGEND_RANGE, LEGEND_ROOT, LEGEND_CHILD, LEGEND_SWAP, ['outside', tr('fora do heap', 'outside the heap')]],
   build: [LEGEND_RANGE, LEGEND_ROOT, LEGEND_CHILD, LEGEND_SWAP],
   'heap-sort': [LEGEND_RANGE, LEGEND_ROOT, LEGEND_CHILD, LEGEND_SWAP, LEGEND_SORTED],
   counting: [LEGEND_RANGE, LEGEND_ROOT, LEGEND_SORTED],
-  adaptability: [['compared', 'trecho que acabou de mudar'], ['result', 'onde o valor parou'], LEGEND_SORTED],
-  stability: [LEGEND_SORTED, ['warn', 'par de iguais que inverteu'], ['dup', 'repetido (letra = ordem original)']],
+  adaptability: [['compared', tr('trecho que acabou de mudar', 'range that just changed')], ['result', tr('onde o valor parou', 'where the value stopped')], LEGEND_SORTED],
+  stability: [LEGEND_SORTED, ['warn', tr('par de iguais que inverteu', 'pair of equals that reversed')], ['dup', tr('repetido (letra = ordem original)', 'repeated (letter = original order)')]],
 };
 
 const WITH_TREE = ['heap', 'sift', 'build', 'heap-sort'];
@@ -51,10 +52,10 @@ const lastParent = (count) => Math.max(0, Math.floor((count - 2) / 2));
 
 export const heapSortModule = {
   id: 'heap-sort',
-  name: 'Heap Sort',
-  category: { name: 'Algoritmos', anchor: 'algoritmos' },
+  name: tr('Heap Sort', 'Heap Sort'),
+  category: { name: tr('Algoritmos', 'Algorithms'), anchor: 'algoritmos' },
   version: '1.0',
-  visualizationTitle: 'Vetor e heap sendo ordenados',
+  visualizationTitle: tr('Vetor e heap sendo ordenados', 'Array and heap being sorted'),
   defaultAlgorithmId: 'heap-sort',
   defaultData: DEFAULT_VECTOR,
   defaultRandomCount: 8,
@@ -88,34 +89,34 @@ export const heapSortModule = {
 
   renderEditor(context) {
     const buttons = [
-      ['lesson', 'Debug da aula', PRESETS.lesson],
-      ['visual', 'Árvore passo a passo', PRESETS.visual],
-      ['maxheap', 'Max-heap do slide 9', PRESETS.maxheap],
+      ['lesson', tr('Debug da aula', 'Lesson debug'), PRESETS.lesson],
+      ['visual', tr('Árvore passo a passo', 'Step-by-step tree'), PRESETS.visual],
+      ['maxheap', tr('Max-heap do slide 9', 'Max-heap from slide 9'), PRESETS.maxheap],
     ].map(([key, text, values]) => `<button class="button secondary compact" type="button" data-module-action="preset" data-preset="${key}" title="${values.join(', ')}">${text}</button>`).join('');
     return `${renderVectorEditor(context, { ...LIMITS, placeholder: '6, 5, 3, 1, 8, 7, 2, 4' })}
-      <div class="preset-row"><span>Exemplos da aula</span>${buttons}</div>`;
+      <div class="preset-row"><span>${tr('Exemplos da aula', 'Lesson examples')}</span>${buttons}</div>`;
   },
 
   renderConfig({ state }) {
-    const heading = (title) => `<div class="panel-heading compact-heading"><div><span class="eyebrow">Parâmetros</span><h2 id="config-title">${title}</h2></div></div>`;
+    const heading = (title) => `<div class="panel-heading compact-heading"><div><span class="eyebrow">${tr('Parâmetros', 'Parameters')}</span><h2 id="config-title">${title}</h2></div></div>`;
 
     if (state.algorithmId === 'sift') {
       const last = state.data.length - 1;
       return `
-        ${heading('Escolha o trecho do heap')}
+        ${heading(tr('Escolha o trecho do heap', 'Choose the range of the heap'))}
         <div class="config-grid">
-          <label class="config-field"><span>inicio (o nó que vai descer)</span><input id="inicio-input" type="number" min="0" max="${last}" value="${state.config.inicio}" data-module-input="inicio" /></label>
-          <label class="config-field"><span>fim (a última posição do heap)</span><input id="fim-input" type="number" min="${state.config.inicio}" max="${last}" value="${state.config.fim}" data-module-input="fim" /></label>
+          <label class="config-field"><span>${tr('inicio (o nó que vai descer)', 'start (the node that will sink)')}</span><input id="inicio-input" type="number" min="0" max="${last}" value="${state.config.inicio}" data-module-input="inicio" /></label>
+          <label class="config-field"><span>${tr('fim (a última posição do heap)', 'end (the last position of the heap)')}</span><input id="fim-input" type="number" min="${state.config.inicio}" max="${last}" value="${state.config.fim}" data-module-input="fim" /></label>
         </div>
-        <p class="config-note">Intervalo válido: inicio de 0 a ${last} e fim de inicio a ${last}. O ajuste só deixa um max-heap quando as subárvores do nó já são heaps, como ocorre com o último pai (${lastParent(state.data.length)}) em um vetor qualquer. Você também pode clicar em uma posição do vetor para fazer dela o início.</p>`;
+        <p class="config-note">${tr('Intervalo válido: inicio de 0 a', 'Valid range: start from 0 to')} ${last} ${tr('e fim de inicio a', 'and end from start to')} ${last}${tr('. O ajuste só deixa um max-heap quando as subárvores do nó já são heaps, como ocorre com o último pai (', '. The adjustment only leaves a max-heap when the subtrees of the node are already heaps, as happens with the last parent (')}${lastParent(state.data.length)}${tr(') em um vetor qualquer. Você também pode clicar em uma posição do vetor para fazer dela o início.', ') in any array. You can also click an array position to make it the start.')}</p>`;
     }
 
     if (state.algorithmId === 'stability') {
       return `
-        ${heading('Exemplo com valores repetidos')}
+        ${heading(tr('Exemplo com valores repetidos', 'Example with repeated values'))}
         <div class="config-note-row">
-          <p>A estabilidade só aparece quando há valores iguais. O botão ao lado monta um vetor com valores repetidos em que o Heapsort realmente inverte a ordem de dois deles.</p>
-          <button class="button secondary" type="button" data-module-action="stability-example">${icons.shuffle}<span>Gerar exemplo</span></button>
+          <p>${tr('A estabilidade só aparece quando há valores iguais. O botão ao lado monta um vetor com valores repetidos em que o Heapsort realmente inverte a ordem de dois deles.', 'Stability only shows up when there are equal values. The button beside builds an array with repeated values where Heapsort really reverses the order of two of them.')}</p>
+          <button class="button secondary" type="button" data-module-action="stability-example">${icons.shuffle}<span>${tr('Gerar exemplo', 'Generate example')}</span></button>
         </div>`;
     }
 

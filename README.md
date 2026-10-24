@@ -9,7 +9,7 @@
 
 Simuladores interativos para aprender estruturas de dados e algoritmos. Cada operação roda passo a passo, com o pseudocódigo destacado, as variáveis e o console ao lado, e você pode usar os seus próprios dados.
 
-**Acesse: [labofalgorithms.com](https://labofalgorithms.com)**
+**Acesse: [labofalgorithms.com](https://labofalgorithms.com)** · English: [labofalgorithms.com/en](https://labofalgorithms.com/en/)
 
 [![Deploy](https://github.com/labofalgorithms/simulator-web/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/labofalgorithms/simulator-web/actions/workflows/deploy-pages.yml)
 [![Verificação](https://github.com/labofalgorithms/simulator-web/actions/workflows/check.yml/badge.svg)](https://github.com/labofalgorithms/simulator-web/actions/workflows/check.yml)
@@ -21,7 +21,7 @@ Simuladores interativos para aprender estruturas de dados e algoritmos. Cada ope
 
 ## Simuladores
 
-São 22 simuladores, em português, no navegador e sem cadastro. O que cada um cobre está no [catálogo detalhado](docs/SIMULADORES.md).
+São 22 simuladores, em português e em inglês, no navegador e sem cadastro. O que cada um cobre está no [catálogo detalhado](docs/SIMULADORES.md).
 
 ### Estruturas de Dados
 

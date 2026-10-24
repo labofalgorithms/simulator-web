@@ -8,6 +8,7 @@ import {
 import {
   legend, parseVector, randomVector, renderArray, renderCompare, renderInspection, renderLockstep, renderPhase, renderStats, renderVectorEditor,
 } from '../shared/sort-view.js';
+import { tr } from '../../core/i18n.js';
 
 // O vetor do exemplo da aula (slides 6 a 36 e 42 a 109).
 const LESSON_VECTOR = [97, 81, 56, 64, 43, 39, 72];
@@ -15,30 +16,30 @@ const DEFAULT_VECTOR = LESSON_VECTOR;
 const MIN_ITEMS = 2;
 const MAX_ITEMS = 10;
 const LIMITS = { min: MIN_ITEMS, max: MAX_ITEMS };
-const COMPARE_HINT = 'A comparação inicio &lt; fim (no mergeSort) e B[i] ≤ B[j] (no intercala) aparece aqui.';
+const COMPARE_HINT = tr('A comparação inicio &lt; fim (no mergeSort) e B[i] ≤ B[j] (no intercala) aparece aqui.', 'The comparison start &lt; end (in mergeSort) and B[i] ≤ B[j] (in merge) appears here.');
 
-const LEGEND_RANGE = ['range', 'início e fim · trecho atual'];
-const LEGEND_OUTSIDE = ['outside', 'fora do trecho'];
-const LEGEND_READ = ['compared', 'valor lido para B'];
-const LEGEND_B = ['current', 'B[i] e B[j] · comparados'];
-const LEGEND_SORTED = ['sorted', 'já intercalado'];
-const LEGEND_AUX = ['aux', 'vetor auxiliar B'];
+const LEGEND_RANGE = ['range', tr('início e fim · trecho atual', 'start and end · current range')];
+const LEGEND_OUTSIDE = ['outside', tr('fora do trecho', 'outside the range')];
+const LEGEND_READ = ['compared', tr('valor lido para B', 'value read into B')];
+const LEGEND_B = ['current', tr('B[i] e B[j] · comparados', 'B[i] and B[j] · compared')];
+const LEGEND_SORTED = ['sorted', tr('já intercalado', 'already merged')];
+const LEGEND_AUX = ['aux', tr('vetor auxiliar B', 'auxiliary array B')];
 
 const LEGENDS = {
-  divide: [['range', 'trecho do nível atual'], ['sorted', 'trecho de um elemento']],
+  divide: [['range', tr('trecho do nível atual', 'range of the current level')], ['sorted', tr('trecho de um elemento', 'one-element range')]],
   intercala: [LEGEND_RANGE, LEGEND_READ, LEGEND_B, LEGEND_SORTED, LEGEND_AUX],
   'merge-sort': [LEGEND_RANGE, LEGEND_OUTSIDE, LEGEND_READ, LEGEND_B, LEGEND_SORTED, LEGEND_AUX],
-  counting: [['range', 'nível atual']],
-  adaptability: [['compared', 'trecho intercalado'], LEGEND_SORTED],
-  stability: [LEGEND_RANGE, LEGEND_READ, LEGEND_B, LEGEND_SORTED, ['dup', 'repetido (letra = ordem original)']],
+  counting: [['range', tr('nível atual', 'current level')]],
+  adaptability: [['compared', tr('trecho intercalado', 'merged range')], LEGEND_SORTED],
+  stability: [LEGEND_RANGE, LEGEND_READ, LEGEND_B, LEGEND_SORTED, ['dup', tr('repetido (letra = ordem original)', 'repeated (letter = original order)')]],
 };
 
 export const mergeSortModule = {
   id: 'merge-sort',
-  name: 'Merge Sort',
-  category: { name: 'Algoritmos', anchor: 'algoritmos' },
+  name: tr('Merge Sort', 'Merge Sort'),
+  category: { name: tr('Algoritmos', 'Algorithms'), anchor: 'algoritmos' },
   version: '1.0',
-  visualizationTitle: 'Vetor sendo ordenado',
+  visualizationTitle: tr('Vetor sendo ordenado', 'Array being sorted'),
   defaultAlgorithmId: 'merge-sort',
   defaultData: DEFAULT_VECTOR,
   defaultRandomCount: 7,
@@ -69,27 +70,27 @@ export const mergeSortModule = {
 
   renderEditor(context) {
     return `${renderVectorEditor(context, { ...LIMITS, placeholder: '97, 81, 56, 64, 43, 39, 72' })}
-      <div class="preset-row"><span>Exemplo da aula</span><button class="button secondary compact" type="button" data-module-action="preset">97, 81, 56, 64, 43, 39, 72</button></div>`;
+      <div class="preset-row"><span>${tr('Exemplo da aula', 'Lesson example')}</span><button class="button secondary compact" type="button" data-module-action="preset">97, 81, 56, 64, 43, 39, 72</button></div>`;
   },
 
   renderConfig({ state }) {
-    const heading = (title) => `<div class="panel-heading compact-heading"><div><span class="eyebrow">Parâmetros</span><h2 id="config-title">${title}</h2></div></div>`;
+    const heading = (title) => `<div class="panel-heading compact-heading"><div><span class="eyebrow">${tr('Parâmetros', 'Parameters')}</span><h2 id="config-title">${title}</h2></div></div>`;
 
     if (state.algorithmId === 'intercala') {
       const last = state.data.length - 2;
       return `
-        ${heading('Escolha onde o vetor se divide')}
-        <label class="config-field"><span>Posição meio (fim da 1ª metade)</span><input id="meio-input" type="number" min="0" max="${last}" value="${state.config.meio}" data-module-input="meio" /><small>Intervalo válido: 0 a ${last}. A 1ª metade vai de 0 a meio e a 2ª, de meio + 1 até o fim. Você também pode clicar em uma posição do vetor.</small></label>`;
+        ${heading(tr('Escolha onde o vetor se divide', 'Choose where the array splits'))}
+        <label class="config-field"><span>${tr('Posição meio (fim da 1ª metade)', 'Position mid (end of the 1st half)')}</span><input id="meio-input" type="number" min="0" max="${last}" value="${state.config.meio}" data-module-input="meio" /><small>${tr('Intervalo válido: 0 a', 'Valid range: 0 to')} ${last}${tr('. A 1ª metade vai de 0 a meio e a 2ª, de meio + 1 até o fim. Você também pode clicar em uma posição do vetor.', '. The 1st half goes from 0 to mid and the 2nd, from mid + 1 to the end. You can also click an array position.')}</small></label>`;
     }
 
     if (state.algorithmId === 'stability') {
       return `
-        ${heading('Exemplos com valores repetidos')}
+        ${heading(tr('Exemplos com valores repetidos', 'Examples with repeated values'))}
         <div class="config-note-row">
-          <p>A estabilidade só aparece quando há valores iguais. "Gerar exemplo" monta um vetor com repetidos em que a ordem é preservada; "Ver o caso que inverte" monta um em que a 2ª metade, copiada invertida, faz dois iguais trocarem de lugar.</p>
+          <p>${tr('A estabilidade só aparece quando há valores iguais. "Gerar exemplo" monta um vetor com repetidos em que a ordem é preservada; "Ver o caso que inverte" monta um em que a 2ª metade, copiada invertida, faz dois iguais trocarem de lugar.', 'Stability only shows up when there are equal values. "Generate example" builds an array with repeated values where the order is preserved; "See the case that reverses" builds one where the 2nd half, copied reversed, makes two equals swap places.')}</p>
           <div class="config-buttons">
-            <button class="button secondary" type="button" data-module-action="stability-example">${icons.shuffle}<span>Gerar exemplo</span></button>
-            <button class="button secondary" type="button" data-module-action="stability-inverted">${icons.shuffle}<span>Ver o caso que inverte</span></button>
+            <button class="button secondary" type="button" data-module-action="stability-example">${icons.shuffle}<span>${tr('Gerar exemplo', 'Generate example')}</span></button>
+            <button class="button secondary" type="button" data-module-action="stability-inverted">${icons.shuffle}<span>${tr('Ver o caso que inverte', 'See the case that reverses')}</span></button>
           </div>
         </div>`;
     }

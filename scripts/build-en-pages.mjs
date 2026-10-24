@@ -35,6 +35,11 @@ const rewritePath = (value) => {
 
 function translateTag(tag, page) {
   if (/^<html\b/i.test(tag)) return tag.replace('lang="pt-BR"', 'lang="en"');
+  // O link EN do português vira, na página em inglês, o link PT para a mesma página.
+  if (/^<a\b[^>]*class="lang-link"/.test(tag)) {
+    const href = page.home ? '../' : `../../../simuladores/${page.slug}/`;
+    return `<a class="lang-link" href="${href}" hreflang="pt-BR" lang="pt-BR" title="Ler em português" aria-label="PT: Ler em português">`;
+  }
   const attrs = [...tag.matchAll(/([\w:-]+)="([^"]*)"/g)].reduce((o, m) => ({ ...o, [m[1]]: m[2] }), {});
   const set = (name, value) => { tag = tag.replace(new RegExp(`(\\b${name}=")[^"]*(")`), (_, a, b) => `${a}${value}${b}`); };
   for (const name of ['aria-label', 'title', 'placeholder', 'alt']) if (name in attrs) set(name, translateText(attrs[name], page));
@@ -55,6 +60,7 @@ function translateTag(tag, page) {
       'og:description': () => (sim ? sim.description : tr()),
       'og:url': () => enUrl(attrs.content),
       'og:locale': () => 'en_US',
+      'og:locale:alternate': () => 'pt_BR',
       'og:image': () => (sim ? `${BASE}/assets/og/en/${page.slug}.jpg` : attrs.content),
       'og:image:alt': () => (sim ? `Card for the ${sim.name} simulator, by LabOfAlgorithms.` : tr()),
     }[key]?.();
@@ -84,6 +90,7 @@ function translatePage(html, page) {
   const out = [];
   const tokens = html.match(/<script\b[\s\S]*?<\/script>|<style\b[\s\S]*?<\/style>|<!--[\s\S]*?-->|<[^>]+>|[^<]+/g) ?? [];
   let inTitle = false;
+  let inLangLink = false;
   for (const token of tokens) {
     if (token.startsWith('<script')) {
       if (/application\/ld\+json/.test(token)) {
@@ -91,9 +98,13 @@ function translatePage(html, page) {
       } else out.push(translateTag(token.match(/^<script[^>]*>/)[0], page) + token.slice(token.match(/^<script[^>]*>/)[0].length));
     } else if (token.startsWith('<style') || token.startsWith('<!--')) out.push(token);
     else if (token.startsWith('<')) {
+      if (/^<a\b[^>]*class="lang-link"/.test(token)) inLangLink = true;
+      if (/^<\/a/i.test(token)) inLangLink = false;
       if (/^<title\b/i.test(token)) inTitle = true;
       if (/^<\/title/i.test(token)) inTitle = false;
       out.push(translateTag(token, page));
+    } else if (inLangLink) {
+      out.push('PT');
     } else if (inTitle) {
       out.push(page.sim ? `LabOfAlgorithms · ${page.sim.name}` : translateText(token, page));
     } else out.push(translateText(token, page));

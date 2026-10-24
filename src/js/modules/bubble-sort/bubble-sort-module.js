@@ -4,25 +4,26 @@ import { repeatedExample } from '../shared/sort-steps.js';
 import {
   legend, parseVector, randomVector, renderArray, renderChart, renderCompare, renderInspection, renderLockstep, renderPhase, renderStats, renderVectorEditor,
 } from '../shared/sort-view.js';
+import { tr } from '../../core/i18n.js';
 
 const DEFAULT_VECTOR = [7, 5, 3, 11, 9, 2];
 const MIN_ITEMS = 2;
 const MAX_ITEMS = 10;
 const LIMITS = { min: MIN_ITEMS, max: MAX_ITEMS };
-const COMPARE_HINT = 'A comparação vetor[j - 1] &gt; vetor[j] aparece aqui durante a varredura.';
+const COMPARE_HINT = tr('A comparação vetor[j - 1] &gt; vetor[j] aparece aqui durante a varredura.', 'The comparison array[j - 1] &gt; array[j] appears here during the sweep.');
 
-const LEGEND_I = ['pointer-i', 'i · passada'];
-const LEGEND_PAIR = ['current', 'j−1 e j · par examinado'];
-const LEGEND_SWAP = ['compared', 'troca'];
-const LEGEND_SORTED = ['sorted', 'posição final'];
+const LEGEND_I = ['pointer-i', tr('i · passada', 'i · pass')];
+const LEGEND_PAIR = ['current', tr('j−1 e j · par examinado', 'j−1 and j · examined pair')];
+const LEGEND_SWAP = ['compared', tr('troca', 'swap')];
+const LEGEND_SORTED = ['sorted', tr('posição final', 'final position')];
 
 const LEGENDS = {
-  sweep: [LEGEND_PAIR, LEGEND_SWAP, ['result', 'maior do trecho'], ['outside', 'fora do trecho']],
+  sweep: [LEGEND_PAIR, LEGEND_SWAP, ['result', tr('maior do trecho', 'largest of the range')], ['outside', tr('fora do trecho', 'outside the range')]],
   'bubble-sort': [LEGEND_I, LEGEND_PAIR, LEGEND_SWAP, LEGEND_SORTED],
   optimized: [LEGEND_I, LEGEND_PAIR, LEGEND_SWAP, LEGEND_SORTED],
   counting: [LEGEND_I, LEGEND_SWAP, LEGEND_SORTED],
   adaptability: [LEGEND_SWAP, LEGEND_SORTED],
-  stability: [LEGEND_I, LEGEND_PAIR, LEGEND_SORTED, ['dup', 'repetido (letra = ordem original)']],
+  stability: [LEGEND_I, LEGEND_PAIR, LEGEND_SORTED, ['dup', tr('repetido (letra = ordem original)', 'repeated (letter = original order)')]],
 };
 
 const WITH_COMPARE = ['sweep', 'bubble-sort', 'optimized', 'stability'];
@@ -30,10 +31,10 @@ const WITH_STATS = ['bubble-sort', 'optimized'];
 
 export const bubbleSortModule = {
   id: 'bubble-sort',
-  name: 'Bubble Sort',
-  category: { name: 'Algoritmos', anchor: 'algoritmos' },
+  name: tr('Bubble Sort', 'Bubble Sort'),
+  category: { name: tr('Algoritmos', 'Algorithms'), anchor: 'algoritmos' },
   version: '1.0',
-  visualizationTitle: 'Vetor sendo ordenado',
+  visualizationTitle: tr('Vetor sendo ordenado', 'Array being sorted'),
   defaultAlgorithmId: 'sweep',
   defaultData: DEFAULT_VECTOR,
   defaultRandomCount: 6,
@@ -67,20 +68,20 @@ export const bubbleSortModule = {
   },
 
   renderConfig({ state }) {
-    const heading = (title) => `<div class="panel-heading compact-heading"><div><span class="eyebrow">Parâmetros</span><h2 id="config-title">${title}</h2></div></div>`;
+    const heading = (title) => `<div class="panel-heading compact-heading"><div><span class="eyebrow">${tr('Parâmetros', 'Parameters')}</span><h2 id="config-title">${title}</h2></div></div>`;
 
     if (state.algorithmId === 'sweep') {
       return `
-        ${heading('Escolha até onde vai a varredura')}
-        <label class="config-field"><span>Última posição do trecho</span><input id="end-input" type="number" min="0" max="${state.data.length - 1}" value="${state.config.fim}" data-module-input="fim" /><small>Intervalo válido: 0 a ${state.data.length - 1}. Você também pode clicar em uma posição do vetor.</small></label>`;
+        ${heading(tr('Escolha até onde vai a varredura', 'Choose how far the sweep goes'))}
+        <label class="config-field"><span>${tr('Última posição do trecho', 'Last position of the range')}</span><input id="end-input" type="number" min="0" max="${state.data.length - 1}" value="${state.config.fim}" data-module-input="fim" /><small>${tr('Intervalo válido: 0 a', 'Valid range: 0 to')} ${state.data.length - 1}${tr('. Você também pode clicar em uma posição do vetor.', '. You can also click an array position.')}</small></label>`;
     }
 
     if (state.algorithmId === 'stability') {
       return `
-        ${heading('Exemplo com valores repetidos')}
+        ${heading(tr('Exemplo com valores repetidos', 'Example with repeated values'))}
         <div class="config-note-row">
-          <p>A estabilidade só aparece quando há valores iguais. O botão ao lado monta um vetor com valores repetidos para você ver o que acontece quando eles se encontram.</p>
-          <button class="button secondary" type="button" data-module-action="stability-example">${icons.shuffle}<span>Gerar exemplo</span></button>
+          <p>${tr('A estabilidade só aparece quando há valores iguais. O botão ao lado monta um vetor com valores repetidos para você ver o que acontece quando eles se encontram.', 'Stability only shows up when there are equal values. The button beside builds an array with repeated values so you can see what happens when they meet.')}</p>
+          <button class="button secondary" type="button" data-module-action="stability-example">${icons.shuffle}<span>${tr('Gerar exemplo', 'Generate example')}</span></button>
         </div>`;
     }
 

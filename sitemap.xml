@@ -1,26 +1,279 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://labofalgorithms.com/</loc></url>
-  <url><loc>https://labofalgorithms.com/simuladores/alocacao-dinamica/</loc></url>
-  <url><loc>https://labofalgorithms.com/simuladores/arvore-avl/</loc></url>
-  <url><loc>https://labofalgorithms.com/simuladores/arvore-binaria-busca/</loc></url>
-  <url><loc>https://labofalgorithms.com/simuladores/bubble-sort/</loc></url>
-  <url><loc>https://labofalgorithms.com/simuladores/filas-dinamicas/</loc></url>
-  <url><loc>https://labofalgorithms.com/simuladores/filas/</loc></url>
-  <url><loc>https://labofalgorithms.com/simuladores/heap-sort/</loc></url>
-  <url><loc>https://labofalgorithms.com/simuladores/insertion-sort/</loc></url>
-  <url><loc>https://labofalgorithms.com/simuladores/listas-circulares/</loc></url>
-  <url><loc>https://labofalgorithms.com/simuladores/listas-dinamicas/</loc></url>
-  <url><loc>https://labofalgorithms.com/simuladores/listas-duplamente-encadeadas/</loc></url>
-  <url><loc>https://labofalgorithms.com/simuladores/listas/</loc></url>
-  <url><loc>https://labofalgorithms.com/simuladores/matrizes/</loc></url>
-  <url><loc>https://labofalgorithms.com/simuladores/merge-sort/</loc></url>
-  <url><loc>https://labofalgorithms.com/simuladores/percursos-arvores-binarias/</loc></url>
-  <url><loc>https://labofalgorithms.com/simuladores/pilhas-dinamicas/</loc></url>
-  <url><loc>https://labofalgorithms.com/simuladores/pilhas/</loc></url>
-  <url><loc>https://labofalgorithms.com/simuladores/quick-sort/</loc></url>
-  <url><loc>https://labofalgorithms.com/simuladores/selection-sort/</loc></url>
-  <url><loc>https://labofalgorithms.com/simuladores/shotgun-sort/</loc></url>
-  <url><loc>https://labofalgorithms.com/simuladores/tabelas-hash/</loc></url>
-  <url><loc>https://labofalgorithms.com/simuladores/vetores/</loc></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://labofalgorithms.com/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/simuladores/alocacao-dinamica/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/alocacao-dinamica/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/alocacao-dinamica/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/alocacao-dinamica/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/alocacao-dinamica/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/alocacao-dinamica/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/alocacao-dinamica/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/alocacao-dinamica/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/simuladores/arvore-avl/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/arvore-avl/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/arvore-avl/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/arvore-avl/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/arvore-avl/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/arvore-avl/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/arvore-avl/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/arvore-avl/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/simuladores/arvore-binaria-busca/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/arvore-binaria-busca/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/arvore-binaria-busca/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/arvore-binaria-busca/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/arvore-binaria-busca/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/arvore-binaria-busca/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/arvore-binaria-busca/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/arvore-binaria-busca/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/simuladores/bubble-sort/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/bubble-sort/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/bubble-sort/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/bubble-sort/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/bubble-sort/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/bubble-sort/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/bubble-sort/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/bubble-sort/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/simuladores/filas-dinamicas/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/filas-dinamicas/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/filas-dinamicas/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/filas-dinamicas/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/filas-dinamicas/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/filas-dinamicas/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/filas-dinamicas/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/filas-dinamicas/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/simuladores/filas/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/filas/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/filas/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/filas/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/filas/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/filas/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/filas/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/filas/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/simuladores/heap-sort/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/heap-sort/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/heap-sort/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/heap-sort/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/heap-sort/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/heap-sort/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/heap-sort/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/heap-sort/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/simuladores/insertion-sort/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/insertion-sort/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/insertion-sort/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/insertion-sort/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/insertion-sort/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/insertion-sort/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/insertion-sort/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/insertion-sort/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/simuladores/listas-circulares/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/listas-circulares/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/listas-circulares/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/listas-circulares/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/listas-circulares/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/listas-circulares/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/listas-circulares/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/listas-circulares/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/simuladores/listas-dinamicas/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/listas-dinamicas/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/listas-dinamicas/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/listas-dinamicas/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/listas-dinamicas/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/listas-dinamicas/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/listas-dinamicas/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/listas-dinamicas/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/simuladores/listas-duplamente-encadeadas/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/listas-duplamente-encadeadas/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/listas-duplamente-encadeadas/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/listas-duplamente-encadeadas/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/listas-duplamente-encadeadas/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/listas-duplamente-encadeadas/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/listas-duplamente-encadeadas/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/listas-duplamente-encadeadas/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/simuladores/listas/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/listas/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/listas/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/listas/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/listas/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/listas/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/listas/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/listas/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/simuladores/matrizes/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/matrizes/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/matrizes/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/matrizes/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/matrizes/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/matrizes/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/matrizes/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/matrizes/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/simuladores/merge-sort/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/merge-sort/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/merge-sort/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/merge-sort/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/merge-sort/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/merge-sort/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/merge-sort/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/merge-sort/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/simuladores/percursos-arvores-binarias/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/percursos-arvores-binarias/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/percursos-arvores-binarias/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/percursos-arvores-binarias/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/percursos-arvores-binarias/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/percursos-arvores-binarias/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/percursos-arvores-binarias/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/percursos-arvores-binarias/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/simuladores/pilhas-dinamicas/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/pilhas-dinamicas/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/pilhas-dinamicas/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/pilhas-dinamicas/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/pilhas-dinamicas/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/pilhas-dinamicas/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/pilhas-dinamicas/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/pilhas-dinamicas/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/simuladores/pilhas/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/pilhas/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/pilhas/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/pilhas/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/pilhas/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/pilhas/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/pilhas/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/pilhas/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/simuladores/quick-sort/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/quick-sort/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/quick-sort/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/quick-sort/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/quick-sort/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/quick-sort/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/quick-sort/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/quick-sort/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/simuladores/selection-sort/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/selection-sort/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/selection-sort/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/selection-sort/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/selection-sort/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/selection-sort/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/selection-sort/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/selection-sort/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/simuladores/shotgun-sort/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/shotgun-sort/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/shotgun-sort/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/shotgun-sort/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/shotgun-sort/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/shotgun-sort/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/shotgun-sort/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/shotgun-sort/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/simuladores/tabelas-hash/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/tabelas-hash/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/tabelas-hash/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/tabelas-hash/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/tabelas-hash/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/tabelas-hash/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/tabelas-hash/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/tabelas-hash/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/simuladores/vetores/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/vetores/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/vetores/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/vetores/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/vetores/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/vetores/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/vetores/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/vetores/" />
+  </url>
 </urlset>

@@ -1,5 +1,6 @@
 import { icons } from '../../core/icons.js';
 import { hasIndex } from '../../core/utils.js';
+import { tr } from '../../core/i18n.js';
 
 // O heap como árvore binária completa, desenhada em SVG: o nó i fica no nível ⌊log₂(i + 1)⌋, e os
 // filhos de i são 2i + 1 e 2i + 2. Cada passo traz o vetor e os mesmos marcadores do vetor
@@ -15,7 +16,7 @@ const LINE = 11.5;
 
 // Marcadores que viram rótulo sob o nó (`inicio` só quando ainda não existe `raiz`, em CriaHeap).
 const ROLE_LABELS = {
-  pai: 'pai', raiz: 'raiz', filho: 'filho', trocar: 'trocar', i: 'i', j: 'j',
+  pai: tr('pai', 'parent'), raiz: tr('raiz', 'root'), filho: tr('filho', 'child'), trocar: tr('trocar', 'largest'), i: 'i', j: 'j',
 };
 
 const levelOf = (index) => Math.floor(Math.log2(index + 1));
@@ -24,7 +25,7 @@ const parentOf = (index) => Math.floor((index - 1) / 2);
 function rolesOf(step, index) {
   const pointers = step.pointers || {};
   const roles = Object.keys(ROLE_LABELS).filter((name) => pointers[name] === index).map((name) => ROLE_LABELS[name]);
-  if (pointers.raiz === undefined && pointers.pai === undefined && pointers.inicio === index) roles.push('início');
+  if (pointers.raiz === undefined && pointers.pai === undefined && pointers.inicio === index) roles.push(tr('início', 'start'));
   return roles;
 }
 
@@ -87,8 +88,8 @@ export function renderHeapTree(step, state, escapeText) {
   }).join('');
 
   return `
-    <div class="heap-scroll" role="group" aria-label="O vetor visto como uma árvore binária completa (heap)">
-      <svg class="heap-svg" viewBox="0 0 ${width} ${height}" style="min-width:${Math.round(width * 0.58)}px;max-width:${Math.round(width * 1.25)}px" role="img" aria-label="Heap com ${count} nós">
+    <div class="heap-scroll" role="group" aria-label="${tr('O vetor visto como uma árvore binária completa (heap)', 'The array seen as a complete binary tree (heap)')}">
+      <svg class="heap-svg" viewBox="0 0 ${width} ${height}" style="min-width:${Math.round(width * 0.58)}px;max-width:${Math.round(width * 1.25)}px" role="img" aria-label="${tr('Heap com', 'Heap with')} ${count} ${tr('nós', 'nodes')}">
         <g>${edges}</g>
         <g>${nodes}</g>
       </svg>
@@ -100,11 +101,11 @@ export function renderHeapInspection(step, state, escapeText) {
   const item = state.inspectedItem;
   const count = step.values.length;
   if (item === null || item === undefined || item >= count) return '';
-  const at = (index) => `vetor[${index}] = ${escapeText(step.values[index])}`;
-  const parent = item === 0 ? 'a raiz não tem pai' : `pai (${item} − 1) / 2 = ${parentOf(item)}: ${at(parentOf(item))}`;
+  const at = (index) => tr(`vetor[${index}] = ${escapeText(step.values[index])}`, `array[${index}] = ${escapeText(step.values[index])}`);
+  const parent = item === 0 ? tr('a raiz não tem pai', 'the root has no parent') : tr(`pai (${item} − 1) / 2 = ${parentOf(item)}: ${at(parentOf(item))}`, `parent (${item} − 1) / 2 = ${parentOf(item)}: ${at(parentOf(item))}`);
   const children = [2 * item + 1, 2 * item + 2].filter((child) => child < count);
   const kids = children.length
-    ? `filhos 2·${item} + 1 = ${children[0]}${children[1] === undefined ? '' : ` e 2·${item} + 2 = ${children[1]}`}: ${children.map(at).join(' · ')}`
-    : `filhos 2·${item} + 1 = ${2 * item + 1} (fora do vetor): é uma folha`;
-  return `<div class="inspection-card heap-inspection">${icons.info}<span>Posição ${item}: ${escapeText(step.values[item])}</span><strong>${parent} · ${kids}</strong></div>`;
+    ? tr(`filhos 2·${item} + 1 = ${children[0]}${children[1] === undefined ? '' : ` e 2·${item} + 2 = ${children[1]}`}: ${children.map(at).join(' · ')}`, `children 2·${item} + 1 = ${children[0]}${children[1] === undefined ? '' : ` and 2·${item} + 2 = ${children[1]}`}: ${children.map(at).join(' · ')}`)
+    : tr(`filhos 2·${item} + 1 = ${2 * item + 1} (fora do vetor): é uma folha`, `children 2·${item} + 1 = ${2 * item + 1} (outside the array): it is a leaf`);
+  return `<div class="inspection-card heap-inspection">${icons.info}<span>${tr('Posição', 'Position')} ${item}: ${escapeText(step.values[item])}</span><strong>${parent} · ${kids}</strong></div>`;
 }
