@@ -14,10 +14,9 @@ const PAGES = join(ROOT, 'src/js/pages');
 
 /** Simuladores ainda sem tradução: só a estrutura é conferida. Cada um sai daqui quando fica pronto. */
 const PENDING = new Set([
-  'avl-tree-simulator.js', 'binary-search-tree-simulator.js', 'bubble-sort-simulator.js',
-  'hash-table-simulator.js', 'heap-sort-simulator.js', 'insertion-sort-simulator.js',
+  'bubble-sort-simulator.js',
+  'heap-sort-simulator.js', 'insertion-sort-simulator.js',
   'merge-sort-simulator.js', 'quick-sort-simulator.js', 'selection-sort-simulator.js', 'shotgun-sort-simulator.js',
-  'tree-traversal-simulator.js',
 ]);
 
 const pageFiles = () => readdirSync(PAGES).filter((f) => f.endsWith('-simulator.js')).sort();
@@ -80,9 +79,20 @@ if (process.argv[2] === '--dump') {
     accents({ name: b.name, visualizationTitle: b.visualizationTitle, algorithms: b.algorithms }, 'meta', leaks);
     for (const [id, steps] of Object.entries(b.steps)) accents(steps, `steps.${id}`, leaks);
     if (leaks.length) at(`${leaks.length} texto(s) com acento do português no inglês, por exemplo ${leaks.slice(0, 3).join(' | ')}`);
+    // Uma variável traduzida no próprio texto (chave diferente nos dois idiomas) está certa; se a chave é igual,
+    // ela precisa estar em variable-names.js (nomes iguais nos dois idiomas ficam lá também).
     const unknown = new Set();
-    for (const steps of Object.values(b.steps)) for (const step of steps) for (const key of Object.keys(step.variables || {})) {
-      if (!(key in variableNames) && !(key.split(/[\[.]/)[0] in variableNames) && !['rowSum', 'colSum', 'jagged'].includes(key.split(/[\[.]/)[0])) unknown.add(key);
+    for (const id of Object.keys(a.steps)) {
+      const stepsPt = a.steps[id];
+      const stepsEn = b.steps[id];
+      if (typeof stepsPt === 'string' || typeof stepsEn === 'string') continue;
+      stepsEn.forEach((step, i) => {
+        const keysPt = Object.keys(stepsPt[i]?.variables || {});
+        Object.keys(step.variables || {}).forEach((key, j) => {
+          const base = key.split(/[\[.]/)[0];
+          if (key === keysPt[j] && !(key in variableNames) && !(base in variableNames) && !['rowSum', 'colSum', 'jagged'].includes(base)) unknown.add(key);
+        });
+      });
     }
     if (unknown.size) at(`variáveis sem nome em inglês em variable-names.js: ${[...unknown].join(', ')}`);
   }

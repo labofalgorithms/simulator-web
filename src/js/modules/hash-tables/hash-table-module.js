@@ -1,5 +1,6 @@
 import { algorithms, buildSteps, buildOpenTable, DELETADO } from './algorithms.js';
 import { hasIndex } from '../../core/utils.js';
+import { tr, variableName } from '../../core/i18n.js';
 
 const MIN_CAPACITY = 5;
 const MAX_CAPACITY = 12;
@@ -24,7 +25,7 @@ const maxEntries = (capacity) => capacity - 1;
 const countLabel = (entries) => {
   const removed = entries.filter((entry) => entry.removida).length;
   const active = entries.length - removed;
-  return `${active} entrada${active === 1 ? '' : 's'}${removed ? ` + ${removed} removida${removed === 1 ? '' : 's'}` : ''}`;
+  return tr(`${active} entrada${active === 1 ? '' : 's'}${removed ? ` + ${removed} removida${removed === 1 ? '' : 's'}` : ''}`, `${active} entr${active === 1 ? 'y' : 'ies'}${removed ? ` + ${removed} removed` : ''}`);
 };
 const hashOf = (chave, capacity) => Math.abs(chave) % capacity;
 
@@ -34,19 +35,19 @@ function parseEntries(text, capacity) {
   const entries = [];
   for (const token of rawTokens) {
     const match = token.match(/^(~)?\s*(\d+)\s*(?:[:=]\s*(.+))?$/);
-    if (!match) return { error: 'Use pares chave:valor, por exemplo 36:Ana. A chave é um número inteiro.' };
+    if (!match) return { error: tr('Use pares chave:valor, por exemplo 36:Ana. A chave é um número inteiro.', 'Use key:value pairs, for example 36:Ana. The key is an integer.') };
     const removida = Boolean(match[1]);
     const chave = Number(match[2]);
-    const valor = (match[3] ?? 'valor').trim();
-    if (!isKey(chave)) return { error: `A chave deve ser um inteiro entre 0 e ${MAX_KEY}.` };
-    if (!valor || valor.length > MAX_VALUE_LENGTH) return { error: `O valor deve ter de 1 a ${MAX_VALUE_LENGTH} caracteres.` };
+    const valor = (match[3] ?? tr('valor', 'value')).trim();
+    if (!isKey(chave)) return { error: tr(`A chave deve ser um inteiro entre 0 e ${MAX_KEY}.`, `The key must be an integer between 0 and ${MAX_KEY}.`) };
+    if (!valor || valor.length > MAX_VALUE_LENGTH) return { error: tr(`O valor deve ter de 1 a ${MAX_VALUE_LENGTH} caracteres.`, `The value must have 1 to ${MAX_VALUE_LENGTH} characters.`) };
     entries.push(removida ? { chave, valor, removida } : { chave, valor });
   }
   if (new Set(entries.map((entry) => entry.chave)).size !== entries.length) {
-    return { error: 'Não repita chaves: cada chave aparece uma única vez na tabela.' };
+    return { error: tr('Não repita chaves: cada chave aparece uma única vez na tabela.', 'Do not repeat keys: each key appears only once in the table.') };
   }
   if (entries.length > maxEntries(capacity)) {
-    return { error: `Com capacidade ${capacity}, use no máximo ${maxEntries(capacity)} entradas (sempre sobra ao menos uma posição null).` };
+    return { error: tr(`Com capacidade ${capacity}, use no máximo ${maxEntries(capacity)} entradas (sempre sobra ao menos uma posição null).`, `With capacity ${capacity}, use at most ${maxEntries(capacity)} entries (at least one null position always remains).`) };
   }
   return { entries };
 }
@@ -106,7 +107,7 @@ function defaultConfig(data) {
   while (taken.has(newKey) && newKey <= MAX_KEY) newKey += capacity;
   if (newKey > MAX_KEY) newKey = Array.from({ length: MAX_KEY + 1 }, (_, value) => value).find((value) => !taken.has(value)) ?? 0;
   const usedValues = new Set(entries.map((entry) => entry.valor));
-  const value = NAMES.find((name) => !usedValues.has(name)) ?? 'valor';
+  const value = NAMES.find((name) => !usedValues.has(name)) ?? tr('valor', 'value');
   return { key, newKey, value };
 }
 
@@ -122,17 +123,17 @@ function cellStates(step, index) {
 
 function chipsHtml(markers, at, escapeText, names = null) {
   return markers.filter((marker) => marker.at === at && (!names || names.includes(marker.name)))
-    .map((marker) => `<span class="mem-chip${marker.name === 'original' ? ' cursor' : ''}">${escapeText(marker.name)}</span>`)
+    .map((marker) => `<span class="mem-chip${marker.name === 'original' ? ' cursor' : ''}">${escapeText(variableName(marker.name))}</span>`)
     .join('');
 }
 
 const legend = `
-  <div class="node-legend" aria-label="Legenda">
-    <span><i class="legend-dot current"></i> atual</span>
-    <span><i class="legend-dot compared"></i> alterado</span>
-    <span><i class="legend-dot processed"></i> processado</span>
-    <span><i class="legend-dot result"></i> resultado</span>
-    <span><i class="legend-dot collision"></i> colisão</span>
+  <div class="node-legend" aria-label="${tr('Legenda', 'Legend')}">
+    <span><i class="legend-dot current"></i> ${tr('atual', 'current')}</span>
+    <span><i class="legend-dot compared"></i> ${tr('alterado', 'changed')}</span>
+    <span><i class="legend-dot processed"></i> ${tr('processado', 'processed')}</span>
+    <span><i class="legend-dot result"></i> ${tr('resultado', 'result')}</span>
+    <span><i class="legend-dot collision"></i> ${tr('colisão', 'collision')}</span>
   </div>`;
 
 function renderOpen(scene, step, escapeText) {
@@ -151,7 +152,7 @@ function renderOpen(scene, step, escapeText) {
       content = '<span class="hash-del">DEL</span>';
     } else {
       tag = 'button';
-      attrs = ` type="button" data-module-action="pick-key" data-key="${cell.chave}" aria-label="Posição ${index}, chave ${cell.chave}, valor ${escapeText(cell.valor)}"`;
+      attrs = tr(` type="button" data-module-action="pick-key" data-key="${cell.chave}" aria-label="Posição ${index}, chave ${cell.chave}, valor ${escapeText(cell.valor)}"`, ` type="button" data-module-action="pick-key" data-key="${cell.chave}" aria-label="Position ${index}, key ${cell.chave}, value ${escapeText(cell.valor)}"`);
       content = `<strong>${cell.chave}</strong><small>${escapeText(cell.valor)}</small>`;
     }
     if (step.bornTable) classes.push('born');
@@ -166,15 +167,15 @@ function renderOpen(scene, step, escapeText) {
 
   const body = scene.cells.length
     ? `<div class="node-scroll"><div class="hash-open-row">${slots}</div></div>`
-    : `<div class="mem-empty">A tabela ainda não foi criada (capacidade ${scene.capacity}).</div>`;
+    : `<div class="mem-empty">${tr('A tabela ainda não foi criada (capacidade', 'The table has not been created yet (capacity')} ${scene.capacity}).</div>`;
   const info = [
     scene.i === null ? '' : `<span>i = <strong>${scene.i}</strong></span>`,
-    scene.deleted ? '<span>DELETADO = <strong>{-1 = ""}</strong></span>' : '',
+    scene.deleted ? `<span>${tr('DELETADO =', 'DELETED =')} <strong>{-1 = ""}</strong></span>` : '',
   ].filter(Boolean).join('');
 
   return `
     <div class="mem-stage">
-      <div class="node-dimensions"><span>capacidade: ${scene.capacity} · entradas: ${filled}${deletedCount ? ` · deletados: ${deletedCount}` : ''}</span></div>
+      <div class="node-dimensions"><span>${tr('capacidade:', 'capacity:')} ${scene.capacity} ${tr('· entradas:', '· entries:')} ${filled}${deletedCount ? tr(` · deletados: ${deletedCount}`, ` · deleted: ${deletedCount}`) : ''}</span></div>
       ${body}
       ${info ? `<div class="hash-info">${info}</div>` : ''}
       ${legend}
@@ -192,7 +193,7 @@ function renderChain(scene, step, escapeText) {
 
     const head = list === null
       ? '<span class="hash-bucket-head null">null</span>'
-      : `<span class="hash-bucket-head${step.bornBucket === bucket ? ' born' : ''}">lista</span>`;
+      : `<span class="hash-bucket-head${step.bornBucket === bucket ? ' born' : ''}">${tr('lista', 'list')}</span>`;
 
     let entries = '';
     if (list && list.length === 0) {
@@ -204,7 +205,7 @@ function renderChain(scene, step, escapeText) {
         if (hasIndex(step.activeEntries, id)) entryClasses.push('active');
         if (hasIndex(step.foundEntries, id)) entryClasses.push('found');
         if (hasIndex(step.changedEntries, id)) entryClasses.push('changed');
-        return `<span class="hash-chain-arrow" aria-hidden="true">→</span><button type="button" class="${entryClasses.join(' ')}" data-module-action="pick-key" data-key="${entry.chave}" aria-label="Lista ${bucket}, chave ${entry.chave}, valor ${escapeText(entry.valor)}"><strong>${entry.chave}</strong><small>${escapeText(entry.valor)}</small></button>`;
+        return `<span class="hash-chain-arrow" aria-hidden="true">→</span><button type="button" class="${entryClasses.join(' ')}" data-module-action="pick-key" data-key="${entry.chave}" aria-label="${tr('Lista', 'List')} ${bucket}${tr(', chave', ', key')} ${entry.chave}${tr(', valor', ', value')} ${escapeText(entry.valor)}"><strong>${entry.chave}</strong><small>${escapeText(entry.valor)}</small></button>`;
       }).join('');
     }
 
@@ -218,20 +219,20 @@ function renderChain(scene, step, escapeText) {
 
   return `
     <div class="mem-stage">
-      <div class="node-dimensions"><span>capacidade: ${scene.capacity} · entradas: ${total}</span></div>
+      <div class="node-dimensions"><span>${tr('capacidade:', 'capacity:')} ${scene.capacity} ${tr('· entradas:', '· entries:')} ${total}</span></div>
       <div class="node-scroll"><div class="hash-chain-rows">${rows}</div></div>
       ${legend}
     </div>`;
 }
 
 function renderEntry(scene, step, escapeText) {
-  const field = (name, value) => `<div class="mem-object-field${step.changedField === name ? ' changed' : ''}"><span>${name}</span><strong>${value === null ? '—' : escapeText(value)}</strong></div>`;
+  const field = (name, value) => `<div class="mem-object-field${step.changedField === name ? ' changed' : ''}"><span>${variableName(name)}</span><strong>${value === null ? '—' : escapeText(value)}</strong></div>`;
   const text = scene.chave !== null && scene.valor !== null ? `{${scene.chave} = ${scene.valor}}` : '—';
   return `
     <div class="mem-stage">
-      <div class="node-dimensions"><span>uma entrada da tabela</span></div>
+      <div class="node-dimensions"><span>${tr('uma entrada da tabela', 'a table entry')}</span></div>
       <div class="mem-object">
-        <div class="mem-object-head"><span>EntradaChaveValor</span></div>
+        <div class="mem-object-head"><span>${tr('EntradaChaveValor', 'KeyValueEntry')}</span></div>
         ${field('chave', scene.chave)}
         ${field('valor', scene.valor)}
         <div class="mem-object-field"><span>toString()</span><strong>${escapeText(text)}</strong></div>
@@ -241,9 +242,9 @@ function renderEntry(scene, step, escapeText) {
 
 export const hashTableModule = {
   id: 'hash-tables',
-  name: 'Tabelas Hash',
+  name: tr('Tabelas Hash', 'Hash Tables'),
   version: '1.0',
-  visualizationTitle: 'Tabela hash na memória',
+  visualizationTitle: tr('Tabela hash na memória', 'Hash table in memory'),
   defaultAlgorithmId: 'entry',
   defaultData: DEFAULT_DATA,
   defaultRandomCount: 6,
@@ -280,7 +281,7 @@ export const hashTableModule = {
     return {
       key: toKey(config.key, fallback.key),
       newKey: toKey(config.newKey, fallback.newKey),
-      value: String(config.value ?? '').trim().slice(0, MAX_VALUE_LENGTH) || 'valor',
+      value: String(config.value ?? '').trim().slice(0, MAX_VALUE_LENGTH) || tr('valor', 'value'),
     };
   },
 
@@ -288,41 +289,41 @@ export const hashTableModule = {
     const { capacity, entries } = state.data;
     return `
       <div class="panel-heading compact-heading">
-        <div><span class="eyebrow">Dados de entrada</span><h2 id="data-editor-title">Monte a tabela</h2></div>
+        <div><span class="eyebrow">${tr('Dados de entrada', 'Input data')}</span><h2 id="data-editor-title">${tr('Monte a tabela', 'Build the table')}</h2></div>
         <span id="entry-count" class="size-badge">${countLabel(entries)}</span>
       </div>
-      <label class="field-label" for="node-input">Entradas chave:valor, na ordem de inserção</label>
+      <label class="field-label" for="node-input">${tr('Entradas chave:valor, na ordem de inserção', 'Key:value entries, in insertion order')}</label>
       <div class="input-action-row">
         <input id="node-input" class="text-input ${state.inputError ? 'invalid' : ''}" value="${escapeText(state.draft)}" placeholder="36:Ana, 56:Bia, 10:Caio" aria-describedby="node-help node-error" data-module-input="draft" data-module-enter="apply" />
-        <button class="button primary" type="button" data-module-action="apply-data">${icons.check}<span>Aplicar</span></button>
+        <button class="button primary" type="button" data-module-action="apply-data">${icons.check}<span>${tr('Aplicar', 'Apply')}</span></button>
       </div>
-      <p id="node-help" class="field-help">Chaves inteiras de 0 a ${MAX_KEY}, sem repetir; sem o valor, usa-se "valor". Prefixe com ~ uma entrada já removida (no endereçamento aberto a posição vira DELETADO), ex.: ~22:Duda. Máximo: capacidade − 1 entradas, para sempre sobrar uma posição null. A tabela inicial é montada inserindo as entradas nessa ordem.</p>
+      <p id="node-help" class="field-help">${tr('Chaves inteiras de 0 a', 'Integer keys from 0 to')} ${MAX_KEY}${tr(', sem repetir; sem o valor, usa-se "valor". Prefixe com ~ uma entrada já removida (no endereçamento aberto a posição vira DELETADO), ex.: ~22:Duda. Máximo: capacidade − 1 entradas, para sempre sobrar uma posição null. A tabela inicial é montada inserindo as entradas nessa ordem.', ', no repeats; without the value, "value" is used. Prefix an already removed entry with ~ (in open addressing the position becomes DELETED), e.g.: ~22:Duda. Maximum: capacity − 1 entries, so that a null position always remains. The initial table is built by inserting the entries in this order.')}</p>
       <p id="node-error" class="error-message" role="alert">${escapeText(state.inputError)}</p>
       <div class="random-row">
-        <label for="capacity-input">Capacidade</label>
+        <label for="capacity-input">${tr('Capacidade', 'Capacity')}</label>
         <input id="capacity-input" type="range" min="${MIN_CAPACITY}" max="${MAX_CAPACITY}" value="${capacity}" data-module-input="capacity" />
         <output id="capacity-output">${capacity}</output>
-        <button class="button secondary" type="button" data-module-action="random-data">${icons.shuffle}<span>Gerar tabela aleatória</span></button>
+        <button class="button secondary" type="button" data-module-action="random-data">${icons.shuffle}<span>${tr('Gerar tabela aleatória', 'Generate random table')}</span></button>
       </div>`;
   },
 
   renderConfig({ state, escapeText }) {
     const { algorithmId, config } = state;
     const keyField = (id, label, field, hint) => `<label class="config-field"><span>${label}</span><input id="${id}" type="number" min="0" max="${MAX_KEY}" value="${config[field]}" data-module-input="${field}" /><small>${hint}</small></label>`;
-    const valueField = `<label class="config-field"><span>Valor</span><input id="value-input" type="text" maxlength="${MAX_VALUE_LENGTH}" value="${escapeText(config.value)}" data-module-input="value" /><small>Texto associado à chave.</small></label>`;
-    const heading = (title) => `<div class="panel-heading compact-heading"><div><span class="eyebrow">Parâmetros</span><h2 id="config-title">${title}</h2></div></div>`;
+    const valueField = `<label class="config-field"><span>${tr('Valor', 'Value')}</span><input id="value-input" type="text" maxlength="${MAX_VALUE_LENGTH}" value="${escapeText(config.value)}" data-module-input="value" /><small>${tr('Texto associado à chave.', 'Text associated with the key.')}</small></label>`;
+    const heading = (title) => `<div class="panel-heading compact-heading"><div><span class="eyebrow">${tr('Parâmetros', 'Parameters')}</span><h2 id="config-title">${title}</h2></div></div>`;
 
     if (algorithmId === 'entry' || algorithmId === 'oaAdd' || algorithmId === 'scAdd') {
-      return `${heading('Escolha a chave e o valor')}
+      return `${heading(tr('Escolha a chave e o valor', 'Choose the key and the value'))}
         <div class="config-grid">
-          ${keyField('key-input', 'Chave', 'newKey', 'Clique em uma entrada da tabela para usar a chave dela e ver a atualização.')}
+          ${keyField('key-input', tr('Chave', 'Key'), 'newKey', tr('Clique em uma entrada da tabela para usar a chave dela e ver a atualização.', 'Click a table entry to use its key and see the update.'))}
           ${valueField}
         </div>`;
     }
     if (algorithmId === 'hash' || algorithmId === 'oaSearch' || algorithmId === 'oaRemove' || algorithmId === 'scSearch' || algorithmId === 'scRemove') {
-      const title = algorithmId === 'hash' ? 'Escolha a chave' : algorithmId.endsWith('Search') ? 'Escolha a chave a buscar' : 'Escolha a chave a remover';
+      const title = algorithmId === 'hash' ? tr('Escolha a chave', 'Choose the key') : algorithmId.endsWith('Search') ? tr('Escolha a chave a buscar', 'Choose the key to search for') : tr('Escolha a chave a remover', 'Choose the key to remove');
       return `${heading(title)}
-        ${keyField('key-input', 'Chave', 'key', 'Clique em uma entrada da tabela para usar a chave dela.')}`;
+        ${keyField('key-input', tr('Chave', 'Key'), 'key', tr('Clique em uma entrada da tabela para usar a chave dela.', 'Click a table entry to use its key.'))}`;
     }
     return '';
   },

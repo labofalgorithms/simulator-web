@@ -19,5 +19,5 @@ export const extendVariableNames = (names) => Object.assign(overrides, names);
 export const variableName = (name) => (isEnglish ? overrides[name] ?? variableNames[name] ?? name : name);
 
 // Valores de texto que o painel "Variáveis" mostra como estão no código (`'nulo'`, `'verdadeiro'`...).
-const valueWords = { nulo: 'null', verdadeiro: 'true', falso: 'false', vazio: 'empty', vazia: 'empty' };
+const valueWords = { nulo: 'null', verdadeiro: 'true', falso: 'false', vazio: 'empty', vazia: 'empty', verdadeira: 'true', falsa: 'false', respeitada: 'holds', violada: 'violated' };
 export const displayValue = (value) => (isEnglish && typeof value === 'string' && value in valueWords ? valueWords[value] : value);

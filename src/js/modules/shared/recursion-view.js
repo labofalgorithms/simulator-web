@@ -4,6 +4,7 @@
 
 import { hasIndex } from '../../core/utils.js';
 import { slotClass } from './sort-view.js';
+import { tr } from '../../core/i18n.js';
 
 /**
  * Vetor auxiliar B, alinhado com as colunas do vetor. `step.aux` tem `label`, `values` (uma posição
@@ -36,8 +37,8 @@ export function renderAux(step, escapeText, { showTags = false } = {}) {
       </div>`;
   }).join('');
   return `
-    <div class="sort-aux" role="group" aria-label="Vetor auxiliar ${escapeText(aux.label)}">
-      <span class="sort-aux-title">${escapeText(aux.label)}<small>vetor auxiliar</small></span>
+    <div class="sort-aux" role="group" aria-label="${tr('Vetor auxiliar', 'Auxiliary array')} ${escapeText(aux.label)}">
+      <span class="sort-aux-title">${escapeText(aux.label)}<small>${tr('vetor auxiliar', 'auxiliary array')}</small></span>
       <div class="sort-scroll roomy"><div class="sort-row">${slots}</div></div>
     </div>`;
 }
@@ -50,8 +51,8 @@ export function renderStack(step, escapeText) {
     .join('<i class="sort-frame-sep">›</i>');
   return `
     <div class="sort-stack">
-      <span class="sort-stack-title">Pilha de chamadas</span>
-      <div class="sort-stack-frames">${items || '<span class="sort-stack-empty">vazia</span>'}</div>
+      <span class="sort-stack-title">${tr('Pilha de chamadas', 'Call stack')}</span>
+      <div class="sort-stack-frames">${items || `<span class="sort-stack-empty">${tr('vazia', 'empty')}</span>`}</div>
     </div>`;
 }
 
@@ -74,7 +75,7 @@ export function renderLevels(step, escapeText, { showTags = false } = {}) {
         <span class="sort-level-note">${escapeText(level.note || '')}</span>
       </div>`;
   }).join('');
-  return `<div class="sort-levels" role="group" aria-label="Trechos do vetor em cada nível da recursão">${rows}</div>`;
+  return `<div class="sort-levels" role="group" aria-label="${tr('Trechos do vetor em cada nível da recursão', 'Array sections at each recursion level')}">${rows}</div>`;
 }
 
 /** Caixas de total (`step.summary.totals`: `{ label, value, note }`), no mesmo desenho do gráfico de barras. */

@@ -1,5 +1,5 @@
 import { hasIndex } from '../../core/utils.js';
-import { locale } from '../../core/i18n.js';
+import { locale, tr, variableName } from '../../core/i18n.js';
 
 /*
  * Cena de árvore binária, usada pelo módulo de Árvore Binária de Busca. Como em node-scene.js, cada
@@ -34,7 +34,7 @@ import { locale } from '../../core/i18n.js';
  */
 
 const NONE = '—';
-const NULO = 'nulo';
+const NULO = tr('nulo', 'null');
 
 export const fmt = (value) => (Number.isInteger(value) ? String(value) : value.toLocaleString(locale, { maximumFractionDigits: 2 }));
 
@@ -214,9 +214,9 @@ export function treeTrace({ tree, layout, params = {}, locals, allNulls = false 
     if (target === undefined) return NONE;
     if (target === null) return NULO;
     const node = st.nodes[target];
-    const text = node.value === node.origin ? fmt(node.value) : `${fmt(node.value)} [nó ${fmt(node.origin)}]`;
+    const text = node.value === node.origin ? fmt(node.value) : tr(`${fmt(node.value)} [nó ${fmt(node.origin)}]`, `${fmt(node.value)} [node ${fmt(node.origin)}]`);
     // Variável que ainda aponta para um nó já removido: o nó saiu da cena, mas a variável continua valendo.
-    return st.gone.has(target) ? `${text} (removido)` : text;
+    return st.gone.has(target) ? tr(`${text} (removido)`, `${text} (removed)`) : text;
   };
 
   const step = (line, title, description, tone = 'neutral', extra = {}) => {
@@ -468,7 +468,7 @@ export function afterRenderTree({ step, stage }) {
   scroller.scrollTo({ left: Math.max(0, x - scroller.clientWidth / 2), behavior: reduced ? 'auto' : 'smooth' });
 }
 
-const DEFAULT_LEGEND = [['current', 'atual'], ['processed', 'visitado'], ['compared', 'alterado'], ['result', 'resultado']];
+const DEFAULT_LEGEND = [['current', tr('atual', 'current')], ['processed', tr('visitado', 'visited')], ['compared', tr('alterado', 'changed')], ['result', tr('resultado', 'result')]];
 
 /**
  * Altura (arestas) de um nó da cena. No meio de uma rotação os ponteiros chegam a formar um ciclo
@@ -498,7 +498,7 @@ export function renderTree({
   const reached = new Set(scene.reached);
   const nodeOf = (id) => scene.nodes.find((node) => node.id === id);
   const valueOf = (id) => nodeOf(id)?.value;
-  const target = (id) => (typeof id === 'number' ? `nó ${escapeText(fmt(valueOf(id)))}` : NULO);
+  const target = (id) => (typeof id === 'number' ? tr(`nó ${escapeText(fmt(valueOf(id)))}`, `node ${escapeText(fmt(valueOf(id)))}`) : NULO);
 
   // Lado em que cada nó alcançável pendura no pai (os chips ficam do lado de fora, longe da aresta).
   const sideOf = new Map();
@@ -664,25 +664,25 @@ export function renderTree({
     const hasHeight = typeof node.h === 'number';
     const factor = scene.fb?.[node.id];
     const meta = hasHeight
-      ? `<em class="tree-meta" aria-hidden="true">alt ${node.h}</em>${factor === undefined ? '' : `<em class="tree-meta fb${Math.abs(factor) > 1 ? ' bad' : ''}" aria-hidden="true">FB ${factor > 0 ? '+' : ''}${factor}</em>`}`
+      ? `<em class="tree-meta" aria-hidden="true">${tr('alt', 'h')} ${node.h}</em>${factor === undefined ? '' : `<em class="tree-meta fb${Math.abs(factor) > 1 ? ' bad' : ''}" aria-hidden="true">${tr('FB', 'BF')} ${factor > 0 ? '+' : ''}${factor}</em>`}`
       : '';
-    const links = `esquerda: ${target(node.left ?? null)}, direita: ${target(node.right ?? null)}${badge ? `, visita ${escapeText(badge)}` : ''}${hasHeight ? `, altura guardada ${node.h}` : ''}${factor === undefined ? '' : `, fator de balanceamento ${factor}`}`;
+    const links = tr(`esquerda: ${target(node.left ?? null)}, direita: ${target(node.right ?? null)}${badge ? `, visita ${escapeText(badge)}` : ''}${hasHeight ? `, altura guardada ${node.h}` : ''}${factor === undefined ? '' : `, fator de balanceamento ${factor}`}`, `left: ${target(node.left ?? null)}, right: ${target(node.right ?? null)}${badge ? `, visit ${escapeText(badge)}` : ''}${hasHeight ? `, stored height ${node.h}` : ''}${factor === undefined ? '' : `, balance factor ${factor}`}`);
     return `<div class="tree-slot${cls}" style="left:${p.x - R}px;top:${p.y - R}px${vars}">`
-      + `<button type="button" class="${classes.join(' ')}" data-module-action="pick-node" data-index="${node.id}" data-value="${escapeText(node.value)}" aria-label="Nó com valor ${escapeText(fmt(node.value))}, ${links}">`
+      + `<button type="button" class="${classes.join(' ')}" data-module-action="pick-node" data-index="${node.id}" data-value="${escapeText(node.value)}" aria-label="${tr('Nó com valor', 'Node with value')} ${escapeText(fmt(node.value))}, ${links}">`
       + `<span>${escapeText(fmt(node.value))}</span></button>`
-      + `${meta}${p.float ? '<em class="tree-tag">isolado</em>' : ''}${badge ? `<em class="tree-badge" aria-hidden="true">${escapeText(badge)}</em>` : ''}</div>`;
+      + `${meta}${p.float ? `<em class="tree-tag">${tr('isolado', 'isolated')}</em>` : ''}${badge ? `<em class="tree-badge" aria-hidden="true">${escapeText(badge)}</em>` : ''}</div>`;
   }).join('');
 
   const chipHtml = chips.map((chip) => {
     const { cls, vars } = motion(`c:${chip.name}`, chip);
     const classes = ['circ-chip', chip.kind, chip.below ? 'below' : '', chip.near ? 'near' : ''].filter(Boolean).join(' ');
-    return `<div class="circ-pos${cls}" style="left:${chip.x}px;top:${chip.y}px${vars}"><span class="${classes}">${escapeText(chip.name)}</span></div>`;
+    return `<div class="circ-pos${cls}" style="left:${chip.x}px;top:${chip.y}px${vars}"><span class="${classes}">${escapeText(variableName(chip.name))}</span></div>`;
   }).join('');
 
   const varsHtml = scene.vars.map((item) => {
     const kind = item.status === 'param' ? 'param' : CHIP_KIND[item.name] || 'cursor';
     const classes = ['circ-var', kind, item.status === 'unset' || item.status === 'null' ? item.status : '', item.changed ? 'changed' : ''].filter(Boolean).join(' ');
-    return `<span class="${classes}"><b>${escapeText(item.name)}</b><i>${item.status === 'param' ? '=' : '→'}</i><span>${escapeText(item.text)}</span></span>`;
+    return `<span class="${classes}"><b>${escapeText(variableName(item.name))}</b><i>${item.status === 'param' ? '=' : '→'}</i><span>${escapeText(item.text)}</span></span>`;
   }).join('');
 
   const inspected = state.inspectedItem === null || state.inspectedItem === undefined ? null : nodeOf(state.inspectedItem);
@@ -690,23 +690,23 @@ export function renderTree({
   if (inspected) {
     const depth = scene.depth[inspected.id];
     const facts = [
-      `valor = ${fmt(inspected.value)}`,
-      `esquerda = ${target(inspected.left ?? null)}`,
-      `direita = ${target(inspected.right ?? null)}`,
+      tr(`valor = ${fmt(inspected.value)}`, `value = ${fmt(inspected.value)}`),
+      tr(`esquerda = ${target(inspected.left ?? null)}`, `left = ${target(inspected.left ?? null)}`),
+      tr(`direita = ${target(inspected.right ?? null)}`, `right = ${target(inspected.right ?? null)}`),
     ];
-    if (reached.has(inspected.id)) facts.push(`profundidade = ${depth}`, `altura = ${heightIn(scene, inspected.id)}`);
-    inspection = `<div class="inspection-card">${icons.info}<span>Nó selecionado</span><strong>${facts.join(', ')}</strong></div>`;
+    if (reached.has(inspected.id)) facts.push(tr(`profundidade = ${depth}`, `depth = ${depth}`), tr(`altura = ${heightIn(scene, inspected.id)}`, `height = ${heightIn(scene, inspected.id)}`));
+    inspection = `<div class="inspection-card">${icons.info}<span>${tr('Nó selecionado', 'Selected node')}</span><strong>${facts.join(', ')}</strong></div>`;
   }
 
   const count = scene.reached.length;
   const levelsNow = scene.root === null ? 0 : heightIn(scene, scene.root);
-  const dimensions = `nós na árvore: ${count}${scene.root === null ? '' : ` · altura: ${levelsNow}`}`;
+  const dimensions = tr(`nós na árvore: ${count}${scene.root === null ? '' : ` · altura: ${levelsNow}`}`, `nodes in the tree: ${count}${scene.root === null ? '' : ` · height: ${levelsNow}`}`);
   const legendHtml = legend.map(([cls, label]) => `<span><i class="legend-dot ${cls}"></i> ${label}</span>`).join('');
 
   return `
     <div class="node-stage">
       <div class="node-dimensions"><span>${dimensions}</span></div>
-      <div class="circ-vars" aria-label="Variáveis do algoritmo">${varsHtml}</div>
+      <div class="circ-vars" aria-label="${tr('Variáveis do algoritmo', 'Algorithm variables')}">${varsHtml}</div>
       <div class="node-scroll">
         <div class="circ-board tree-board" style="width:${geo.width}px;height:${geo.height}px">
           ${pill}${nodesHtml}${stubsHtml}
@@ -715,6 +715,6 @@ export function renderTree({
         </div>
       </div>
       ${extra ? `<div class="tree-extra">${extra}</div>` : ''}
-      <div class="node-legend" aria-label="Legenda">${legendHtml}</div>
+      <div class="node-legend" aria-label="${tr('Legenda', 'Legend')}">${legendHtml}</div>
     </div>${inspection}`;
 }
