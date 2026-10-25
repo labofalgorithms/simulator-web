@@ -42,4 +42,6 @@ export const variableNames = {
   'verificações': 'checks', embaralhamentos: 'shuffles',
   // recursão
   maiorResto: 'largestRest', invertido: 'reversed', pico: 'peak',
+  // buscas
+  valorProcurado: 'target', centro: 'mid', rodada: 'round', 'sequencial': 'sequential', 'binária': 'binary', 'pior caso binária': 'binary worst case', candidatos: 'candidates',
 };

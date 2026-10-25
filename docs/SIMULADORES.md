@@ -200,6 +200,20 @@ Onde as aulas se contradizem ou escorregam, o módulo corrige:
 
 O pseudocódigo da soma e do fatorial é o dos slides 31 e 39, em PT-BR, e a pilha dos slides 26 a 37 (`soma(5)`) aparece na mesma ordem: as 5 entradas, os 5 retornos e a pilha vazia. O maior elemento do vetor e a inversão da string não estão nos slides (são exemplos extras, diferentes dos exercícios 1 a 3 da aula); o laço e o caso base inalcançável vêm dos slides 3 a 8, 15, 40 e 45. A soma e o laço usam n de 1 a 8, o fatorial de 0 a 8, o vetor de 2 a 8 números e a palavra de 1 a 8 caracteres.
 
+### Buscas
+
+- Busca sequencial: `buscaSequencial` percorre o vetor da primeira à última posição (slides 6 a 16), com o cartão `vetor[i] = valorProcurado`, o contador de comparações e o valor ausente (devolve -1)
+- Sequencial em vetor ordenado: o teste `vetor[i] > valorProcurado` encerra a busca assim que passa do valor (slides 21 a 30, procurar o 65); as posições que sobram nem são examinadas
+- Busca binária iterativa: `inicio`, `centro` e `fim` sobre as células, o trecho candidato que encolhe pela metade (`[5..9]`, 5 candidatos) e os três testes do slide 37, um passo por linha, inclusive o terceiro `SE`, que roda mesmo depois do segundo
+- Busca binária recursiva: a mesma busca com a pilha de chamadas (`buscaBinariaRecursiva(5, 9)`), uma chamada por metade examinada, e o valor voltando de chamada em chamada
+- Sequencial × binária: a sequencial, a otimizada e a binária em paralelo, uma posição examinada por rodada (6 × 6 × 3 para o 56 e 10 × 8 × 4 para o 73, como nos slides 34 e 36)
+- Melhor, médio e pior caso: as comparações de cada valor do vetor em barras (sequencial de 1 a n, binária até ⌊log₂ n⌋ + 1), o valor ausente e a média, que fecha em (n + 1) / 2 para a sequencial
+- Crescimento do custo: para um n de 1 a 1.000.000.000, quantos candidatos sobram a cada comparação (n, n/2, n/4...), a binária zerando em ⌊log₂ n⌋ + 1 passos e a sequencial ainda com quase todos
+
+O pseudocódigo é o dos slides 16, 22, 37 e 39, em PT-BR (`vetor` no lugar de `array`). A aula não traz uma execução passo a passo, então cada passo é uma linha do código, como num depurador; os números dos slides conferem: a binária faz 3 comparações para o 56 (centros 4, 7 e 5) e 4 para o 73 (centros 4, 7, 5 e 6), a sequencial ordenada faz 6 e 8, e o 62 do slide 14 está no índice 6, depois de 7 comparações. Cada posição examinada conta uma comparação, como na aula (a otimizada e a binária ainda fazem testes a mais por posição, só que constantes). Os vetores vão de 2 a 16 números, a busca binária e a otimizada ordenam o que for digitado, e o tamanho do último simulador vai de 1 a 1.000.000.000.
+
+Onde a aula escorrega, o módulo corrige: o slide 39 tem um `fim-se` a mais no fim da função (o código fica com um só `FIM SE`); o slide 42 escreve `esq − dir` (o trecho é `fim − inicio`); o slide 21 fala em "retorna falso", mas o código devolve -1; e as complexidades dos slides 41 a 43 vêm escritas como `O(n) = log(n)`, que o módulo escreve como `O(log n)`.
+
 ### Shotgun Sort
 
 - `isOrdenado`: compara pares vizinhos e para no primeiro fora de ordem

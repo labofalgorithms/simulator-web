@@ -61,6 +61,18 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/bubble-sort/" />
   </url>
   <url>
+    <loc>https://labofalgorithms.com/simuladores/buscas/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/buscas/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/buscas/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/buscas/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/buscas/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/buscas/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/buscas/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/buscas/" />
+  </url>
+  <url>
     <loc>https://labofalgorithms.com/simuladores/filas-dinamicas/</loc>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/filas-dinamicas/" />
     <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/filas-dinamicas/" />

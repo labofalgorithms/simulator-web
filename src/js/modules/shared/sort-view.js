@@ -7,10 +7,10 @@ import { icons } from '../../core/icons.js';
 import { hasIndex } from '../../core/utils.js';
 import { tr, variableName } from '../../core/i18n.js';
 
-// Os quatro seguintes marcam o trecho do Merge Sort e do Quick Sort (início, meio, fim e o índice k)
-// e os três últimos, o pai e a raiz, o filho e o candidato a trocar do Heap Sort.
+// Os quatro seguintes marcam o trecho do Merge Sort e do Quick Sort (início, meio, fim e o índice k), o centro
+// é o meio da busca binária iterativa e os três últimos, o pai e a raiz, o filho e o candidato a trocar do Heap Sort.
 const CHIP_LABELS = {
-  i: 'i', j: 'j', min: 'min', next: 'i+1', prev: 'j−1', inicio: tr('início', 'start'), meio: tr('meio', 'mid'), fim: tr('fim', 'end'), k: 'k', pai: tr('pai', 'parent'), raiz: tr('raiz', 'root'), filho: tr('filho', 'child'), trocar: tr('trocar', 'largest'),
+  i: 'i', j: 'j', min: 'min', next: 'i+1', prev: 'j−1', inicio: tr('início', 'start'), meio: tr('meio', 'mid'), centro: tr('centro', 'mid'), fim: tr('fim', 'end'), k: 'k', pai: tr('pai', 'parent'), raiz: tr('raiz', 'root'), filho: tr('filho', 'child'), trocar: tr('trocar', 'largest'),
 };
 
 export function parseVector(text, { min, max, hint }) {
@@ -33,11 +33,13 @@ export function randomVector(count) {
   return pool.slice(0, count);
 }
 
-export function renderVectorEditor({ state, escapeText }, { min, max, placeholder, help }) {
+export function renderVectorEditor({ state, escapeText }, {
+  min, max, placeholder, help, size = state.data.length,
+}) {
   return `
     <div class="panel-heading compact-heading">
       <div><span class="eyebrow">${tr('Dados de entrada', 'Input data')}</span><h2 id="data-editor-title">${tr('Monte seu vetor', 'Build your array')}</h2></div>
-      <span class="size-badge">${state.data.length} ${tr('posições', 'positions')}</span>
+      <span class="size-badge">${size} ${tr('posições', 'positions')}</span>
     </div>
     <label class="field-label" for="vector-input">${tr('Números do vetor', 'Array numbers')}</label>
     <div class="input-action-row">

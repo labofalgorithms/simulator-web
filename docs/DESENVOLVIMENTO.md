@@ -49,6 +49,8 @@ simulator-web/
 │   │   └── index.html
 │   ├── recursao/
 │   │   └── index.html
+│   ├── buscas/
+│   │   └── index.html
 │   ├── shotgun-sort/
 │   │   └── index.html
 │   ├── selection-sort/
@@ -87,6 +89,7 @@ simulator-web/
 │       │   ├── tree-traversals/
 │       │   ├── avl-trees/
 │       │   ├── recursion/
+│       │   ├── searches/
 │       │   ├── shotgun-sort/
 │       │   ├── selection-sort/
 │       │   ├── bubble-sort/
