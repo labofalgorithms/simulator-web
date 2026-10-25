@@ -21,7 +21,7 @@ Simuladores interativos para aprender estruturas de dados e algoritmos. Cada ope
 
 ## Simuladores
 
-São 22 simuladores, em português e em inglês, no navegador e sem cadastro. O que cada um cobre está no [catálogo detalhado](docs/SIMULADORES.md).
+São 23 simuladores, em português e em inglês, no navegador e sem cadastro. O que cada um cobre está no [catálogo detalhado](docs/SIMULADORES.md).
 
 ### Estruturas de Dados
 
@@ -43,6 +43,7 @@ São 22 simuladores, em português e em inglês, no navegador e sem cadastro. O 
 
 ### Algoritmos
 
+- [Recursão](https://labofalgorithms.com/simuladores/recursao/)
 - [Shotgun Sort](https://labofalgorithms.com/simuladores/shotgun-sort/)
 - [Selection Sort](https://labofalgorithms.com/simuladores/selection-sort/)
 - [Bubble Sort](https://labofalgorithms.com/simuladores/bubble-sort/)

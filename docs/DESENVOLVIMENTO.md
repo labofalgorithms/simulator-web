@@ -47,6 +47,8 @@ simulator-web/
 │   │   └── index.html
 │   ├── arvore-avl/
 │   │   └── index.html
+│   ├── recursao/
+│   │   └── index.html
 │   ├── shotgun-sort/
 │   │   └── index.html
 │   ├── selection-sort/
@@ -84,6 +86,7 @@ simulator-web/
 │       │   ├── binary-search-trees/
 │       │   ├── tree-traversals/
 │       │   ├── avl-trees/
+│       │   ├── recursion/
 │       │   ├── shotgun-sort/
 │       │   ├── selection-sort/
 │       │   ├── bubble-sort/

@@ -67,6 +67,10 @@ modules/
 ├── avl-trees/
 │   ├── algorithms.js
 │   └── avl-tree-module.js
+├── recursion/
+│   ├── algorithms.js
+│   ├── recursion-module.js
+│   └── views.js
 ├── shotgun-sort/
 │   ├── algorithms.js
 │   └── shotgun-sort-module.js
@@ -126,6 +130,7 @@ modules/
 - `binary-search-tree-simulator.js`: conecta `SimulatorApp` ao `binarySearchTreeModule`;
 - `tree-traversal-simulator.js`: conecta `SimulatorApp` ao `treeTraversalModule`;
 - `avl-tree-simulator.js`: conecta `SimulatorApp` ao `avlTreeModule`;
+- `recursion-simulator.js`: conecta `SimulatorApp` ao `recursionModule`;
 - `shotgun-sort-simulator.js`: conecta `SimulatorApp` ao `shotgunSortModule`;
 - `selection-sort-simulator.js`: conecta `SimulatorApp` ao `selectionSortModule`;
 - `bubble-sort-simulator.js`: conecta `SimulatorApp` ao `bubbleSortModule`;
@@ -152,7 +157,7 @@ Para incluir um módulo, copie um card `.module-card.available` para o grupo cer
 
 `assets/logo/` guarda o logo (SVG e PNG, em versões para fundo escuro e claro), o favicon, o ícone do iOS, o avatar e a imagem de compartilhamento (`og-image.png`); o `assets/logo/README.md` lista cada arquivo e as regras de uso. Todas as páginas apontam para `favicon.ico`, `favicon.svg` (que troca de cor com o tema do navegador) e `apple-touch-icon.png`; todas as páginas têm `canonical`, as tags `og:` e `twitter:card` e um bloco JSON-LD, e o `og:image` usa a URL absoluta de `labofalgorithms.com`. A home usa o `og-image.png` e cada simulador tem a sua imagem em `assets/og/<pasta>.jpg` (1200 × 630). O `manifest.webmanifest`, na raiz, usa os ícones `icon-192.png` e `icon-512.png`.
 
-O ícone do cabeçalho (`.brand-mark`, na home e no menu lateral dos simuladores) é um SVG inline, e não um `<img>`: assim ele usa `currentColor` com `color: var(--cyan)` e muda junto com o tema (`#22d3ee` no escuro, `#0e7490` no claro), algo que um arquivo externo não consegue por causa do botão de tema. O desenho está repetido nas 23 páginas; ao mudá-lo, troque em todas.
+O ícone do cabeçalho (`.brand-mark`, na home e no menu lateral dos simuladores) é um SVG inline, e não um `<img>`: assim ele usa `currentColor` com `color: var(--cyan)` e muda junto com o tema (`#22d3ee` no escuro, `#0e7490` no claro), algo que um arquivo externo não consegue por causa do botão de tema. O desenho está repetido nas 24 páginas; ao mudá-lo, troque em todas.
 
 ## Contagem de acessos
 
@@ -277,9 +282,19 @@ Mesma forma de dados `{ values }` que os demais módulos de lista dinâmica (sem
 
 Na inserção, o nó novo nasce solto e entra na lista no passo em que um nó da lista passa a apontar para ele: no início, `inicio.anterior ← novoNo` (depois de `novoNo.proximo ← inicio`); no fim, `temp.proximo ← novoNo` (e só depois `novoNo.anterior ← temp` liga o caminho de volta).
 
+## Módulo de Recursão
+
+Módulo da categoria **Algoritmos** (ALG1 · 01, aula 03), com seis simuladores em três grupos: `soma` (a soma de 1 até n, slides 19 a 37) e `fatorial` (slide 39) mostram a pilha de chamadas crescendo até o caso base e se desfazendo na volta; `maior` (o maior elemento de um vetor) e `inverter` (inverter uma string) são os exemplos extras, sem equivalente nos slides; `iterativo` (a mesma soma com um laço, slides 3 a 8 e 45) e `overflow` (o caso base inalcançável, slides 15 e 40) fecham com os cuidados. Os dados são um objeto `{ n, fat, vetor, texto, inicio }`: cada simulador edita o seu campo (`n` serve à soma e ao laço), com limites em `LIMITS` (`n` de 1 a 8, `fat` de 0 a 8, vetor de 2 a 8 números, texto de 1 a 8 caracteres, `inicio` de −10 a 10). O número é editado ao vivo; o vetor e o texto têm o botão Aplicar.
+
+`algorithms.js` executa como num depurador, com um `createTracer` que guarda a pilha de quadros (`frames`): cada quadro tem `name` (`soma(5)`), `vars` (as variáveis locais, que aparecem no painel de variáveis e no quadro), `note` (a conta pendente, como o `5 + soma(4)` dos slides), `result` e `term` (o termo que a conta guarda enquanto espera). Cada passo leva `frames` (o quadro ao fim do passo, com `state` `run`, `wait` ou `ret` e `fresh` para a animação de entrada), `action` (o texto "Insere na pilha soma(4)", "Retorna 1" ou "Faz o 2 + 1 = 3" que os slides põem acima da memória), `stats` (`chamadas`, `profundidade` e `pico`) e `slots` (a altura da pilha inteira, para a tela não pular). O quadro de uma chamada que terminou continua na pilha no passo do retorno (como o `1` do slide 32) e sai no passo seguinte. `soma` e `fatorial` são a mesma função (`linearSteps`, com um objeto `LINEAR` por problema) e levam `expression`, a conta inteira naquele instante (`soma(5) = 5 + 4 + 3 + 3`); `maior` leva `values`, `pointers.i`, `outsideIndices`, `comparedIndices`, `foundIndices` e `compare` (o cartão de `sort-view.js`); `inverter` leva os caracteres e `strip` (o texto que volta de cada chamada, com o último caractere destacado quando é a letra que esperou); `iterativo` leva `summary` (as caixas de `recursion-view.js`, o `renderTotals`); `overflow` leva `limit` (`STACK_LIMIT`, 8 frames, porque no Java real seriam milhares), `ghost` (a chamada que não coube) e `overflow`. Com n ≤ 0 a recursão chega ao caso base e volta; com n > 0 ou n ≤ −8 a pilha estoura.
+
+`views.js` desenha a pilha na vertical, com o topo em cima e a seta TOPO (`renderCallStack`), a legenda da ação (`renderAction`), a conta (`renderExpression`) e as células da string e do texto que volta (`renderChars`, `renderStrip`). O palco é um `container` de largura própria (`.cs-stage`): com mais de 430 px a legenda e as contagens ficam ao lado da pilha, e abaixo disso a pilha desce para baixo. O pseudocódigo usa os nomes `soma`, `fatorial`, `maior` (com `maiorResto`), `inverter` (com `invertido`), `somaIterativo` e `f`, sem sintaxe de Java.
+
+A pilha dos slides 26 a 37 (`soma(5)`) foi conferida com um script descartável: as 5 entradas na pilha, os 5 retornos (`1`, `2 + 1 = 3`, `3 + 3 = 6`, `4 + 6 = 10`, `5 + 10 = 15`) e a pilha vazia aparecem na mesma ordem e com as mesmas contas. O mesmo script confere, para todos os valores de n, vetores com repetidos, palavras e todos os valores iniciais do `overflow`, o resultado, a altura máxima da pilha (n frames, ou o limite de 8) e as linhas executadas.
+
 ## Módulo de Selection Sort
 
-Módulo da categoria **Algoritmos** (ALG1 · 02, depois do Shotgun Sort na aula). Os dados são um vetor de 2 a 10 números e o pseudocódigo segue o da aula, inclusive a última passada (`i` vai até `vetor.length - 1`) e a troca executada em todas as passadas. O menu tem cinco simuladores: `find-min` (a varredura isolada, com `config.inicio`), `selection-sort` (execução completa), `counting` (complexidade de tempo), `adaptability` e `stability`.
+Módulo da categoria **Algoritmos** (ALG1 · 03, depois do Shotgun Sort na aula). Os dados são um vetor de 2 a 10 números e o pseudocódigo segue o da aula, inclusive a última passada (`i` vai até `vetor.length - 1`) e a troca executada em todas as passadas. O menu tem cinco simuladores: `find-min` (a varredura isolada, com `config.inicio`), `selection-sort` (execução completa), `counting` (complexidade de tempo), `adaptability` e `stability`.
 
 `find-min` e `selection-sort` executam como num depurador: cada passo é uma linha do pseudocódigo, o painel de variáveis lista sempre as variáveis do código (`—` até serem atribuídas; os valores antigos permanecem, como numa execução real) e o teste que encerra cada laço é um passo próprio (`PARA j (j = n): fim`). Os rótulos usam o valor real de `i`, começando em 0 (`i = 0`), e não numeração de passadas a partir de 1. Os três de análise trabalham por passada (varredura + troca) a partir de `runPasses`, que devolve, para cada passada, o vetor antes e depois, a posição do menor e quais elementos iguais o primeiro elemento ultrapassou (usado para detectar a inversão de ordem). Os itens são `{ v, tag }`; `tagDuplicates` marca os valores repetidos com letras pela ordem original.
 
@@ -296,7 +311,7 @@ Nos módulos de ordenação cada passo destaca uma única linha do pseudocódigo
 
 ## Módulo de Bubble Sort
 
-Módulo da categoria **Algoritmos** (ALG1 · 03, aula 09). Segue o formato do Selection Sort, com seis simuladores: `sweep` (uma varredura, com `config.fim`, a última posição do trecho, que também se escolhe clicando em uma célula), `bubble-sort` (execução completa, a da aula), `optimized` (o laço de `j` encolhe a cada passada), `counting`, `adaptability` e `stability`. Os dados são de 2 a 10 números.
+Módulo da categoria **Algoritmos** (ALG1 · 04, aula 09). Segue o formato do Selection Sort, com seis simuladores: `sweep` (uma varredura, com `config.fim`, a última posição do trecho, que também se escolhe clicando em uma célula), `bubble-sort` (execução completa, a da aula), `optimized` (o laço de `j` encolhe a cada passada), `counting`, `adaptability` e `stability`. Os dados são de 2 a 10 números.
 
 O pseudocódigo da aula (slide 37) faz `i` de 0 a `n − 1` e `j` de 1 a `n − 1`, então são n passadas e n(n−1) comparações, inclusive nas posições que já estão no lugar. Na versão otimizada, a aula escreve `j ← 1 até n − i`, que em base 0 sairia do vetor; o código usa `n - 1 - i`, que é o que a análise do slide 107 conta, e `i` termina em `n - 2`. A aula também escreve (n−1) + (n−2) + … + 1 = n² − n para as trocas; o correto é n(n−1)/2, que é o que o simulador mostra (uma troca por par fora de ordem).
 
@@ -304,13 +319,13 @@ O pseudocódigo da aula (slide 37) faz `i` de 0 a `n − 1` e `j` de 1 a `n − 
 
 ## Módulo de Insertion Sort
 
-Módulo da categoria **Algoritmos** (ALG1 · 04, aula 09), com cinco simuladores: `insert-one` (o laço interno sozinho, com `config.i`, a posição do elemento, que também se escolhe clicando em uma célula), `insertion-sort` (execução completa), `counting`, `adaptability` e `stability`. O pseudocódigo é o do slide 26, com `ENQUANTO j > 0 E vetor[j - 1] > vetor[j]`: o teste é um passo só por volta e, com `j = 0`, o passo diz que o `E` não avalia o lado direito.
+Módulo da categoria **Algoritmos** (ALG1 · 05, aula 09), com cinco simuladores: `insert-one` (o laço interno sozinho, com `config.i`, a posição do elemento, que também se escolhe clicando em uma célula), `insertion-sort` (execução completa), `counting`, `adaptability` e `stability`. O pseudocódigo é o do slide 26, com `ENQUANTO j > 0 E vetor[j - 1] > vetor[j]`: o teste é um passo só por volta e, com `j = 0`, o passo diz que o `E` não avalia o lado direito.
 
 As primeiras `i` posições estão ordenadas entre si, mas ainda não são as posições finais; por isso o `sortedCount` do Insertion Sort usa a legenda "sub-vetor ordenado". Em `insert-one` o vetor é mostrado com as `i` primeiras posições já ordenadas, como estariam depois das passadas anteriores. `runPasses` devolve, por passada, onde o elemento parou (`to`), as comparações, as trocas e o igual que o fez parar (`stoppedBy`), usado na estabilidade. Diferente do Bubble e do Selection, o custo depende da ordem: o vetor ordenado faz n − 1 comparações e nenhuma troca, e o invertido, n(n−1)/2 de cada, o que a adaptabilidade mostra nos três vetores.
 
 ## Módulo de Merge Sort
 
-Módulo da categoria **Algoritmos** (ALG1 · 05, aula 10), com seis simuladores: `divide` (os trechos de cada nível da recursão), `intercala` (a função sozinha, com `config.meio`, que também se escolhe clicando em uma célula), `merge-sort` (execução completa), `counting`, `adaptability` e `stability`. Os dados são de 2 a 10 números e o vetor inicial é o dos slides (`97, 81, 56, 64, 43, 39, 72`).
+Módulo da categoria **Algoritmos** (ALG1 · 06, aula 10), com seis simuladores: `divide` (os trechos de cada nível da recursão), `intercala` (a função sozinha, com `config.meio`, que também se escolhe clicando em uma célula), `merge-sort` (execução completa), `counting`, `adaptability` e `stability`. Os dados são de 2 a 10 números e o vetor inicial é o dos slides (`97, 81, 56, 64, 43, 39, 72`).
 
 `merge-sort` e `intercala` executam como num depurador, agora com chamadas recursivas: `createTracer` mantém uma pilha de quadros (`frames`), cada um com as suas variáveis (`inicio`, `fim` e `meio` no `mergeSort`; `inicio`, `meio`, `fim`, `i`, `j` e `k` no `intercala`), e cada passo traz a pilha (`step.stack`), as variáveis do quadro de cima e o vetor auxiliar (`step.aux`). Como nos slides, `mergeSort` tem um passo no cabeçalho e outro em cada linha de chamada; o `intercala` não tem passo de cabeçalho (a linha da chamada já o anuncia) e cada laço `PARA` tem um passo por volta e outro na linha `FIM PARA` quando termina. O pseudocódigo exibido tem as duas funções, com uma linha em branco entre elas (`OFFSET` é a linha onde o `intercala` começa, 0 quando ele roda sozinho).
 
@@ -322,7 +337,7 @@ Os slides de debug (42 a 109) cobrem só o início da execução. Os 65 passos d
 
 ## Módulo de Quick Sort
 
-Módulo da categoria **Algoritmos** (ALG1 · 06, aula 10), com cinco simuladores: `partition` (`particionar` sozinho, com `config.inicio` e `config.fim`; clicar em uma célula escolhe o pivô), `quick-sort` (execução completa), `counting`, `adaptability` e `stability`. Os dados são de 2 a 10 números e o vetor inicial é o do debug da aula (`12, 1, 100, 10, 97, 53, 46, 82`).
+Módulo da categoria **Algoritmos** (ALG1 · 07, aula 10), com cinco simuladores: `partition` (`particionar` sozinho, com `config.inicio` e `config.fim`; clicar em uma célula escolhe o pivô), `quick-sort` (execução completa), `counting`, `adaptability` e `stability`. Os dados são de 2 a 10 números e o vetor inicial é o do debug da aula (`12, 1, 100, 10, 97, 53, 46, 82`).
 
 Mesma estrutura do Merge Sort: `createTracer` mantém a pilha de quadros (`quickSort` com `inicio`, `fim` e `meio`; `particionar` com `inicio`, `fim`, `i`, `j` e `aux`) e cada passo é uma linha executada (`FIM SE`, `SENÃO` e `FIM ENQUANTO` não são passos). O pivô, `vetor[inicio]`, ganha a classe `pivot` (`step.pivotIndex`), `aux` aparece junto dos contadores e os pivôs que chegam à posição final, assim como os trechos de um elemento, entram em `sortedIndices`. O pseudocódigo exibido tem as duas funções, com `OFFSET` marcando onde `particionar` começa.
 
@@ -332,7 +347,7 @@ Os slides de debug (55 a 200) percorrem o exemplo até o fim do 5º particioname
 
 ## Módulo de Heap Sort
 
-Módulo da categoria **Algoritmos** (ALG1 · 07, aula 11), com sete simuladores: `heap` (o heap como árvore e a conferência `ehMaxHeap`; clicar em uma célula mostra o pai e os filhos dela), `sift` (`ArrumaHeap` sozinho, com `config.inicio` e `config.fim`; clicar em uma célula escolhe o nó), `build` (`CriaHeap`), `heap-sort` (execução completa), `counting`, `adaptability` e `stability`. Os dados são de 3 a 15 números (um heap de até quatro níveis) e o vetor inicial é o do debug da aula (`6, 5, 3, 1, 8, 7, 2, 4`); três botões carregam também os vetores dos slides 19 a 84 e do slide 9.
+Módulo da categoria **Algoritmos** (ALG1 · 08, aula 11), com sete simuladores: `heap` (o heap como árvore e a conferência `ehMaxHeap`; clicar em uma célula mostra o pai e os filhos dela), `sift` (`ArrumaHeap` sozinho, com `config.inicio` e `config.fim`; clicar em uma célula escolhe o nó), `build` (`CriaHeap`), `heap-sort` (execução completa), `counting`, `adaptability` e `stability`. Os dados são de 3 a 15 números (um heap de até quatro níveis) e o vetor inicial é o do debug da aula (`6, 5, 3, 1, 8, 7, 2, 4`); três botões carregam também os vetores dos slides 19 a 84 e do slide 9.
 
 Mesma estrutura dos módulos recursivos, mas sem recursão: `createTracer` mantém a pilha de quadros (`heapsort` com `tamanho` e `fim`; `CriaHeap` com `tamanho` e `inicio`; `ArrumaHeap` com `inicio`, `fim`, `raiz`, `filho` e `trocar`; `swap` com `i`, `j` e `temp`) e cada passo é uma linha executada (`FIM SE`, `SENÃO` e `FIM ENQUANTO` não são passos; o `FIM` de uma função é um passo, como nos slides, exceto o de `swap`). `heapsort` não tem passo de cabeçalho: a linha da chamada já anuncia a função. O pseudocódigo exibido junta as funções na ordem heapsort, CriaHeap, ArrumaHeap e swap, e `offsets` diz onde cada uma começa; cada simulador mostra só as que usa (`SIFT_ONLY_CODE`, `BUILD_ONLY_CODE`, `FULL_CODE` e o `CHECK_CODE` do `heap`, que não está nos slides). A condição `filho + 1 ≤ fim E vetor[trocar] < vetor[filho + 1]` é um passo só, e a segunda parte só é testada (e contada) quando a primeira é verdadeira.
 
@@ -344,7 +359,7 @@ Os slides de debug (92 a 199) foram conferidos com um script descartável (as li
 
 ## Módulo de Shotgun Sort
 
-Módulo da categoria **Algoritmos** (ALG1 · 01), com três simuladores: `is-sorted` (a função `isOrdenado`), `shotgun-sort` (o laço de embaralhamento) e `why-worst` (a análise do custo). Reaproveita o renderer de `shared/sort-view.js`; os dados são de 2 a 8 números.
+Módulo da categoria **Algoritmos** (ALG1 · 02), com três simuladores: `is-sorted` (a função `isOrdenado`), `shotgun-sort` (o laço de embaralhamento) e `why-worst` (a análise do custo). Reaproveita o renderer de `shared/sort-view.js`; os dados são de 2 a 8 números.
 
 O pseudocódigo da aula está em base 0: o laço de `isOrdenado` vai até `vetor.length - 2`, porque na versão do slide o último par sairia do vetor. `shotgun-sort` e `is-sorted` também executam como num depurador: as variáveis locais de `isOrdenado` (`i`, `vetor[i]`, `vetor[i+1]`, `retorno`) nascem sem valor a cada chamada, `i` começa em 0 e o teste que encerra o `PARA` é um passo próprio. `shotgun-sort` percorre as linhas na ordem de execução: chamada de `isOrdenado` (`ENQUANTO`), um passo `PARA` e um `SE` para cada par até o primeiro fora de ordem, `RETORNE falso` e o embaralhamento. A simulação para em `MAX_ATTEMPTS` (100): o algoritmo não tem limite, o simulador sim. O embaralhamento (Fisher-Yates) usa `Math.random` e é refeito a cada `rebuildSteps`; o botão "Sortear outra execução" apenas dispara esse rebuild. `buildSteps` aceita um gerador aleatório opcional como quarto argumento, o que permite testar execuções reproduzíveis.
 

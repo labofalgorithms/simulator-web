@@ -526,3 +526,58 @@ button.sort-cell:hover{border-color:var(--cyan);transform:translateY(-2px)}
 .main-content:not(.is-ready)>:not(.topbar){visibility:hidden}
 /* Telas de celular: nada abaixo de 12px, o mínimo legível (menos o "nulo" dos nós circulares, que não cabe). */
 @media(max-width:640px){.brand-block small,.nav-group>p,.nav-number,.sidebar-note p,.keyboard-hint,kbd,.lesson-kicker,.complexity-strip small,.eyebrow,.size-badge,.language-badge,.field-label,.field-help,.error-message,.button,.random-row label,.random-row output,.config-field>span,.config-field small,.status-pill,.memory-label,.cell-index,.array-cell.unused .cell-value,.array-legend,.inspection-card,.play-button,.step-counter,.speed-control,.variables-card dt,.empty-state,.console-output p,.line-number,.concept-note,.site-footer,.module-home-link,.matrix-random-controls label,.matrix-random-controls output,.matrix-stage-label,.matrix-dimensions,.matrix-block-title,.matrix-corner,.matrix-index,.matrix-result-vector>span,.matrix-legend,.jagged-row-label,.jagged-empty,.matrix-config-note,.stack-dimensions,.stack-index,.stack-cell.empty,.stack-pointer,.stack-floor-note,.stack-legend,.queue-dimensions,.queue-marker,.queue-cell.empty,.queue-index,.queue-legend,.node-dimensions,.node-marker,.node-topo-badge,.node-null,.node-loop,.node-link-label,.node-staging-tag,.node-legend,.mem-zone-label,.mem-object-address,.mem-empty,.mem-chip,.mem-node-next,.mem-node-caption,.mem-node-tag,.hash-cell small,.hash-null,.hash-del,.hash-index,.hash-bucket-head,.hash-entry small,.sort-phase-badge,.sort-chip,.sort-cell-tag,.sort-index,.sort-compare-side small,.sort-compare-result,.sort-compare-hint,.sort-chart-title,.sort-bar-row,.sort-total small,.sort-total span,.sort-counters,.sort-table-head,.sort-table-head small,.sort-table-row em,.sort-table-note,.sort-table-row,.circ-null,.circ-chip,.tree-tag,.tree-null,.preset-row>span,.config-note,.sort-chips.stacked .sort-chip,.sort-aux-title small,.sort-stack-title,.sort-frame,.sort-stack-empty,.sort-level-label,.sort-seg b sup,.sort-level-note,.tree-badge,.tree-meta,.rec-stack-title small,.rec-frame,.rec-empty,.heap-index,.heap-role,.heap-inspection strong,.privacy-note{font-size:12px}.playback-row{padding:12px 14px;gap:10px}.step-counter{white-space:normal}.status-pill{white-space:normal;border-radius:14px}}
+
+.status-pill.error{color:var(--rose);background:rgba(251,113,133,.12)}
+.cs-stage{min-height:300px;padding:14px 22px 22px;display:flex;flex-direction:column;gap:16px;container-type:inline-size}
+.cs-top{display:flex;flex-direction:column;gap:14px}
+.cs-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,270px);gap:18px;align-items:start}
+.cs-main{min-width:0;display:flex;flex-direction:column;gap:14px}
+.cs-main .sort-stats{flex-wrap:wrap;justify-content:flex-start;gap:4px 14px}
+.cs-action{min-height:62px;display:flex;flex-direction:column;justify-content:center;gap:3px;padding:10px 14px;border:1px solid var(--border);border-left:3px solid var(--border-strong);border-radius:12px;background:var(--surface-2)}
+.cs-action-label{color:var(--muted);font-size:11px;font-weight:700}
+.cs-action strong{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:16px;overflow-wrap:anywhere}
+.cs-action-hint{color:var(--subtle);font-size:12px}
+.cs-action.push{border-left-color:var(--cyan)}
+.cs-action.push strong{color:var(--cyan)}
+.cs-action.return{border-left-color:var(--green)}
+.cs-action.return strong{color:var(--green)}
+.cs-action.error{border-left-color:var(--rose);background:rgba(251,113,133,.08)}
+.cs-action.error strong{color:var(--rose)}
+.cs-expression{display:grid;gap:5px;padding:10px 14px;border:1px dashed var(--border-strong);border-radius:12px}
+.cs-expression small{color:var(--subtle);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em}
+.cs-expression code{color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:15px;font-weight:700;overflow-wrap:anywhere}
+.cs-stack{display:flex;flex-direction:column;gap:8px;min-width:0}
+.cs-title{display:flex;align-items:baseline;gap:8px;color:var(--text);font-size:12px;font-weight:800}
+.cs-title small{color:var(--subtle);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em}
+.cs-frames{min-height:calc(var(--slots,1) * 56px + 20px);display:flex;flex-direction:column;justify-content:flex-end;gap:6px;padding:10px;border:1px solid var(--border);border-bottom:3px solid var(--border-strong);border-radius:12px;background:var(--surface-2)}
+.cs-row{display:grid;grid-template-columns:minmax(0,1fr) 54px;align-items:center;gap:6px}
+.cs-frame{display:flex;flex-wrap:wrap;align-items:baseline;gap:1px 10px;padding:5px 10px;border:1px solid var(--border-strong);border-radius:9px;background:var(--surface);color:var(--muted);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+.cs-name{color:var(--text);font-weight:800}
+.cs-note{color:var(--subtle);font-weight:700}
+.cs-result{margin-left:auto;color:var(--green);font-weight:800}
+.cs-locals{flex-basis:100%;display:flex;flex-wrap:wrap;gap:2px 12px;font-size:11px}
+.cs-locals:empty{display:none}
+.cs-local i{color:var(--subtle);font-style:normal}
+.cs-frame.run{border-color:rgba(34,211,238,.55);background:var(--cyan-soft)}
+.cs-frame.run .cs-name{color:var(--cyan)}
+.cs-frame.ret{border-color:rgba(52,211,153,.55);background:var(--green-soft)}
+.cs-frame.ret .cs-name{color:var(--green)}
+.cs-frame.bad{border-color:rgba(251,113,133,.55);background:rgba(251,113,133,.08)}
+.cs-frame.bad .cs-name{color:var(--rose)}
+.cs-frame.ghost{border:1px dashed var(--rose);background:transparent}
+.cs-frame.ghost .cs-name,.cs-frame.ghost .cs-note{color:var(--rose)}
+.cs-frame.new{animation:cs-push 360ms ease}
+.cs-topo{display:flex;align-items:center;gap:4px;color:var(--rose);font-size:10px;font-weight:800;letter-spacing:.06em}
+.cs-topo i{width:14px;height:0;border-top:2px solid var(--rose);position:relative}
+.cs-topo i:before{content:"";position:absolute;left:-1px;top:-5px;border:4px solid transparent;border-right:6px solid var(--rose);border-left:0}
+.cs-empty{align-self:center;margin:auto;color:var(--subtle);font-size:12px}
+.cs-floor{color:var(--subtle);font-size:10px;text-align:center}
+.cs-strip{display:flex;align-items:center;gap:12px;min-height:56px;padding:6px 12px;border:1px dashed var(--border-strong);border-radius:12px}
+.cs-strip-label{flex:0 0 74px;color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+.cs-strip-cells{display:flex;flex-wrap:wrap;gap:5px}
+.cs-strip-cells .sort-cell.aux{width:36px}
+.cs-strip-hint{color:var(--subtle);font-size:11px}
+@keyframes cs-push{from{transform:translateY(-16px);opacity:0}to{transform:none;opacity:1}}
+@container (max-width:430px){.cs-body{grid-template-columns:1fr}.cs-stack{width:min(100%,420px);justify-self:center}}
+@media(max-width:720px){.cs-stage{padding-inline:14px}}
+@media(max-width:640px){.cs-title small,.cs-frame,.cs-locals,.cs-floor,.cs-action-label,.cs-action-hint,.cs-expression small,.cs-topo,.cs-strip-label,.cs-strip-hint,.cs-empty{font-size:12px}}

@@ -40,4 +40,6 @@ export const variableNames = {
   trecho: 'range', 'comparações do trecho': 'comparisons of the range', particionamento: 'partitioning', 'pares invertidos': 'reversed pairs', pivô: 'pivot',
   chamada: 'call', chamadas: 'calls', 'voltas desta': 'turns of this', voltas: 'turns', pares: 'pairs', pai: 'parent',
   'verificações': 'checks', embaralhamentos: 'shuffles',
+  // recursão
+  maiorResto: 'largestRest', invertido: 'reversed', pico: 'peak',
 };

@@ -189,6 +189,17 @@ Onde as aulas se contradizem ou escorregam, o módulo corrige:
 
 ## Algoritmos
 
+### Recursão
+
+- Soma de 1 até n: `soma(n) = n + soma(n − 1)`, com a pilha de chamadas crescendo até o caso base e se desfazendo na volta, a legenda de cada passo ("Insere na pilha", "Retorna 1", "Faz o 2 + 1 = 3") e a conta que a recursão monta (`5 + 4 + 3 + soma(2)`)
+- Fatorial: `fatorial(n) = n × fatorial(n − 1)`, com o caso base `n < 1` do slide 39
+- Maior elemento de um vetor: `maior(v, i)` olha o trecho `v[0..i]`, e cada chamada compara `v[i]` com o maior que recebeu (`maiorResto`)
+- Inverter uma string: `inverter(texto)` inverte o texto sem o primeiro caractere e põe esse caractere no fim; cada frame guarda um pedaço menor do texto e o texto que volta aparece em células
+- Iterativo × recursivo: a mesma soma com um laço, com um único frame na pilha, e a comparação com os `n` frames da versão recursiva
+- Caso base inalcançável: `f(n)` chama `f(n + 1)` e a pilha estoura (`StackOverflowError`); com n ≤ 0 o caso base chega, e com n ≤ −8 a recursão está certa, mas funda demais para a pilha de 8 frames do simulador
+
+O pseudocódigo da soma e do fatorial é o dos slides 31 e 39, em PT-BR, e a pilha dos slides 26 a 37 (`soma(5)`) aparece na mesma ordem: as 5 entradas, os 5 retornos e a pilha vazia. O maior elemento do vetor e a inversão da string não estão nos slides (são exemplos extras, diferentes dos exercícios 1 a 3 da aula); o laço e o caso base inalcançável vêm dos slides 3 a 8, 15, 40 e 45. A soma e o laço usam n de 1 a 8, o fatorial de 0 a 8, o vetor de 2 a 8 números e a palavra de 1 a 8 caracteres.
+
 ### Shotgun Sort
 
 - `isOrdenado`: compara pares vizinhos e para no primeiro fora de ordem

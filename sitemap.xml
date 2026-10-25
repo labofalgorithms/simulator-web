@@ -229,6 +229,18 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/quick-sort/" />
   </url>
   <url>
+    <loc>https://labofalgorithms.com/simuladores/recursao/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/recursao/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/recursao/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/recursao/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/recursao/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/recursao/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/recursao/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/recursao/" />
+  </url>
+  <url>
     <loc>https://labofalgorithms.com/simuladores/selection-sort/</loc>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/selection-sort/" />
     <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/selection-sort/" />
