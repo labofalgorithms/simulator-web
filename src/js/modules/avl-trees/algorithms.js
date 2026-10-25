@@ -776,11 +776,22 @@ function rotationSteps(tree, dir, wanted) {
   if (link) t.setChild(link.parent, link.side, up);
   else t.set('raiz', up);
   t.setAlias();
+  // A rotação pode ter mudado a altura da subárvore: quem chamou recalcula a altura de cada ancestral na volta.
+  const refreshed = [];
+  for (let at = link?.parent; isId(at); at = parents.get(at)?.parent) {
+    const node = t.node(at);
+    const next = 1 + Math.max(...[node.left, node.right].map((child) => (isId(child) ? t.node(child).h : -1)));
+    if (next !== node.h) {
+      refreshed.push({ id: at, text: `${val(at)}: ${node.h} → ${next}` });
+      t.setHeight(at, next);
+    }
+  }
+  const refreshedList = refreshed.map((item) => item.text).join('; ');
   const after = inorder({ nodes: t.st.nodes, root: t.st.refs.raiz }).map((id) => fmt(t.node(id).value)).join(' ');
   snap(ctx.at(`${r.block}.ret`), tr('O chamador liga o retorno', 'The caller links the return value'), tr(`${link
     ? `O código que chamou ${r.fn} (por exemplo, nó.${sideName(link.side)} ← ${r.fn}(...)) guarda o retorno: ${val(link.parent)}.${sideName(link.side)} passa a ser ${val(up)}.`
-    : `O código que chamou ${r.fn} (raiz ← ${r.fn}(raiz)) guarda o retorno: raiz passa a apontar para ${val(up)}.`} A subárvore girada está no lugar. Percurso em ordem: ${before} antes, ${after} depois — ${before === after ? 'a mesma sequência' : 'diferente (algo deu errado)'}.`, `${link ? `The code that called ${r.fn} (for example, node.${sideName(link.side)} ← ${r.fn}(...)) stores the return value: ${val(link.parent)}.${sideName(link.side)} becomes ${val(up)}.` : `The code that called ${r.fn} (root ← ${r.fn}(root)) stores the return value: root now points to ${val(up)}.`} The rotated subtree is in place. In-order traversal: ${before} before, ${after} after — ${before === after ? 'the same sequence' : 'different (something went wrong)'}.`), 'done', {
-    foundIndices: [up], changedIndices: link ? [link.parent] : [], output: [tr(`em ordem antes: ${before}`, `in-order before: ${before}`), tr(`em ordem depois: ${after}`, `in-order after: ${after}`)],
+    : `O código que chamou ${r.fn} (raiz ← ${r.fn}(raiz)) guarda o retorno: raiz passa a apontar para ${val(up)}.`} A subárvore girada está no lugar.${refreshed.length ? ` A altura dos ancestrais é recalculada na volta (${refreshedList}).` : ''} Percurso em ordem: ${before} antes, ${after} depois — ${before === after ? 'a mesma sequência' : 'diferente (algo deu errado)'}.`, `${link ? `The code that called ${r.fn} (for example, node.${sideName(link.side)} ← ${r.fn}(...)) stores the return value: ${val(link.parent)}.${sideName(link.side)} becomes ${val(up)}.` : `The code that called ${r.fn} (root ← ${r.fn}(root)) stores the return value: root now points to ${val(up)}.`} The rotated subtree is in place.${refreshed.length ? ` The height of the ancestors is recalculated on the way back (${refreshedList}).` : ''} In-order traversal: ${before} before, ${after} after — ${before === after ? 'the same sequence' : 'different (something went wrong)'}.`), 'done', {
+    foundIndices: [up], changedIndices: link ? [link.parent, ...refreshed.map((item) => item.id)] : [], output: [tr(`em ordem antes: ${before}`, `in-order before: ${before}`), tr(`em ordem depois: ${after}`, `in-order after: ${after}`)],
   });
   return t.finish();
 }
