@@ -542,7 +542,7 @@ button.sort-cell:hover{border-color:var(--cyan);transform:translateY(-2px)}
 .cs-action.return{border-left-color:var(--green)}
 .cs-action.return strong{color:var(--green)}
 .cs-action.error{border-left-color:var(--rose);background:rgba(251,113,133,.08)}
-.cs-action.error strong{color:var(--rose)}
+.cs-action.error strong{color:var(--rose);font-size:14px}
 .cs-expression{display:grid;gap:5px;padding:10px 14px;border:1px dashed var(--border-strong);border-radius:12px}
 .cs-expression small{color:var(--subtle);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em}
 .cs-expression code{color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:15px;font-weight:700;overflow-wrap:anywhere}
