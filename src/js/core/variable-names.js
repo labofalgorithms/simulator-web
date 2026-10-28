@@ -44,4 +44,6 @@ export const variableNames = {
   maiorResto: 'largestRest', invertido: 'reversed', pico: 'peak',
   // buscas
   valorProcurado: 'target', centro: 'mid', rodada: 'round', 'sequencial': 'sequential', 'binária': 'binary', 'pior caso binária': 'binary worst case', candidatos: 'candidates',
+  // ordenações lineares
+  max: 'max', numBuckets: 'numBuckets', bucketIndex: 'bucketIndex', pos: 'pos', maior: 'largest', digitoPos: 'digitPos', digitoAtual: 'currentDigit', digito: 'digit', num: 'num', index: 'index',
 };

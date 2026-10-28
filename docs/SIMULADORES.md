@@ -285,3 +285,32 @@ O pseudocódigo é o dos slides 52 e 53 (o pivô é `vetor[inicio]`) e o vetor i
 - Estabilidade: valores repetidos marcados com letras, mostrando a troca da raiz com o último elemento e os `ArrumaHeap` que invertem dois iguais
 
 O pseudocódigo é o dos slides 87 a 90 (`heapsort`, `CriaHeap`, `ArrumaHeap` e `swap`) e o vetor inicial é o do debug da aula (slides 92 a 199, `6, 5, 3, 1, 8, 7, 2, 4`): 99 dos 103 pontos de parada dos slides aparecem na mesma ordem e com os mesmos marcadores, entre os 272 passos do simulador, que também percorre o que o deck abrevia (a partir do slide 167 o deck pula o interior de `ArrumaHeap`). Os outros 4 (slides 111, 126, 140 e 160, `inicio ← inicio - 1`) mostram a seta `inicio` ainda no valor antigo; o simulador mostra o valor já atualizado, como em todos os outros passos. Os slides 104, 167 e 168 destacam `Fim` onde o código executa `swap` e `ArrumaHeap`. Os dados são de 3 a 15 números (um heap de até quatro níveis); há também os vetores dos slides 19 a 84 (`9, 8, 6, 12, 4, 3, 7`) e do slide 9 (o max-heap `100, 19, 36, 17, 3, 25, 1, 2, 7`) nos botões de exemplo.
+
+### Bucket Sort
+
+- Bucket Sort: o algoritmo da aula passo a passo (slides 8 a 145): o maior valor, os buckets criados um a um (nulos, depois listas vazias), a fórmula `bucketIndex = piso((A[i] × numBuckets) / (max + 1))` com a conta de cada valor (`(60 × 10) / (200 + 1) = 600 / 201 = 2,98 → 2`), a ordenação de cada bucket e a recombinação em `A`; o número de buckets (2 a 12) é ajustável
+- Melhor e pior caso: três vetores do mesmo tamanho (um valor por bucket, o seu e todos apertados no bucket 0) com o tamanho de cada bucket em barras e as comparações do Insertion Sort: de `O(n + k)` a `O(n²)`
+- Adaptabilidade: o mesmo algoritmo em quatro vetores (já ordenado, quase ordenado, ordem inversa e o seu); distribuir e juntar custam o mesmo e só o Insertion Sort dos buckets muda o total
+- Estabilidade: valores repetidos com letras; o algoritmo que ordena os buckets decide (Insertion Sort estável, Selection Sort instável) e "Gerar exemplo" monta um vetor em que o Selection Sort inverte dois iguais
+
+O pseudocódigo é o do slide 8 (linhas 01 a 27, com o recuo e o `end` finais da aula) e o vetor inicial, o dos slides 9 a 145 (`60, 32, 20, 2, 100, 120, 200, 40, 86, 95`, 10 buckets). O simulador aceita só inteiros de 0 a 999, porque a fórmula usa `max + 1` e não admite negativos.
+
+### Counting Sort
+
+- Counting Sort: o algoritmo dos slides 9 a 99, com `encontrarMaior` passo a passo, o vetor `count` (de 0 até o maior valor) incrementado por `count[A[i]]`, e a reescrita de `A` com o `ENQUANTO count[i] > 0` (o slide 100, com contagens maiores que 1, é o exemplo "Repetidos")
+- Versão estável: a soma acumulada de `count` ("adicione os valores da frequência dos anteriores", slide 8), o vetor `saida` montado de trás para a frente e a cópia de volta, com letras nos repetidos (slide 106: o Counting Sort é estável)
+- Complexidade de tempo: o mesmo n com o maior valor multiplicado por 10 e por 100, em barras por fase (achar o maior, criar, contar, varrer e escrever): `O(n + maior)` e a desvantagem do slide 104 (um `count` enorme)
+- Adaptabilidade: o mesmo custo nos quatro vetores (slide 105)
+
+O pseudocódigo é o do slide 9 (linhas 01 a 16) e o vetor inicial, o dos slides 10 a 99 (`9, 8, 6, 10, 4, 3, 7`). O `return 0` do slide vira `FIM`, e os valores vão de 0 a 50 (uma célula de `count` por valor).
+
+### Radix Sort
+
+- Radix Sort com buckets: o algoritmo do slide 9 sobre `279, 230, 20, 692, 378, 895, 534` (slides 9 a 122): em cada passada, o dígito em destaque em cada número, os 10 buckets e a recombinação
+- Radix Sort com Counting Sort: a mesma ideia, com a passada de dígito sendo um Counting Sort estável (o código de exemplo `RadixSort_Count`, vetor `170, 45, 75, 90, 802, 24, 2, 66`): `count` de 10 posições, soma acumulada e saída de trás para a frente
+- LSD × MSD: as duas formas de ler os dígitos, passada por passada (slide 8: de 1 a 10, o LSD dá `1 2 … 10` e o MSD, `1 10 2 … 9`)
+- Complexidade de tempo: `O(k · n)`, uma barra por passada, e a comparação com o Counting Sort simples quando o maior valor tem 6 e 9 dígitos
+- Adaptabilidade: as `k` passadas acontecem em qualquer ordem inicial (slide 125)
+- Estabilidade: a passada com fila (a da aula) contra uma passada com pilha, que inverte os iguais e deixa o vetor fora de ordem: o LSD só funciona porque cada passada é estável (slide 126)
+
+O pseudocódigo é o do slide 9 (linhas 01 a 24), com `digitoPos ← 1` e `ENQUANTO maior / digitoPos > 0` no lugar do `PARA ... ATÉ maior / digitoPos > 0` do slide (uma condição escrita como limite de PARA), que é o laço do código de exemplo. `getMax` vem do código de exemplo. Os valores vão de 0 a 9999.

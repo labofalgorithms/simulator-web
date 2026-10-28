@@ -97,8 +97,19 @@ modules/
 │   ├── algorithms.js
 │   ├── heap-sort-module.js
 │   └── views.js
+├── bucket-sort/
+│   ├── algorithms.js
+│   └── bucket-sort-module.js
+├── counting-sort/
+│   ├── algorithms.js
+│   └── counting-sort-module.js
+├── radix-sort/
+│   ├── algorithms.js
+│   └── radix-sort-module.js
 └── shared/
     ├── sort-steps.js
+    ├── linear-sort.js
+    ├── linear-sort-view.js
     ├── sort-view.js
     ├── recursion-view.js
     ├── call-stack-trace.js
@@ -143,7 +154,10 @@ modules/
 - `insertion-sort-simulator.js`: conecta `SimulatorApp` ao `insertionSortModule`;
 - `merge-sort-simulator.js`: conecta `SimulatorApp` ao `mergeSortModule`;
 - `quick-sort-simulator.js`: conecta `SimulatorApp` ao `quickSortModule`;
-- `heap-sort-simulator.js`: conecta `SimulatorApp` ao `heapSortModule`.
+- `heap-sort-simulator.js`: conecta `SimulatorApp` ao `heapSortModule`;
+- `bucket-sort-simulator.js`: conecta `SimulatorApp` ao `bucketSortModule`;
+- `counting-sort-simulator.js`: conecta `SimulatorApp` ao `countingSortModule`;
+- `radix-sort-simulator.js`: conecta `SimulatorApp` ao `radixSortModule`.
 
 ## Idiomas
 
@@ -372,6 +386,18 @@ Mesma estrutura dos módulos recursivos, mas sem recursão: `createTracer` mant�
 `runCalls` repete o algoritmo sem passos e serve à contagem, à adaptabilidade e à estabilidade: cada chamada de `ArrumaHeap` (as de CriaHeap e as de cada extração) devolve o intervalo, as voltas do laço, as comparações, as trocas, onde o valor da raiz parou e o vetor antes e depois (`before`, `swapped`, `after`; `swapped` é o vetor logo depois da troca da raiz com o último elemento, que só as extrações têm). Cada chamada dá no máximo `⌊log₂ n⌋` voltas, e o vetor ordenado, o invertido e o quase ordenado custam quase o mesmo: o Heapsort não é adaptável. A estabilidade compara a ordem dos iguais antes e depois de cada troca da raiz e de cada `ArrumaHeap` (`flippedPairs`), e `stabilityExample` sorteia vetores até achar um em que a ordem realmente se inverte.
 
 Os slides de debug (92 a 199) foram conferidos com um script descartável (as linhas destacadas e as setas de cada slide contra os passos do simulador): 99 dos 103 pontos de parada aparecem na mesma ordem e com os mesmos marcadores (os slides 167-168, 172-173, 177-178, 182-183, 187-188 e 192-193 mostram o mesmo `ArrumaHeap` antes e depois, e contam como um), e o vetor dos 54 slides em que o texto do PDF o traz inteiro é igual ao do passo correspondente. Os 4 que sobram são `inicio ← inicio - 1` (slides 111, 126, 140 e 160), em que o slide ainda desenha a seta `inicio` no valor antigo. O deck também marca `Fim` onde o código executa `swap` (slide 104) e `ArrumaHeap` (167 e 168), e abrevia o laço principal a partir do slide 167 ("Agora, vamos acelerar o processo"), sem o interior de `ArrumaHeap`; o simulador percorre tudo. Os slides 42 a 84 (o exemplo desenhado, `9, 8, 6, 12, 4, 3, 7`) refazem o heap a partir do último pai depois de cada extração, e o código dos slides 87 a 90 só desce a raiz, com o mesmo resultado; o simulador segue o código. Também no exemplo desenhado, o slide 21 chama o nó 3 de "último pai" para `n = 7`, mas ele é uma folha: `inicio ← (tamanho - 1) / 2` começa em uma folha quando `tamanho` é ímpar, e o primeiro `ArrumaHeap` termina sem mudar nada.
+
+## Módulos de ordenação linear (Bucket, Counting e Radix Sort)
+
+Três módulos separados da categoria **Algoritmos** (ALG1 · 10, 11 e 12, aula 12), que substituem o cartão "Ordenações lineares": `bucket-sort` (4 simuladores: `bucket`, `complexity`, `adaptability`, `stability`), `counting-sort` (4: `counting`, `stable`, `complexity`, `adaptability`) e `radix-sort` (6: `radix`, `radix-count`, `lsd-msd`, `complexity`, `adaptability`, `stability`). Os dados são de 3 a 15 inteiros: de 0 a 999 no Bucket (a fórmula `(A[i] × numBuckets) / (max + 1)` não aceita negativos), de 0 a 50 no Counting (o `count` tem uma célula por valor possível) e de 0 a 9999 no Radix (até quatro passadas). O Bucket tem `config.numBuckets` (2 a 12) e `config.inner` (o algoritmo que ordena cada bucket, `insertion` ou `selection`, usado na estabilidade); os outros dois não têm parâmetros.
+
+`shared/linear-sort.js` guarda a execução comum: `createTrace` (com `record` falso o mesmo código roda sem montar passos, para as análises e os testes), `bucketIndexOf` e `digitOf`, o Insertion Sort e o Selection Sort de um bucket com os contadores (`INNER_SORTS`), `traceFindMax` (o `encontrarMaior`/`getMax` passo a passo) e os "corredores" `bucketsLane` e `vectorLane`. `shared/linear-sort-view.js` desenha o vetor A com os marcadores da aula (`i`, `indice`, `pos`, `index`, `num`) e o dígito atual em destaque (`step.digit.pos`), os corredores de `step.lanes` (buckets e vetores auxiliares como `count` e `saida`) e as linhas de `step.orders` (LSD × MSD, fila × pilha). A legenda, o cartão de comparação e o gráfico de barras continuam em `sort-view.js`, que não foi alterado.
+
+Cada algoritmo é escrito uma vez (`runBucket`, `runCounting`, `runStable`, `runRadix`) e devolve os passos, o resultado e o custo de cada fase; as análises (`complexity` e `adaptability`) chamam as mesmas funções sem passos e mostram o custo em barras. O pseudocódigo é o dos slides, em PT-BR e com a mesma numeração de linhas: Bucket (slide 8, linhas 01 a 27), Counting (slide 9, linhas 01 a 16) e Radix (slide 9, linhas 01 a 24); `encontrarMaior` e `getMax` vêm do código de exemplo e ficam depois, como função à parte.
+
+Onde as aulas escorregam, o módulo corrige e o catálogo registra: o `return 0` do Counting Sort vira `FIM` (a função ordena o próprio vetor), o `para digitoPos de 1 até maior / digitoPos > 0` do Radix mistura PARA e condição (vira `digitoPos ← 1` e `ENQUANTO maior / digitoPos > 0`, como no código de exemplo) e a linha `end` do Bucket fecha só a função, sem `FIM` dos laços (o recuo é mantido).
+
+Conferência com um script descartável sobre os slides: os estados do vetor A (e do `count`) de cada slide de debug aparecem, na mesma ordem, nos passos dos simuladores (Counting 88 de 88, Bucket 137 de 137, Radix 114 de 114); os buckets da aula (`2, 1, 0, 0, 4, 5, 9, 1, 4, 4`, buckets 0 e 4 ordenados) e as passadas do Radix (`230 20 692 534 895 378 279`, depois `20 230 534 378 279 692 895`) batem; e 3.000 vetores aleatórios no Bucket e no Counting (também na versão estável) e 2.000 no Radix (com buckets e com Counting Sort) saem ordenados. O LSD × MSD reproduz o slide 8 (1 a 10 fica `1 2 … 10` no LSD e `1 10 2 … 9` no MSD).
 
 ## Módulo de Shotgun Sort
 

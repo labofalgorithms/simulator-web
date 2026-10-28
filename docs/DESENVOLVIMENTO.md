@@ -63,7 +63,13 @@ simulator-web/
 │   │   └── index.html
 │   ├── quick-sort/
 │   │   └── index.html
-│   └── heap-sort/
+│   ├── heap-sort/
+│   │   └── index.html
+│   ├── bucket-sort/
+│   │   └── index.html
+│   ├── counting-sort/
+│   │   └── index.html
+│   └── radix-sort/
 │       └── index.html
 ├── src/
 │   ├── css/
@@ -97,6 +103,9 @@ simulator-web/
 │       │   ├── merge-sort/
 │       │   ├── quick-sort/
 │       │   ├── heap-sort/
+│       │   ├── bucket-sort/
+│       │   ├── counting-sort/
+│       │   ├── radix-sort/
 │       │   └── shared/
 │       └── pages/
 ├── docs/                  (arquitetura, catálogo, guia de desenvolvimento e capturas de tela)
