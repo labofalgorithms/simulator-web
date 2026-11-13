@@ -46,4 +46,7 @@ export const variableNames = {
   valorProcurado: 'target', centro: 'mid', rodada: 'round', 'sequencial': 'sequential', 'binária': 'binary', 'pior caso binária': 'binary worst case', candidatos: 'candidates',
   // ordenações lineares
   max: 'max', numBuckets: 'numBuckets', bucketIndex: 'bucketIndex', pos: 'pos', maior: 'largest', digitoPos: 'digitPos', digitoAtual: 'currentDigit', digito: 'digit', num: 'num', index: 'index',
+  // ordenação parcial e mista (os nomes dos slides são os mesmos nos dois idiomas)
+  minIndex: 'minIndex', key: 'key', expelled: 'expelled', smallest: 'smallest', left: 'left', right: 'right', heapSize: 'heapSize', low: 'low', high: 'high', pi: 'pi', pivot: 'pivot',
+  lo: 'lo', hi: 'hi', mid: 'mid', depthLimit: 'depthLimit', pivotIndex: 'pivotIndex', CUTOFF: 'CUTOFF', 'deslocamentos': 'shifts', 'movimentações': 'moves',
 };

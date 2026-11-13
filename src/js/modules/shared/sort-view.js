@@ -9,8 +9,11 @@ import { tr, variableName } from '../../core/i18n.js';
 
 // Os quatro seguintes marcam o trecho do Merge Sort e do Quick Sort (início, meio, fim e o índice k), o centro
 // é o meio da busca binária iterativa e os três últimos, o pai e a raiz, o filho e o candidato a trocar do Heap Sort.
+// Os de low a right, no fim, são os das Ordenações Parcial e Mista.
 const CHIP_LABELS = {
   i: 'i', j: 'j', min: 'min', next: 'i+1', prev: 'j−1', inicio: tr('início', 'start'), meio: tr('meio', 'mid'), centro: tr('centro', 'mid'), fim: tr('fim', 'end'), k: 'k', pai: tr('pai', 'parent'), raiz: tr('raiz', 'root'), filho: tr('filho', 'child'), trocar: tr('trocar', 'largest'),
+  // Ordenação Parcial e Mista: os nomes das variáveis dos slides, iguais nos dois idiomas.
+  low: 'low', high: 'high', lo: 'lo', hi: 'hi', mid: 'mid', pi: 'pi', minIndex: 'minIndex', smallest: 'smallest', left: 'left', right: 'right',
 };
 
 export function parseVector(text, { min, max, hint }) {

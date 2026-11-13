@@ -17,6 +17,8 @@ const LINE = 11.5;
 // Marcadores que viram rótulo sob o nó (`inicio` só quando ainda não existe `raiz`, em CriaHeap).
 const ROLE_LABELS = {
   pai: tr('pai', 'parent'), raiz: tr('raiz', 'root'), filho: tr('filho', 'child'), trocar: tr('trocar', 'largest'), i: 'i', j: 'j',
+  // Heapsort parcial (min-heap): os nomes do minHeapify dos slides.
+  smallest: 'smallest', left: 'left', right: 'right',
 };
 
 const levelOf = (index) => Math.floor(Math.log2(index + 1));
@@ -48,7 +50,7 @@ export function renderHeapTree(step, state, escapeText) {
   const sortedFrom = step.sortedFrom ?? count;
   const pointers = step.pointers || {};
   const kin = kinOf(state, count);
-  const anchor = pointers.raiz ?? pointers.pai;
+  const anchor = step.anchor ?? pointers.raiz ?? pointers.pai;
 
   const place = (index) => {
     const level = levelOf(index);

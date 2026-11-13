@@ -277,6 +277,30 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/radix-sort/" />
   </url>
   <url>
+    <loc>https://labofalgorithms.com/simuladores/ordenacao-parcial/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/ordenacao-parcial/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/ordenacao-parcial/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/ordenacao-parcial/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/ordenacao-parcial/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/ordenacao-parcial/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/ordenacao-parcial/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/ordenacao-parcial/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/simuladores/ordenacao-mista/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/ordenacao-mista/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/ordenacao-mista/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/ordenacao-mista/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/ordenacao-mista/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/ordenacao-mista/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/ordenacao-mista/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/ordenacao-mista/" />
+  </url>
+  <url>
     <loc>https://labofalgorithms.com/simuladores/recursao/</loc>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/recursao/" />
     <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/recursao/" />

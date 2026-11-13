@@ -106,7 +106,14 @@ modules/
 ├── radix-sort/
 │   ├── algorithms.js
 │   └── radix-sort-module.js
+├── partial-sort/
+│   ├── algorithms.js
+│   └── partial-sort-module.js
+├── mixed-sort/
+│   ├── algorithms.js
+│   └── mixed-sort-module.js
 └── shared/
+    ├── debug-trace.js
     ├── sort-steps.js
     ├── linear-sort.js
     ├── linear-sort-view.js
@@ -118,6 +125,8 @@ modules/
 ```
 
 `shared/sort-view.js` reúne o que os módulos de ordenação têm em comum: o vetor com marcadores sobre as células, o cartão de comparação, os contadores, a legenda, o gráfico de barras por passada, os vetores ordenados em paralelo e o editor de números (`renderArray`, `renderCompare`, `renderStats`, `legend`, `renderChart`, `renderLockstep`, `renderVectorEditor`, `parseVector`, `randomVector`). `shared/sort-steps.js` tem a parte de execução: o formato de um passo (`step`), a formatação (`fmt`, `range`, `NONE`) e os itens com letra que marcam a ordem dos repetidos (`tagDuplicates`, `isStable`, `label`, `repeatedExample`). `withRepeats` monta os vetores com repetidos dos exemplos de estabilidade. Selection Sort, Bubble Sort, Insertion Sort, Merge Sort, Quick Sort e Heap Sort usam os dois.
+
+`shared/debug-trace.js` é a execução "como num depurador" dos módulos de Ordenação Parcial e Ordenação Mista: `createDebugger` guarda o vetor de itens `{ v, tag }`, os quadros da pilha de chamadas (cada um com as suas variáveis), os contadores e o registro dos passos (`add`), e com `record` falso o mesmo código roda sem montar passos (as análises, o exemplo de estabilidade e os scripts de conferência usam essa execução). `cmp` monta o cartão de comparação e `outside` lista as posições fora de um trecho.
 
 `shared/recursion-view.js` tem as peças dos módulos recursivos (Merge Sort e Quick Sort): o vetor auxiliar B alinhado com as colunas (`renderAux`), a pilha de chamadas (`renderStack`), os trechos por nível da recursão (`renderLevels`) e as caixas de total (`renderTotals`). O vetor com marcadores continua sendo `renderArray`, que aceita `{ stacked: true }` (marcadores `inicio`, `meio`, `centro`, `fim`, `k`, `pai`, `raiz`, `filho` e `trocar` empilhados sobre a célula), `step.sortedIndices` (posições prontas), `step.pivotIndex` (o pivô, com a classe `pivot`) e `step.splitAfter` (a barra entre as duas metades). Veja "Módulo de Merge Sort" e "Módulo de Quick Sort" abaixo.
 
@@ -157,7 +166,9 @@ modules/
 - `heap-sort-simulator.js`: conecta `SimulatorApp` ao `heapSortModule`;
 - `bucket-sort-simulator.js`: conecta `SimulatorApp` ao `bucketSortModule`;
 - `counting-sort-simulator.js`: conecta `SimulatorApp` ao `countingSortModule`;
-- `radix-sort-simulator.js`: conecta `SimulatorApp` ao `radixSortModule`.
+- `radix-sort-simulator.js`: conecta `SimulatorApp` ao `radixSortModule`;
+- `partial-sort-simulator.js`: conecta `SimulatorApp` ao `partialSortModule`;
+- `mixed-sort-simulator.js`: conecta `SimulatorApp` ao `mixedSortModule`.
 
 ## Idiomas
 
@@ -177,7 +188,7 @@ Para incluir um módulo, copie um card `.module-card.available` para o grupo cer
 
 `assets/logo/` guarda o logo (SVG e PNG, em versões para fundo escuro e claro), o favicon, o ícone do iOS, o avatar e a imagem de compartilhamento (`og-image.png`); o `assets/logo/README.md` lista cada arquivo e as regras de uso. Todas as páginas apontam para `favicon.ico`, `favicon.svg` (que troca de cor com o tema do navegador) e `apple-touch-icon.png`; todas as páginas têm `canonical`, as tags `og:` e `twitter:card` e um bloco JSON-LD, e o `og:image` usa a URL absoluta de `labofalgorithms.com`. A home usa o `og-image.png` e cada simulador tem a sua imagem em `assets/og/<pasta>.jpg` (1200 × 630). O `manifest.webmanifest`, na raiz, usa os ícones `icon-192.png` e `icon-512.png`.
 
-O ícone do cabeçalho (`.brand-mark`, na home e no menu lateral dos simuladores) é um SVG inline, e não um `<img>`: assim ele usa `currentColor` com `color: var(--cyan)` e muda junto com o tema (`#22d3ee` no escuro, `#0e7490` no claro), algo que um arquivo externo não consegue por causa do botão de tema. O desenho está repetido nas 25 páginas; ao mudá-lo, troque em todas.
+O ícone do cabeçalho (`.brand-mark`, na home e no menu lateral dos simuladores) é um SVG inline, e não um `<img>`: assim ele usa `currentColor` com `color: var(--cyan)` e muda junto com o tema (`#22d3ee` no escuro, `#0e7490` no claro), algo que um arquivo externo não consegue por causa do botão de tema. O desenho está repetido nas 30 páginas; ao mudá-lo, troque em todas.
 
 ## Contagem de acessos
 
@@ -398,6 +409,32 @@ Cada algoritmo é escrito uma vez (`runBucket`, `runCounting`, `runStable`, `run
 Onde as aulas escorregam, o módulo corrige e o catálogo registra: o `return 0` do Counting Sort vira `FIM` (a função ordena o próprio vetor), o `para digitoPos de 1 até maior / digitoPos > 0` do Radix mistura PARA e condição (vira `digitoPos ← 1` e `ENQUANTO maior / digitoPos > 0`, como no código de exemplo) e a linha `end` do Bucket fecha só a função, sem `FIM` dos laços (o recuo é mantido).
 
 Conferência com um script descartável sobre os slides: os estados do vetor A (e do `count`) de cada slide de debug aparecem, na mesma ordem, nos passos dos simuladores (Counting 88 de 88, Bucket 137 de 137, Radix 114 de 114); os buckets da aula (`2, 1, 0, 0, 4, 5, 9, 1, 4, 4`, buckets 0 e 4 ordenados) e as passadas do Radix (`230 20 692 534 895 378 279`, depois `20 230 534 378 279 692 895`) batem; e 3.000 vetores aleatórios no Bucket e no Counting (também na versão estável) e 2.000 no Radix (com buckets e com Counting Sort) saem ordenados. O LSD × MSD reproduz o slide 8 (1 a 10 fica `1 2 … 10` no LSD e `1 10 2 … 9` no MSD).
+
+## Módulos de Ordenação Parcial e Ordenação Mista
+
+Dois módulos da categoria **Algoritmos** (ALG1 · 13 e 14, aula 13, páginas `ordenacao-parcial` e `ordenacao-mista`). Os dois usam `shared/debug-trace.js` (o depurador com pilha de chamadas), `renderStack`, `renderArray` e o resto de `sort-view.js`; os pseudocódigos mantêm os nomes dos slides (`A`, `k`, `minIndex`, `smallest`, `lo`, `hi`...), iguais em português e em inglês, e só as palavras-chave mudam.
+
+### Ordenação Parcial (`partial-sort`)
+
+Cinco simuladores: `selection`, `insertion`, `heap` e `quick` (os quatro métodos, cada um em execução completa) e `compare` (comparando por k). Os dados são de 3 a 12 números e `config.k` (de 1 até o tamanho; o padrão é metade dos valores, `defaultK`) diz quantos menores obter; uma barra no vetor (`step.splitAfter = k - 1`) marca o limite dos k primeiros. Os botões de exemplo carregam o vetor e o k de cada demonstração da aula (Seleção, slides 14 a 26: `64 25 12 22 11`, k = 3; Inserção, 31 a 39: `9 8 6 12 4 16`, k = 4; Heap, 45 a 71: `9 8 6 12 4 3 7`, k = 3; Quick, 77 a 103: `57 70 97 38 63 21 85 68 76`, k = 4).
+
+Cada método é escrito uma vez (`runSelection`, `runInsertion`, `runHeap`, `runQuick`) e devolve os passos, o vetor final e os contadores; com `record` falso o mesmo código roda sem passos, que é o que o `compare` e os testes usam. A segunda estatística é `trocas` (`deslocamentos` na Inserção parcial, que desloca valores em vez de trocá-los). O Heapsort parcial desenha o min-heap com `renderHeapTree` (de `heap-sort/views.js`, que ganhou `step.anchor` para destacar as arestas do nó `i` e os rótulos `smallest`, `left` e `right`); os nós que saíram do heap (`step.sortedFrom`) ficam em verde nas últimas posições. `trocar(A, i, j)` é um quadro com as três linhas e a variável `temp`, como o `swap` do Heap Sort; o `minHeapify` é recursivo e o `partialQuickSort`, também.
+
+O `compare` não usa o vetor do aluno: sorteia `n` valores distintos (10 a 200, `config.size`, padrão 100) com uma semente tirada do vetor (os mesmos números dão os mesmos vetores), repete o experimento em 12 vetores (6 quando `n > 100`) e mostra, para cada k em `{1, 2, 5, 10, 15, 25, 50, 75, n}`, o custo médio (comparações + movimentações) dos quatro métodos em barras. A média é necessária porque o Quicksort parcial, com o pivô no último valor, varia muito de um vetor para outro (num vetor de 100 valores com k = 15, de 177 a 1.210 operações). Com `n = 100` o resultado é o dos slides 106 e 107: a inserção parcial vence para k pequeno (99 operações com k = 1), o Quicksort parcial vence a partir de k = 10 e o Heapsort parcial fica perto dele, mas atrás.
+
+### Ordenação Mista (`mixed-sort`)
+
+Cinco simuladores: `quick-insertion`, `merge-insertion`, `introsort` (os três híbridos) e `adaptability` e `stability` (os três juntos). Os dados são de 4 a 24 números e `config` tem `cutoff` (1 a 12; os slides sugerem de 8 a 24, e o padrão é 4 porque os vetores são pequenos), `median` (a mediana-de-três, ligada por padrão) e `depthLimit` (vazio usa `2 · ⌊log₂ n⌋`; um valor menor força o resgate do Heap Sort). Os botões de exemplo carregam o vetor ordenado com a mediana desligada (o pior caso do pivô no último valor: o `depthLimit` chega a 0 e o Heap Sort assume) e um vetor misturado.
+
+O `introsort` é o pseudocódigo do slide 127; `quick-insertion` é a mesma estrutura sem o limite de profundidade e `merge-insertion` é o Merge Sort que entrega os trechos de até `CUTOFF` elementos ao Insertion Sort. Os dois últimos não têm código nos slides (só a ideia, nos slides 113 a 119) e foram escritos nesse molde. As funções auxiliares (`partition`, `heapSortRange`, `insertionSortRange`, `merge`) são as do slide 128 e rodam em **um passo só** cada: o passo mostra o trecho antes e depois e o custo, e o interior delas está nos módulos de Quick Sort, Heap Sort, Insertion Sort e Merge Sort. `partition` é o Lomuto do slide 105 (pivô no último valor; com a mediana ligada, a mediana de `A[lo]`, `A[mid]` e `A[hi]` vai antes para o fim, com 3 comparações) e `merge` é estável (no empate sai o valor da metade esquerda). O lado menor da partição vai por recursão e o maior continua no laço (a eliminação da recursão de cauda do slide 115), então a pilha nunca passa de `log₂ n` chamadas.
+
+Chamadas de recursão, `lo`, `hi`, `mid` e `pi` (o `pivotIndex`) aparecem como marcadores sobre o vetor, o que está fora do trecho da chamada fica apagado e as posições que já estão no lugar (pivôs e trechos entregues ao Insertion Sort; no Merge, os trechos já ordenados) ficam em verde. A segunda estatística é `movimentações` (trocas, deslocamentos e cópias). `adaptability` roda os três híbridos nos quatro vetores de sempre (ordenado, quase ordenado, invertido e o seu) e mostra o custo em barras; `stability` marca os repetidos com letras e roda os três: só o Merge + Insertion preserva a ordem (`stabilityExample` sorteia um vetor em que o Quick + Insertion e o Introsort a invertem).
+
+### Conferência
+
+Com scripts descartáveis (não estão no repositório): (1) os quatro métodos parciais ordenaram certo 16.000 execuções sobre vetores aleatórios de 2 a 12 valores (com e sem repetidos, k de 1 a n); o Heapsort parcial deixou os k menores nas últimas posições, do maior para o menor, e o resto ainda é um min-heap; os contadores são iguais com e sem passos; (2) os três híbridos ordenaram certo 9.000 execuções sobre vetores de 2 a 41 valores (aleatórios, ordenados e invertidos, `CUTOFF` de 1 a 8, mediana ligada e desligada, `depthLimit` forçado), com cerca de 1.100 resgates do Heap Sort, e o Merge + Insertion foi estável em todas, enquanto o Quick + Insertion e o Introsort inverteram iguais em cerca de 81% e 90% dos vetores com repetidos; (3) as demonstrações dos slides aparecem nos passos: Seleção (`11 25 12 22 64`, `11 12 25 22 64`, `11 12 22 25 64`), Inserção (`8 9 6 12 4 16`, `6 8 9 12 4 16`, `4 6 8 9 12 16`), o Heapsort parcial de `9 8 6 12 4 3 7` (os estados dos slides 49 e 54 e as três últimas posições, `6 4 3`, do slide 71) e o Quicksort parcial de `57 70 97 38 63 21 85 68 76` (os 4 primeiros, `21 38 57 63`, do slide 103); (4) as classes Java de `sourcecode/` (`PartialSelectionSort`, `PartialInsertionSort`, `PartialHeapSort`, `PartialQuickSort`) deram o mesmo resultado em 20.000 execuções.
+
+Onde a aula escorrega, o módulo segue o código e o catálogo registra (veja [SIMULADORES.md](SIMULADORES.md#ordenação-parcial)): a numeração do slide 27, o desenho do heap dos slides 45 a 61 (que não é o do código dos slides 72 e 73), o Quicksort parcial dos slides 77 a 103 (pivô no primeiro valor, o código usa o último), a inserção dos slides 31 a 39 (trocas adjacentes, o código desloca) e o `heapSort` do `IntroSort.java`, que erra quando o resgate acontece.
 
 ## Módulo de Shotgun Sort
 

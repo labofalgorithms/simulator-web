@@ -629,3 +629,8 @@ button.sort-cell:hover{border-color:var(--cyan);transform:translateY(-2px)}
 .lb-null{margin:auto;color:var(--subtle);font-size:10px;font-style:normal}
 .lb-null.empty{opacity:.6}
 @media(max-width:640px){.lb-lane-head{font-size:13px}.lb-lane-head small{font-size:12px}.lb-bucket-head,.lb-null{font-size:12px}}
+.sort-chip.lo,.sort-chip.hi,.sort-chip.low,.sort-chip.high{border-color:rgba(251,113,133,.5);background:rgba(251,113,133,.12);color:var(--rose)}
+.sort-chip.mid,.sort-chip.pi{border-color:rgba(251,191,36,.5);background:var(--amber-soft);color:var(--amber)}
+.sort-chip.minIndex,.sort-chip.smallest{border-color:rgba(52,211,153,.45);background:var(--green-soft);color:var(--green)}
+.sort-chip.left,.sort-chip.right{border-color:rgba(251,191,36,.5);background:var(--amber-soft);color:var(--amber)}
+.config-field.check{align-content:end}.config-field.check input[type=checkbox]{width:22px;height:22px;padding:0;accent-color:var(--cyan)}

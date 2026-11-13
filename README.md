@@ -55,6 +55,8 @@ São 27 simuladores, em português e em inglês, no navegador e sem cadastro. O 
 - [Bucket Sort](https://labofalgorithms.com/simuladores/bucket-sort/)
 - [Counting Sort](https://labofalgorithms.com/simuladores/counting-sort/)
 - [Radix Sort](https://labofalgorithms.com/simuladores/radix-sort/)
+- [Ordenação Parcial](https://labofalgorithms.com/simuladores/ordenacao-parcial/)
+- [Ordenação Mista](https://labofalgorithms.com/simuladores/ordenacao-mista/)
 
 ## Para quem usa
 

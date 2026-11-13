@@ -69,7 +69,11 @@ simulator-web/
 │   │   └── index.html
 │   ├── counting-sort/
 │   │   └── index.html
-│   └── radix-sort/
+│   ├── radix-sort/
+│   │   └── index.html
+│   ├── ordenacao-parcial/
+│   │   └── index.html
+│   └── ordenacao-mista/
 │       └── index.html
 ├── src/
 │   ├── css/
@@ -106,6 +110,8 @@ simulator-web/
 │       │   ├── bucket-sort/
 │       │   ├── counting-sort/
 │       │   ├── radix-sort/
+│       │   ├── partial-sort/
+│       │   ├── mixed-sort/
 │       │   └── shared/
 │       └── pages/
 ├── docs/                  (arquitetura, catálogo, guia de desenvolvimento e capturas de tela)

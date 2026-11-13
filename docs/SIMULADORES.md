@@ -314,3 +314,37 @@ O pseudocódigo é o do slide 9 (linhas 01 a 16) e o vetor inicial, o dos slides
 - Estabilidade: a passada com fila (a da aula) contra uma passada com pilha, que inverte os iguais e deixa o vetor fora de ordem: o LSD só funciona porque cada passada é estável (slide 126)
 
 O pseudocódigo é o do slide 9 (linhas 01 a 24), com `digitoPos ← 1` e `ENQUANTO maior / digitoPos > 0` no lugar do `PARA ... ATÉ maior / digitoPos > 0` do slide (uma condição escrita como limite de PARA), que é o laço do código de exemplo. `getMax` vem do código de exemplo. Os valores vão de 0 a 9999.
+
+### Ordenação Parcial
+
+- Seleção parcial: o Selection Sort do slide 27 com `k` passadas (o vetor dos slides 14 a 26, `64 25 12 22 11`, k = 3): a barra marca o limite dos k primeiros e só eles são ordenados; há uma troca por passada, inclusive a do menor com ele mesmo ("Já está ordenado!", slide 17)
+- Inserção parcial: o Insertion Sort dos k primeiros e a varredura do resto (slides 40 e 41, `9 8 6 12 4 16`, k = 4): `x` contra `A[k - 1]`, o `expelled` que dá lugar ao valor que entra no bloco e volta para a posição de onde `x` saiu
+- Heapsort parcial: o min-heap (vetor e árvore) e as k extrações do slides 72 e 73 (`9 8 6 12 4 3 7`, k = 3), com `buildMinHeap`, `minHeapify` recursivo e `trocar` na pilha de chamadas; os k menores ficam nas k últimas posições, em ordem decrescente da esquerda para a direita
+- Quicksort parcial: o código dos slides 104 e 105 (pivô no último valor), com a pilha de chamadas: a chamada à direita só acontece se `pi + 1 < k`, e se `pi ≥ k` o lado direito é abandonado (`57 70 97 38 63 21 85 68 76`, k = 4, o primeiro particionamento leva o pivô 76 à posição 6)
+- Comparando por k: os quatro métodos em vetores aleatórios (n de 10 a 200, padrão 100, média de 12 vetores) para k = 1, 2, 5, 10, 15, 25, 50, 75 e n, em barras de operações (comparações + movimentações): a inserção parcial para k pequeno e o Quicksort parcial para k grande (slides 106 e 107)
+
+Os dados são de 3 a 12 números e o k vai de 1 até o tamanho (o exercício do slide 133 pede os 5 menores de 10 números). Onde a aula escorrega, o simulador segue o código dos slides 27, 40, 41, 72, 73, 104 e 105:
+
+- o código do slide 27 numera 10 e depois 12 (pula o 11): a numeração aqui é corrida;
+- o desenho do heap dos slides 45 a 61 monta o min-heap comparando cada pai com o filho da esquerda e depois com o da direita (de `9 8 6 12 4 3 7` sai `3 8 4 12 9 6 7`); o `buildMinHeap` do slide 72 e o `minHeapify` do slide 73 dão `3 4 6 12 8 9 7`, outro min-heap válido. Os dois deixam os mesmos três menores no fim (`6 4 3`), mas os vetores dos slides 63 a 71 saem do heap do desenho, e não aparecem nos passos;
+- o Quicksort parcial dos slides 77 a 103 escolhe o primeiro valor como pivô e move cada menor para antes dele sem trocar a ordem dos outros, e o código dos slides 104 e 105 usa o último valor e a partição de Lomuto, que é o que o simulador executa. Os 4 menores são os mesmos (`21 38 57 63`, slide 103);
+- a inserção parcial dos slides 31 a 39 mostra trocas de vizinhos (`vetor[0] > vetor[1]`), e o código dos slides 40 e 41 desloca os valores com `key`: o resultado é o mesmo (`4 6 8 9 12 16`);
+- o slide 28 diz que o tempo é "linear no tamanho de k", o que vale para as trocas (há k); as comparações são cerca de n · k;
+- os slides 43 e 44 falam em `A[1]` e `A[n]` (índices a partir de 1) e o código usa `A[0]` e `A[n - 1]`;
+- o `partialQuickSort` tem a chamada da esquerda nos dois ramos do `SE pi ≥ k` (nada muda entre eles), e o `k` é uma posição absoluta do vetor, não uma contagem.
+
+### Ordenação Mista
+
+- Quick + Insertion: o Quick Sort que entrega ao Insertion Sort os trechos de até `CUTOFF` elementos (slides 113 a 116): `partition` (com ou sem mediana-de-três), o lado menor por recursão e o maior no laço, a pilha de chamadas, e os trechos do Insertion Sort e os pivôs em verde
+- Merge + Insertion: o Merge Sort que divide até sobrarem `CUTOFF` elementos, ordena cada trecho com o Insertion Sort e depois intercala com um `merge` estável (slides 117 a 119), com `lo`, `mid` e `hi` sobre o vetor e a barra entre as duas metades
+- Introsort: o pseudocódigo do slide 127, com o `depthLimit = 2 · ⌊log₂ n⌋`, o resgate do Heap Sort quando ele chega a 0 e o Insertion Sort nos trechos pequenos; o botão "Já ordenado, sem mediana" mostra o resgate, e o `depthLimit` pode ser trocado por um valor menor
+- Adaptabilidade: os três híbridos em quatro vetores (ordenado, quase ordenado, invertido e o seu), com o custo em barras: o Merge + Insertion muda pouco, o Quick + Insertion depende dos pivôs e o Introsort contorna o pior caso com o Heap Sort (slides 116, 119 e 129)
+- Estabilidade: valores repetidos com letras, rodando os três; só o Merge + Insertion preserva a ordem, e "Gerar exemplo" monta um vetor em que o Quick + Insertion e o Introsort a invertem
+
+Os dados são de 4 a 24 números, com `CUTOFF` de 1 a 12 (os slides sugerem de 8 a 24; aqui o padrão é 4 porque os vetores são pequenos), a mediana-de-três ligada ou desligada e o `depthLimit`. As funções auxiliares (`partition`, `heapSortRange`, `insertionSortRange` e `merge`, slide 128) são um passo só cada; o interior delas está nos módulos de Quick Sort, Heap Sort, Insertion Sort e Merge Sort. Os slides só trazem o código do Introsort (slide 127): o do Quick + Insertion e o do Merge + Insertion foram escritos nesse molde, a partir das ideias dos slides 113 a 119.
+
+Sobre os slides e o código de exemplo:
+
+- o `IntroSort.java` de `sourcecode/` tem um erro no `heapSort(begin, end)`: `heapN = end - begin` deixa o último elemento do trecho fora do heap (deveria ser `end - begin + 1`), e o `heapSort(1, 2, 3, 10)` devolve `1 2 10 3`. Em 2.000 vetores aleatórios de 18 a 77 valores, o `heapSort` do trecho inteiro, que é o que o resgate faz quando o `depthLimit` chega a 0, ordenou errado 59; o caminho normal (`sortData`) saiu certo em todos, porque o resgate quase nunca acontece com dados aleatórios (o programa de exemplo ordena 50.000 aleatórios). O `IntrosortDemo.java` (`heapSortRange` com um vetor temporário) e o pseudocódigo do slide 127 estão certos;
+- os slides sugerem `CUTOFF` de 8 a 32 (slide 112), 16 (slide 115) e 8 a 24 (slides 124 e 128), e o `IntroSort.java` usa `end - begin > 16`, ou seja, trechos de até 17 elementos vão para o Insertion Sort, contra 16 no `IntrosortDemo.java`;
+- o slide 119 diz que o Merge Sort é estável "se implementado corretamente", o que o `merge` daqui é (empates saem pela esquerda); o `Intercala` do módulo de Merge Sort, que copia a segunda metade invertida, não é (veja a nota no catálogo do Merge Sort).
