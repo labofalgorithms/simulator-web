@@ -21,7 +21,7 @@ Simuladores interativos para aprender estruturas de dados e algoritmos. Cada ope
 
 ## Simuladores
 
-São 27 simuladores, em português e em inglês, no navegador e sem cadastro. O que cada um cobre está no [catálogo detalhado](docs/SIMULADORES.md).
+São 30 simuladores, em português e em inglês, no navegador e sem cadastro. O que cada um cobre está no [catálogo detalhado](docs/SIMULADORES.md).
 
 ### Estruturas de Dados
 
@@ -40,6 +40,7 @@ São 27 simuladores, em português e em inglês, no navegador e sem cadastro. O 
 - [Árvore Binária de Busca](https://labofalgorithms.com/simuladores/arvore-binaria-busca/)
 - [Percursos em Árvores Binárias](https://labofalgorithms.com/simuladores/percursos-arvores-binarias/)
 - [Árvore AVL](https://labofalgorithms.com/simuladores/arvore-avl/)
+- [Árvore B](https://labofalgorithms.com/simuladores/arvore-b/)
 
 ### Algoritmos
 

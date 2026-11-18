@@ -8,11 +8,11 @@ const MAX_NODES = 12;
 const MAX_VALUE = 999;
 const DEFAULT_DATA = { values: [40, 20, 60, 10, 30, 50, 70] };
 
-// Exemplos da aula: a árvore dos slides, a mesma com o 45 (o caso de um filho), o exercício 1 e
+// Exemplos: a árvore dos slides, a mesma com o 45 (o caso de um filho), o exercício 1 e
 // valores em ordem (a árvore vira uma cadeia).
 const PRESETS = {
-  lesson: { label: tr('Árvore da aula', 'Lesson tree'), values: [40, 20, 60, 10, 30, 50, 70] },
-  lessonPlus: { label: tr('Aula + 45', 'Lesson + 45'), values: [40, 20, 60, 10, 30, 50, 70, 45] },
+  lesson: { label: tr('Árvore completa de 7 nós', 'Complete 7-node tree'), values: [40, 20, 60, 10, 30, 50, 70] },
+  lessonPlus: { label: tr('A mesma + 45', 'The same + 45'), values: [40, 20, 60, 10, 30, 50, 70, 45] },
   exercise: { label: tr('Exercício 1', 'Exercise 1'), values: [45, 25, 65, 15, 35, 55, 75] },
   ascending: { label: tr('Em ordem crescente', 'In ascending order'), values: [10, 20, 30, 40, 50, 60, 70] },
 };
@@ -126,7 +126,7 @@ export const binarySearchTreeModule = {
 
   renderEditor({ state, icons, escapeText }) {
     const { values } = state.data;
-    const presets = Object.entries(PRESETS).map(([key, preset]) => `<button class="button secondary compact" type="button" data-module-action="preset" data-preset="${key}">${preset.label}</button>`).join('');
+    const presets = Object.entries(PRESETS).map(([key, preset], index) => `<button class="button secondary compact" type="button" data-module-action="preset" data-preset="${key}" title="${escapeText(preset.label)}" aria-label="${tr('Exemplo', 'Example')} ${index + 1}: ${escapeText(preset.label)}">${index + 1}</button>`).join('');
     return `
       <div class="panel-heading compact-heading">
         <div><span class="eyebrow">${tr('Dados de entrada', 'Input data')}</span><h2 id="data-editor-title">${tr('Monte a árvore', 'Build the tree')}</h2></div>
@@ -139,7 +139,7 @@ export const binarySearchTreeModule = {
       </div>
       <p id="node-help" class="field-help">${tr('A árvore é montada inserindo cada valor, na ordem informada (iguais vão para a direita). Por isso a ordem muda o formato. Inteiros de 0 a', 'The tree is built by inserting each value, in the order given (equal values go to the right). That is why the order changes the shape. Integers from 0 to')} ${MAX_VALUE}${tr('; no máximo', '; at most')} ${MAX_NODES} ${tr('nós. Deixe em branco para uma árvore vazia.', 'nodes. Leave blank for an empty tree.')}</p>
       <p id="node-error" class="error-message" role="alert">${escapeText(state.inputError)}</p>
-      <div class="preset-row"><span>${tr('Exemplos da aula', 'Lesson examples')}</span>${presets}</div>
+      <div class="preset-row"><span>${tr('Exemplos', 'Examples')}</span>${presets}</div>
       <div class="random-row">
         <label for="random-count">${tr('Quantidade aleatória', 'Random quantity')}</label>
         <input id="random-count" type="range" min="0" max="${MAX_NODES}" value="${state.randomCount}" data-module-input="random-count" />
@@ -176,7 +176,7 @@ export const binarySearchTreeModule = {
       return `${heading(tr('Escolha a árvore', 'Choose the tree'))}
         <div class="preset-row">
           <button class="button secondary compact" type="button" data-module-action="set-rule" data-mode="valid" ${pressed('valid')}>${tr('A minha árvore', 'My tree')}</button>
-          <button class="button secondary compact" type="button" data-module-action="set-rule" data-mode="error" ${pressed('error')}>${tr('Árvore com erro da aula', 'Lesson tree with the mistake')}</button>
+          <button class="button secondary compact" type="button" data-module-action="set-rule" data-mode="error" ${pressed('error')}>${tr('Árvore com erro', 'Tree with the mistake')}</button>
         </div>
         <p class="config-note">${config.rule === 'error' ? tr('Árvore fixa dos slides: 40, 20, 60, 10, 45, 50, 70, com o 45 à esquerda de 40.', 'Slide tree: 40, 20, 60, 10, 45, 50, 70, with 45 to the left of 40.') : tr('A árvore montada com os valores dos dados de entrada.', 'The tree built with the values from the input data.')}</p>`;
     }

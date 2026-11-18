@@ -187,6 +187,26 @@ Onde as aulas se contradizem ou escorregam, o módulo corrige:
 - **Nomes dos casos.** A aula 13 fala em "Caso 1" e "Caso 2"; o módulo usa LL, RR, LR e RL, como o código da aula 14.
 - **Árvore já desbalanceada.** Inserir numa ABB comum que já tinha |FB| = 2 pode chamar uma rotação sem o filho necessário (no Java, um erro de ponteiro nulo); o simulador mostra o aviso e segue.
 
+### Árvore B
+
+- Propriedades: ordem `m`, no máximo `m − 1` chaves e `m` filhos por nó, no mínimo `⌈m/2⌉ − 1` chaves (fora a raiz), filhos = chaves + 1, chaves em ordem e todas as folhas no mesmo nível, conferidos nó por nó
+- Busca: em cada nó, a posição da chave (`posição`) decide o filho; cada nó lido é um acesso a disco
+- Inserir (`inserir`): busca da folha, inserção ordenada, overflow, divisão na mediana, promoção ao pai, atualização dos ponteiros e raiz cheia
+- Construir a árvore: as inserções em sequência, com as divisões, as da raiz, a altura final e a altura de uma ABB comum
+- Remover (`remover`): Caso 1 (folha), 2a (predecessor), 2b (sucessor), 2c (fusão) e 3 (descer reforçando o filho com rotação ou fusão)
+
+O pseudocódigo foi escrito a partir da descrição dos slides, que não trazem código, e cada passo é uma linha executada, com a pilha de chamadas (remoção) ou o caminho de pais (inserção), as fichas `nó`, `pai`, `irmão`, `x`, `y`, `z` e `c` sobre os nós e os nós de `m − 1` vagas desenhados como nos slides. Os dados são as chaves na ordem de inserção (inteiros de 0 a 999, até 16, sem repetidos) e a ordem `m` (3 a 7); há atalhos para os exemplos dos slides (inclusive a árvore de ordem 5 dos slides 7 a 19) e para três árvores que quebram uma regra. Os exemplos de inserção (12, 34 e 46) e de remoção (35, 10 em fusão e em rotação, 52, 68 e 85) terminam na árvore dos slides.
+
+Onde a aula escorrega ou deixa em aberto, o módulo escolhe e avisa:
+
+- **A mediana com número par de chaves.** Os slides 54 e 55 sobem a mediana de cima (`[10 27 46 52]` sobe o 46); as correções dos exercícios 2, 3 e 5 a 8 sobem a de baixo, o 4 usa a de cima e o 1 mistura as duas (sobe o 12 de `[3 5 12 18]` e o 18 de `[15 18 20 22]`). O módulo tem o parâmetro "Mediana" (superior, a da aula, é o padrão) (os exercícios da aula foram retirados da interface; com a inferior os exercícios 2, 3 e 5 a 8 reproduzem as correções); o exercício 1, com a superior, termina em `[12 20]` e não em `[12 18]`.
+- **A descida preventiva da remoção só cabe com ordem par.** O slide 63 diz que a fusão de dois nós com `t − 1` chaves e a do pai tem `2t − 1` chaves, "a ocupação máxima": só é, se `m = 2t`. Com `m = 5` (t = 3) a fusão teria 5 chaves, uma a mais que o máximo 4, e a aula só remove com ordem 4. Com ordem par o simulador segue a aula; com ordem ímpar usa a variante "remover e consertar na volta" do slide 65 (a chave sai primeiro, e o nó que ficar abaixo do mínimo empresta do irmão ou se funde), com aviso no primeiro passo. A árvore final é válida, mas os passos não são os dos slides.
+- **Slide 100 (Caso 2c)** para com o nó fundido `[31 85 87]`, sem tirar o 85 (o passo 4 do slide 95 manda continuar a remoção); o simulador termina em `[31 87]`.
+- **Slide 7** desenha a folha `[13 14 15 18]` duas vezes; nos slides seguintes a folha do meio é `[21 22 23 24]`, que é a que o módulo usa.
+- **"Nó interno" nas regras de ocupação** (slides 12 e 16): a regra de pelo menos `⌈m/2⌉ − 1` chaves vale para toda a árvore, folhas inclusas (os slides 67 e 70 a 78 tratam a folha assim); a contagem de filhos é que só vale para os nós internos.
+- **Correção do exercício 6** (`ED2-Correcao-Exercicios-ArvoresB`): depois das três remoções do exercício 6 sobram dois slides repetidos do exercício 5 ("Removo o 15 / fusão" e "Removo o 25 / predecessor").
+- **Pseudocódigo.** Não existe nos slides; é do módulo. O Caso 3 reforça o filho antes de descer mesmo que a chave não exista, como o slide 101 descreve; o simulador mostra isso e avisa no último passo.
+
 ## Algoritmos
 
 ### Recursão

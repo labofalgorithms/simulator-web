@@ -37,6 +37,18 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/arvore-avl/" />
   </url>
   <url>
+    <loc>https://labofalgorithms.com/simuladores/arvore-b/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/arvore-b/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/arvore-b/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/arvore-b/" />
+  </url>
+  <url>
+    <loc>https://labofalgorithms.com/en/simuladores/arvore-b/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/arvore-b/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/arvore-b/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://labofalgorithms.com/simuladores/arvore-b/" />
+  </url>
+  <url>
     <loc>https://labofalgorithms.com/simuladores/arvore-binaria-busca/</loc>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://labofalgorithms.com/simuladores/arvore-binaria-busca/" />
     <xhtml:link rel="alternate" hreflang="en" href="https://labofalgorithms.com/en/simuladores/arvore-binaria-busca/" />

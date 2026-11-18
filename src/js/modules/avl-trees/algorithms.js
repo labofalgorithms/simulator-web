@@ -299,14 +299,14 @@ export const algorithms = [
   {
     id: 'insert', title: tr('Inserir um valor (inserir)', 'Insert a value (insert)'), menuLabel: tr('inserir(valor)', 'insert(value)'), group: tr('Inserção', 'Insertion'), number: '05',
     description: tr('Insere como numa ABB, de forma recursiva. No caminho de volta, cada nó atualiza a altura, calcula o FB e, se |FB| > 1, aplica uma rotação (simples ou dupla). Valores repetidos são ignorados.', 'Insert as in a BST, recursively. On the way back, each node updates its height, computes the BF and, if |BF| > 1, applies a rotation (single or double). Repeated values are ignored.'),
-    interaction: tr('Use os exemplos da aula para ver cada caso: LL, RR, LR e RL. Clique em um nó da árvore para repetir o valor dele e ver a inserção ser recusada. A pilha de chamadas mostra a recursão.', 'Use the lesson examples to see each case: LL, RR, LR and RL. Click a tree node to repeat its value and see the insertion being refused. The call stack shows the recursion.'),
+    interaction: tr('Use os exemplos para ver cada caso: LL, RR, LR e RL. Clique em um nó da árvore para repetir o valor dele e ver a inserção ser recusada. A pilha de chamadas mostra a recursão.', 'Use the examples to see each case: LL, RR, LR and RL. Click a tree node to repeat its value and see the insertion being refused. The call stack shows the recursion.'),
     complexity: { time: 'O(log n)', space: 'O(log n)', note: tr('A altura de uma AVL é O(log n): a inserção desce uma vez e volta atualizando alturas, com no máximo uma rotação (simples ou dupla). A pilha tem um frame por nível.', 'The height of an AVL is O(log n): the insertion goes down once and comes back updating heights, with at most one rotation (single or double). The stack has one frame per level.') },
     pseudocode: PROGRAMS.insert.code,
   },
   {
     id: 'build', title: tr('Construir a árvore (inserções em sequência)', 'Build the tree (insertions in sequence)'), menuLabel: tr('Construir a AVL', 'Build the AVL'), group: tr('Inserção', 'Insertion'), number: '06',
     description: tr('Insira os valores na ordem da lista e veja quando a árvore precisa rotacionar. Compare a altura final com a de uma ABB comum feita com os mesmos valores.', 'Insert the values in the order of the list and see when the tree needs to rotate. Compare the final height with that of a plain BST built from the same values.'),
-    interaction: tr('Use os exercícios da aula (por exemplo, 50, 30, 70, 20, 40, 10) e depois valores em ordem crescente: a ABB vira uma cadeia, a AVL continua baixa.', 'Use the lesson exercises (for example, 50, 30, 70, 20, 40, 10) and then values in ascending order: the BST becomes a chain, the AVL stays short.'),
+    interaction: tr('Use valores como 50, 30, 70, 20, 40, 10 e depois valores em ordem crescente: a ABB vira uma cadeia, a AVL continua baixa.', 'Use values like 50, 30, 70, 20, 40, 10 and then values in ascending order: the BST becomes a chain, the AVL stays short.'),
     complexity: { time: 'O(n log n)', space: 'O(n)', note: tr('Cada uma das n inserções custa O(log n) numa AVL; numa ABB comum, com valores em ordem, custaria O(n) cada e o total seria O(n²).', 'Each of the n insertions costs O(log n) in an AVL; in a plain BST, with values in order, each would cost O(n) and the total would be O(n²).') },
     pseudocode: PROGRAMS.build.code,
   },

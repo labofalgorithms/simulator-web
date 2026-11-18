@@ -89,12 +89,12 @@ export const heapSortModule = {
 
   renderEditor(context) {
     const buttons = [
-      ['lesson', tr('Debug da aula', 'Lesson debug'), PRESETS.lesson],
+      ['lesson', tr('Vetor de 8 números', '8-number array'), PRESETS.lesson],
       ['visual', tr('Árvore passo a passo', 'Step-by-step tree'), PRESETS.visual],
-      ['maxheap', tr('Max-heap do slide 9', 'Max-heap from slide 9'), PRESETS.maxheap],
-    ].map(([key, text, values]) => `<button class="button secondary compact" type="button" data-module-action="preset" data-preset="${key}" title="${values.join(', ')}">${text}</button>`).join('');
+      ['maxheap', tr('Já é um max-heap', 'Already a max-heap'), PRESETS.maxheap],
+    ].map(([key, text, values], index) => `<button class="button secondary compact" type="button" data-module-action="preset" data-preset="${key}" title="${text} · ${values.join(', ')}" aria-label="${tr('Exemplo', 'Example')} ${index + 1}: ${text}">${index + 1}</button>`).join('');
     return `${renderVectorEditor(context, { ...LIMITS, placeholder: '6, 5, 3, 1, 8, 7, 2, 4' })}
-      <div class="preset-row"><span>${tr('Exemplos da aula', 'Lesson examples')}</span>${buttons}</div>`;
+      <div class="preset-row"><span>${tr('Exemplos', 'Examples')}</span>${buttons}</div>`;
   },
 
   renderConfig({ state }) {

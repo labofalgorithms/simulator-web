@@ -47,6 +47,8 @@ simulator-web/
 │   │   └── index.html
 │   ├── arvore-avl/
 │   │   └── index.html
+│   ├── arvore-b/
+│   │   └── index.html
 │   ├── recursao/
 │   │   └── index.html
 │   ├── buscas/
@@ -98,6 +100,7 @@ simulator-web/
 │       │   ├── binary-search-trees/
 │       │   ├── tree-traversals/
 │       │   ├── avl-trees/
+│       │   ├── b-trees/
 │       │   ├── recursion/
 │       │   ├── searches/
 │       │   ├── shotgun-sort/

@@ -10,31 +10,18 @@ const MAX_VALUE = 999;
 // A árvore da aula (slides de FB, aula 13): uma AVL com os nós dos exemplos de inserção.
 const DEFAULT_DATA = { values: [8, 4, 10, 2, 6, 9, 15, 12], balanced: true };
 
-// Exemplos da aula. `balanced: false` monta a árvore com inserção de ABB (sem rotações): é o que a aula 13
+// Exemplos. `balanced: false` monta a árvore com inserção de ABB (sem rotações): é o que a aula 13
 // pede nos exercícios de remoção ("sem rotacionar") e o que o slide 66 da aula 14 desenha.
 const PRESETS = {
-  ll: { label: tr('LL: inserir(4)', 'LL: insert(4)'), hint: tr('Aula 14, slides 28–40', 'Lesson 14, slides 28–40'), values: [32, 16], insert: 4 },
-  rr: { label: tr('RR: inserir(12)', 'RR: insert(12)'), hint: tr('Aula 14, slides 42–60', 'Lesson 14, slides 42–60'), values: [8, 4, 10, 9, 15], insert: 12 },
-  lr: { label: tr('LR: inserir(5)', 'LR: insert(5)'), hint: tr('Aula 13, slides 49–54', 'Lesson 13, slides 49–54'), values: [8, 4, 10, 2, 6], insert: 5 },
+  ll: { label: tr('LL: inserir(4)', 'LL: insert(4)'), hint: tr('Rotação simples à direita', 'Single right rotation'), values: [32, 16], insert: 4 },
+  rr: { label: tr('RR: inserir(12)', 'RR: insert(12)'), hint: tr('Rotação simples à esquerda', 'Single left rotation'), values: [8, 4, 10, 9, 15], insert: 12 },
+  lr: { label: tr('LR: inserir(5)', 'LR: insert(5)'), hint: tr('Rotação dupla: esquerda e depois direita', 'Double rotation: left, then right'), values: [8, 4, 10, 2, 6], insert: 5 },
   rl: { label: tr('RL: inserir(11)', 'RL: insert(11)'), hint: tr('O espelho do caso LR', 'The mirror of case LR'), values: [8, 12, 6, 14, 10], insert: 11 },
-  rem80: { label: tr('Slides: remover(80)', 'Slides: remove(80)'), hint: tr('Aula 14, slides 66–85. A árvore do slide já tem |FB| = 2 na raiz: não é AVL, por isso é montada como ABB.', 'Lesson 14, slides 66–85. The slide tree already has |BF| = 2 at the root: it is not AVL, so it is built as a BST.'), values: [50, 30, 80, 10, 40, 35], balanced: false, remove: 80 },
-  rem90: { label: tr('remover(90) (AVL válida)', 'remove(90) (valid AVL)'), hint: tr('O exemplo do slide 66 com o 90 à direita do 80: é AVL e a remoção também precisa de uma rotação dupla (LR).', 'The slide 66 example with 90 to the right of 80: it is AVL and the removal also needs a double rotation (LR).'), values: [50, 30, 80, 10, 40, 90, 35], remove: 90 },
-  rem10: { label: tr('Aula 13: remover(10)', 'Lesson 13: remove(10)'), hint: tr('Aula 13, slides 65–69', 'Lesson 13, slides 65–69'), values: [8, 4, 10, 2, 6], remove: 10 },
+  rem80: { label: tr('remover(80) (ABB)', 'remove(80) (BST)'), hint: tr('A árvore deste exemplo já tem |FB| = 2 na raiz: não é AVL, por isso é montada como ABB.', 'The tree of this example already has |BF| = 2 at the root: it is not AVL, so it is built as a BST.'), values: [50, 30, 80, 10, 40, 35], balanced: false, remove: 80 },
+  rem90: { label: tr('remover(90) (AVL válida)', 'remove(90) (valid AVL)'), hint: tr('O exemplo remover(80) com o 90 à direita do 80: é AVL e a remoção também precisa de uma rotação dupla (LR).', 'The remove(80) example with 90 to the right of 80: it is AVL and the removal also needs a double rotation (LR).'), values: [50, 30, 80, 10, 40, 90, 35], remove: 90 },
+  rem10: { label: tr('remover(10)', 'remove(10)'), hint: tr('Uma remoção que desbalanceia a árvore e pede uma rotação', 'A removal that unbalances the tree and needs a rotation'), values: [8, 4, 10, 2, 6], remove: 10 },
   ascending: { label: tr('Em ordem crescente', 'In ascending order'), hint: tr('Com inserção de ABB comum isto vira uma cadeia', 'With plain BST insertion this becomes a chain'), values: [10, 20, 30, 40, 50, 60, 70] },
 };
-
-// Exercícios das aulas 13 e 14: os quatro primeiros são só inserções; nos outros quatro, a aula 13 pede
-// para inserir "sem rotacionar" e remover, e a aula 14 pede para inserir numa AVL e remover.
-const EXERCISES = [
-  { values: [50, 30, 70, 20, 40, 10] },
-  { values: [10, 20, 5, 25, 30, 40] },
-  { values: [30, 10, 50, 5, 20, 15] },
-  { values: [10, 5, 30, 40, 20, 25] },
-  { values: [50, 30, 70, 20, 40, 10], remove: 70, balanced: false },
-  { values: [10, 20, 5, 15, 25, 30], remove: 5, balanced: false },
-  { values: [50, 30, 70, 10, 40, 35], remove: 70, balanced: false },
-  { values: [20, 10, 40, 30, 50, 35], remove: 10, balanced: false },
-];
 
 const CASE_LABELS = {
   LL: tr('LL: esquerda-esquerda', 'LL: left-left'),
@@ -171,8 +158,7 @@ export const avlTreeModule = {
     }
 
     const { values, balanced } = state.data;
-    const presets = Object.entries(PRESETS).map(([key, preset]) => `<button class="button secondary compact" type="button" data-module-action="preset" data-preset="${key}" title="${escapeText(preset.hint)}">${preset.label}</button>`).join('');
-    const exercises = EXERCISES.map((item, index) => `<button class="button secondary compact" type="button" data-module-action="exercise" data-exercise="${index}" title="${escapeText(`${item.values.join(', ')}${item.remove === undefined ? '' : tr(` e remover o ${item.remove}`, ` and remove ${item.remove}`)}`)}">${index + 1}</button>`).join('');
+    const presets = Object.entries(PRESETS).map(([key, preset], index) => `<button class="button secondary compact" type="button" data-module-action="preset" data-preset="${key}" title="${escapeText(`${preset.label}. ${preset.hint}`)}" aria-label="${tr('Exemplo', 'Example')} ${index + 1}: ${escapeText(preset.label)}">${index + 1}</button>`).join('');
     const mode = (flag, label) => `<button class="button secondary compact" type="button" data-module-action="set-mode" data-balanced="${flag}" aria-pressed="${balanced === flag}">${label}</button>`;
     return `
       <div class="panel-heading compact-heading">
@@ -184,11 +170,10 @@ export const avlTreeModule = {
         <input id="node-input" class="text-input ${state.inputError ? 'invalid' : ''}" value="${escapeText(state.draft)}" placeholder="8, 4, 10, 2, 6, 9, 15, 12" aria-describedby="node-help node-error" data-module-input="draft" data-module-enter="apply" />
         <button class="button primary" type="button" data-module-action="apply-data">${icons.check}<span>${tr('Aplicar', 'Apply')}</span></button>
       </div>
-      <p id="node-help" class="field-help">${tr('Cada valor é inserido na ordem informada. Com', 'Each value is inserted in the order given. With')} <strong>${tr('inserção AVL', 'AVL insertion')}</strong> ${tr('a árvore é balanceada com rotações, como no inserir da aula; com', 'the tree is balanced with rotations, as in the lesson\'s insert; with')} <strong>${tr('ABB comum', 'plain BST')}</strong> ${tr('não há rotações e ela pode ficar desbalanceada (é o "sem rotacionar" dos exercícios). Inteiros de 0 a', 'there are no rotations and it may end up unbalanced (it is the "without rotating" of the exercises). Integers from 0 to')} ${MAX_VALUE}${tr(', sem repetidos; no máximo', ', no repeats; at most')} ${MAX_NODES} ${tr('nós. Deixe em branco para uma árvore vazia.', 'nodes. Leave blank for an empty tree.')}</p>
+      <p id="node-help" class="field-help">${tr('Cada valor é inserido na ordem informada. Com', 'Each value is inserted in the order given. With')} <strong>${tr('inserção AVL', 'AVL insertion')}</strong> ${tr('a árvore é balanceada com rotações, como no inserir da aula; com', 'the tree is balanced with rotations, as in the lesson\'s insert; with')} <strong>${tr('ABB comum', 'plain BST')}</strong> ${tr('não há rotações e ela pode ficar desbalanceada (é o "sem rotacionar"). Inteiros de 0 a', 'there are no rotations and it may end up unbalanced (it is the "without rotating" mode). Integers from 0 to')} ${MAX_VALUE}${tr(', sem repetidos; no máximo', ', no repeats; at most')} ${MAX_NODES} ${tr('nós. Deixe em branco para uma árvore vazia.', 'nodes. Leave blank for an empty tree.')}</p>
       <p id="node-error" class="error-message" role="alert">${escapeText(state.inputError)}</p>
       <div class="preset-row"><span>${tr('Montar com', 'Build with')}</span>${mode(true, tr('Inserção AVL', 'AVL insertion'))}${mode(false, tr('ABB comum (sem rotações)', 'Plain BST (no rotations)'))}</div>
-      <div class="preset-row"><span>${tr('Exemplos da aula', 'Lesson examples')}</span>${presets}</div>
-      <div class="preset-row"><span>${tr('Exercícios', 'Exercises')}</span>${exercises}</div>
+      <div class="preset-row"><span>${tr('Exemplos', 'Examples')}</span>${presets}</div>
       <div class="random-row">
         <label for="random-count">${tr('Quantidade aleatória', 'Random quantity')}</label>
         <input id="random-count" type="range" min="0" max="${MAX_NODES}" value="${state.randomCount}" data-module-input="random-count" />
@@ -203,7 +188,7 @@ export const avlTreeModule = {
     const field = (key, hint) => `<label class="config-field"><span>${tr('Valor', 'Value')}</span><input id="item-input" type="number" min="0" max="${MAX_VALUE}" step="1" value="${config[key]}" data-module-input="${key}" /><small>${hint}</small></label>`;
 
     if (algorithmId === 'insert') {
-      return `${heading(tr('Escolha o valor a inserir', 'Choose the value to insert'))}${field('insertValue', tr('Um valor que já existe é recusado (a AVL não aceita repetidos): clique em um nó da árvore para testar. Os exemplos da aula já escolhem o valor de cada caso.', 'A value that already exists is refused (the AVL does not accept repeats): click a tree node to test it. The lesson examples already choose the value for each case.'))}`;
+      return `${heading(tr('Escolha o valor a inserir', 'Choose the value to insert'))}${field('insertValue', tr('Um valor que já existe é recusado (a AVL não aceita repetidos): clique em um nó da árvore para testar. Os exemplos já escolhem o valor de cada caso.', 'A value that already exists is refused (the AVL does not accept repeats): click a tree node to test it. The examples already choose the value for each case.'))}`;
     }
     if (algorithmId === 'remove') {
       const cases = [[0, tr('Uma folha', 'A leaf')], [1, tr('Um filho', 'One child')], [2, tr('Dois filhos', 'Two children')]].map(([count, label]) => {
@@ -294,8 +279,8 @@ export const avlTreeModule = {
       return;
     }
 
-    if (action === 'preset' || action === 'exercise') {
-      const item = action === 'preset' ? PRESETS[button.dataset.preset] : EXERCISES[Number(button.dataset.exercise)];
+    if (action === 'preset') {
+      const item = PRESETS[button.dataset.preset];
       if (!item) return;
       const extra = {};
       if (item.insert !== undefined) extra.insertValue = item.insert;

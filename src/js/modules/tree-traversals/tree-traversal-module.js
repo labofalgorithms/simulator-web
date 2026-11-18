@@ -16,10 +16,10 @@ const DEFAULT_DATA = { values: [39, 22, 55, 12, 25, 46, 63, 10, 15, 23, 28] };
 
 // Todas as árvores dos slides são ABBs, então inserir os valores por níveis monta cada uma delas.
 const PRESETS = {
-  preorder: { label: tr('Slides: pré-ordem', 'Slides: pre-order'), values: [39, 22, 55, 12, 25, 46, 63, 10, 15, 23, 28] },
-  inorder: { label: tr('Slides: em ordem', 'Slides: in-order'), values: [42, 29, 71, 3, 37, 64, 92] },
-  postorder: { label: tr('Slides: pós-ordem', 'Slides: post-order'), values: [31, 19, 53, 12, 27, 42, 65] },
-  bfs: { label: tr('Slides: largura', 'Slides: breadth-first'), values: [72, 41, 89, 9, 53, 78, 91] },
+  preorder: { label: tr('Pré-ordem', 'Pre-order'), values: [39, 22, 55, 12, 25, 46, 63, 10, 15, 23, 28] },
+  inorder: { label: tr('Em ordem', 'In-order'), values: [42, 29, 71, 3, 37, 64, 92] },
+  postorder: { label: tr('Pós-ordem', 'Post-order'), values: [31, 19, 53, 12, 27, 42, 65] },
+  bfs: { label: tr('Em largura', 'Breadth-first'), values: [72, 41, 89, 9, 53, 78, 91] },
   exercise: { label: tr('Exercício 1', 'Exercise 1'), values: [53, 27, 76, 15, 40, 68, 87, 11, 22, 32, 45, 59, 70, 81] },
   ascending: { label: tr('Em ordem crescente', 'In ascending order'), values: [10, 20, 30, 40, 50, 60, 70] },
 };
@@ -107,7 +107,7 @@ export const treeTraversalModule = {
     }
 
     const { values } = state.data;
-    const presets = Object.entries(PRESETS).map(([key, preset]) => `<button class="button secondary compact" type="button" data-module-action="preset" data-preset="${key}">${preset.label}</button>`).join('');
+    const presets = Object.entries(PRESETS).map(([key, preset], index) => `<button class="button secondary compact" type="button" data-module-action="preset" data-preset="${key}" title="${escapeText(preset.label)}" aria-label="${tr('Exemplo', 'Example')} ${index + 1}: ${escapeText(preset.label)}">${index + 1}</button>`).join('');
     return `
       <div class="panel-heading compact-heading">
         <div><span class="eyebrow">${tr('Dados de entrada', 'Input data')}</span><h2 id="data-editor-title">${tr('Monte a árvore', 'Build the tree')}</h2></div>
@@ -120,7 +120,7 @@ export const treeTraversalModule = {
       </div>
       <p id="node-help" class="field-help">${tr('A árvore é montada inserindo cada valor, na ordem informada (iguais vão para a direita), como na aula de ABB. Inserir por níveis, como nos exemplos dos slides, monta a árvore dos slides. Inteiros de 0 a', 'The tree is built by inserting each value, in the order given (equal values go to the right), as in the BST lesson. Inserting level by level, as in the slide examples, builds the slides\' tree. Integers from 0 to')} ${MAX_VALUE}${tr('; no máximo', '; at most')} ${MAX_NODES} ${tr('nós. Deixe em branco para uma árvore vazia.', 'nodes. Leave blank for an empty tree.')}</p>
       <p id="node-error" class="error-message" role="alert">${escapeText(state.inputError)}</p>
-      <div class="preset-row"><span>${tr('Exemplos da aula', 'Lesson examples')}</span>${presets}</div>
+      <div class="preset-row"><span>${tr('Exemplos', 'Examples')}</span>${presets}</div>
       <div class="random-row">
         <label for="random-count">${tr('Quantidade aleatória', 'Random quantity')}</label>
         <input id="random-count" type="range" min="0" max="${MAX_NODES}" value="${state.randomCount}" data-module-input="random-count" />

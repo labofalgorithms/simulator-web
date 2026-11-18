@@ -8,7 +8,7 @@ import {
 import { renderHeapInspection, renderHeapTree } from '../heap-sort/views.js';
 import { tr } from '../../core/i18n.js';
 
-// Os vetores dos exemplos da aula: Seleção parcial (slides 14 a 26), Inserção parcial (31 a 39),
+// Os vetores dos exemplos: Seleção parcial (slides 14 a 26), Inserção parcial (31 a 39),
 // Heapsort parcial (45 a 71) e Quicksort parcial (77 a 103), cada um com o seu k.
 const PRESETS = {
   selection: { values: [64, 25, 12, 22, 11], k: 3 },
@@ -84,14 +84,14 @@ export const partialSortModule = {
 
   renderEditor(context) {
     const labels = {
-      selection: tr('Seleção (slides 14 a 26)', 'Selection (slides 14 to 26)'),
-      insertion: tr('Inserção (slides 31 a 39)', 'Insertion (slides 31 to 39)'),
-      heap: tr('Heap (slides 45 a 71)', 'Heap (slides 45 to 71)'),
-      quick: tr('Quick (slides 77 a 103)', 'Quick (slides 77 to 103)'),
+      selection: tr('Seleção parcial', 'Partial selection'),
+      insertion: tr('Inserção parcial', 'Partial insertion'),
+      heap: tr('Heap parcial', 'Partial heap'),
+      quick: tr('Quick parcial', 'Partial quick'),
     };
-    const buttons = Object.entries(PRESETS).map(([key, preset]) => `<button class="button secondary compact" type="button" data-module-action="preset" data-preset="${key}" title="${preset.values.join(', ')} · k = ${preset.k}">${labels[key]}</button>`).join('');
+    const buttons = Object.entries(PRESETS).map(([key, preset], index) => `<button class="button secondary compact" type="button" data-module-action="preset" data-preset="${key}" title="${labels[key]} · ${preset.values.join(', ')} · k = ${preset.k}" aria-label="${tr('Exemplo', 'Example')} ${index + 1}: ${labels[key]}">${index + 1}</button>`).join('');
     return `${renderVectorEditor(context, { ...LIMITS, placeholder: '64, 25, 12, 22, 11' })}
-      <div class="preset-row"><span>${tr('Exemplos da aula', 'Lesson examples')}</span>${buttons}</div>`;
+      <div class="preset-row"><span>${tr('Exemplos', 'Examples')}</span>${buttons}</div>`;
   },
 
   renderConfig({ state }) {

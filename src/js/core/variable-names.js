@@ -30,6 +30,10 @@ export const variableNames = {
   'nós': 'nodes', altura: 'height', 'nó escolhido': 'chosen node', profundidade: 'depth', 'raiz = NULO': 'root = NULL', comparação: 'comparison', 'atual = NULO': 'current = NULL', 'dois filhos': 'two children', 'pai = NULO': 'parent = NULL',
   'nó v': 'node v', 'condição do ENQUANTO': 'WHILE condition', regra: 'rule',
   raiz: 'root', No: 'node', 'nó': 'node', pai: 'parent', suc: 'succ', paiSuc: 'succParent', filho: 'child', novo: 'newNode', x: 'x', y: 'y', T2: 'T2',
+  // árvores B
+  'irmão': 'sibling', z: 'z', c: 'c', "k'": "k'", t: 't', caminho: 'path', mediana: 'median', 'nós lidos': 'nodes read', 'divisões': 'splits', 'divisões da raiz': 'root splits', 'mínimo de chaves': 'minimum keys', 'máximo de chaves': 'maximum keys',
+  'i < nó.numChaves e chave > nó.chaves[i]': 'i < node.numKeys and key > node.keys[i]', 'nó.chaves[i] = chave': 'node.keys[i] = key', 'nó é folha': 'node is a leaf', 'nó.numChaves > m − 1': 'node.numKeys > m − 1', 'caminho está vazia': 'path is empty',
+  'k está em x': 'k is in x', 'x é folha': 'x is a leaf', 'y.numChaves ≥ t': 'y.numKeys ≥ t', 'z.numChaves ≥ t': 'z.numKeys ≥ t', 'c.numChaves = t − 1': 'c.numKeys = t − 1', 'irmão esquerdo ≥ t': 'left sibling ≥ t', 'irmão direito ≥ t': 'right sibling ≥ t', 'i > 0': 'i > 0', 'x é a raiz e x.numChaves = 0': 'x is the root and x.numKeys = 0', 'folhas no mesmo nível': 'leaves at the same level', 'c.numChaves < t − 1': 'c.numKeys < t − 1', 'raiz.numChaves = 0': 'root.numKeys = 0', 'y.numChaves ≥ t ou z.numChaves < t': 'y.numKeys ≥ t or z.numKeys < t',
   // ordenações
   minimo: 'min', 'comparações': 'comparisons', trocas: 'swaps', 'n(n−1)/2': 'n(n−1)/2', melhor: 'best', ordens: 'orders', tentativas: 'attempts', chance: 'chance',
   // vetores: rótulos dinâmicos (maior/menor)
